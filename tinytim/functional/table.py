@@ -1,6 +1,6 @@
 import copy
 import random
-from typing import Any, List, MutableMapping, MutableSequence, Generator, Optional, Mapping, Union
+from typing import Any, Dict, List, MutableMapping, MutableSequence, Generator, Optional, Mapping, Tuple, Union
 
 import tinytim.functional.utils as utils
 import tinytim.functional.inplace as inplace
@@ -17,7 +17,7 @@ def row_count(data: MutableMapping) -> int:
     return len(data[first_column_name(data)])
 
 
-def shape(data: MutableMapping) -> tuple[int, int]:
+def shape(data: MutableMapping) -> Tuple[int, int]:
     """Return data row count, column count tuple."""
     col_count = column_count(data)
     if col_count == 0: return 0, 0
@@ -37,7 +37,7 @@ def first_column_name(data: MutableMapping) -> str:
     return next(iter(data))
 
 
-def column_names(data: MutableMapping) -> tuple[str]:
+def column_names(data: MutableMapping) -> Tuple[str]:
     """Return data column names."""
     return tuple(data)
 
@@ -50,7 +50,7 @@ def replace_column_names(data: MutableMapping, new_names: MutableSequence[str]) 
     return {new_name: data[old_name] for new_name, old_name in zip(new_names, old_names)}
 
 
-def index(data: MutableMapping) -> tuple[int]:
+def index(data: MutableMapping) -> Tuple[int]:
     """Return tuple of data column indexes."""
     return tuple(range(row_count(data)))
 
@@ -84,7 +84,7 @@ def row_values(data: MutableMapping, index: int) -> tuple:
     return tuple(values[index] for values in data.values())
 
 
-def column_dict(data, col: str) -> dict[str, MutableSequence]:
+def column_dict(data, col: str) -> Dict[str, MutableSequence]:
     return {col: data[col]}
 
 
@@ -92,13 +92,13 @@ def column_values(data: MutableMapping, column_name: str) -> MutableSequence:
     return data[column_name]
 
 
-def itercolumns(data: MutableMapping) -> Generator[tuple[str, tuple], None, None]:
+def itercolumns(data: MutableMapping) -> Generator[Tuple[str, tuple], None, None]:
     """Return a generator of tuple column name, column values."""
     for col in column_names(data):
         yield col, tuple(data[col])
             
 
-def iterrows(data: MutableMapping) -> Generator[tuple[int, dict], None, None]:
+def iterrows(data: MutableMapping) -> Generator[Tuple[int, dict], None, None]:
     """Return a generator of tuple row index, row dict values."""
     for i in index(data):
         yield i, row_dict(data, i)
@@ -116,7 +116,7 @@ def itervalues(data: MutableMapping) -> Generator[tuple, None, None]:
         yield tuple(row.values())
 
 
-def values(data: MutableMapping) -> tuple[tuple]:
+def values(data: MutableMapping) -> Tuple[tuple]:
     """Return tuple of tuple row values."""
     return tuple(itervalues(data))
 
@@ -146,7 +146,7 @@ def sample_indexes(data: MutableMapping, n: int, random_state: Optional[int] = N
     return random.sample(range(row_count(data)), n)
 
 
-def nunique(data: MutableMapping) -> dict[str, int]:
+def nunique(data: MutableMapping) -> Dict[str, int]:
     """Count number of distinct values in each column.
        Return dict with number of distinct values.
     """

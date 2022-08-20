@@ -1,5 +1,5 @@
 from collections import namedtuple
-from typing import Callable, Collection, Iterable, List, MutableMapping, Union
+from typing import Callable, Collection, Iterable, List, MutableMapping, Tuple, Union
 
 from tinytim.functional.filter import column_filter, filter_data
 from tinytim.functional.utils import row_dicts_to_data, uniques
@@ -43,7 +43,7 @@ def _keys(key, by) -> dict:
     return keys
 
 
-def aggregate_groups(groups: List[tuple], by: Collection[str], func: Callable, tuplename: str) -> tuple[List, dict]:
+def aggregate_groups(groups: List[tuple], by: Collection[str], func: Callable, tuplename: str) -> Tuple[List, dict]:
     labels = []
     rows = []
     for key, data in groups:
@@ -56,11 +56,11 @@ def aggregate_groups(groups: List[tuple], by: Collection[str], func: Callable, t
     return labels, row_dicts_to_data(rows)
 
 
-def sum_groups(groups: List[tuple], by: Collection[str]) -> tuple[List, dict]:
+def sum_groups(groups: List[tuple], by: Collection[str]) -> Tuple[List, dict]:
     return aggregate_groups(groups, by, sum_data, 'Sums')
 
 
-def count_groups(groups: List[tuple], by: Collection[str]) -> tuple[List, dict]:
+def count_groups(groups: List[tuple], by: Collection[str]) -> Tuple[List, dict]:
     return aggregate_groups(groups, by, count_data, 'Counts')
 
 

@@ -1,8 +1,8 @@
-from typing import Any, Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional
 from collections import defaultdict
 
 
-def combine_names_rows(column_names, rows) -> dict[str, List]:
+def combine_names_rows(column_names, rows) -> Dict[str, List]:
     return dict(zip(column_names, map(list, zip(*rows))))
 
 
