@@ -1,5 +1,5 @@
 import pathlib
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, find_namespace_packages
 
 HERE = pathlib.Path(__file__).parent
 
@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="tinytim",
-    version="0.5",
+    version="0.6",
     description="Pure Python data table functions.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
     ],
-    packages=find_packages(),
+    packages=find_namespace_packages(),
     include_package_data=True,
     python_requires='>=3.6',
     install_requires=[]
