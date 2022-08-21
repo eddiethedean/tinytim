@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="tinytim",
-    version="0.4",
+    version="0.5",
     description="Pure Python data table functions.",
     long_description=README,
     long_description_content_type="text/markdown",
