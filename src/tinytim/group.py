@@ -1,4 +1,5 @@
-from typing import Collection, List, MutableMapping, Union
+from collections import namedtuple
+from typing import Callable, Collection, List, Mapping, MutableMapping, Tuple, Union
 
 import tinytim.filter as filter
 import tinytim.utils as utils
@@ -23,3 +24,53 @@ def groupby(data: MutableMapping, by: Union[str, Collection[str]]) -> List[tuple
         return groupbyone(data, by)
     else:
         return groupbymulti(data, by)
+
+
+def _keys(key, by) -> dict:
+    keys = {}
+    if isinstance(by, str):
+        keys[by] = key
+    else:
+        for col, k in zip(by, key):
+            keys[col] = k
+    return keys
+
+
+def aggregate_groups(groups: List[tuple], by: Collection[str], func: Callable, tuplename: str) -> Tuple[List, dict]:
+    labels = []
+    rows = []
+    for key, data in groups:
+        row = func(data)
+        if len(row):
+            GroupbyKey = namedtuple(field_names=by, typename='GroupbyKey')
+            keys = _keys(key, by)
+            labels.append(GroupbyKey(*keys.values()))
+            rows.append(row)
+    return labels, utils.row_dicts_to_data(rows)
+
+
+def sum_groups(groups: List[tuple], by: Collection[str]) -> Tuple[List, dict]:
+    return aggregate_groups(groups, by, sum_data, 'Sums')
+
+
+def count_groups(groups: List[tuple], by: Collection[str]) -> Tuple[List, dict]:
+    return aggregate_groups(groups, by, count_data, 'Counts')
+
+
+def aggregate_data(data: Mapping, func: Callable) -> dict:
+    out = {}
+    for column_name in data.keys():
+        try:
+            col_sum = func(data[column_name])
+        except TypeError:
+            continue
+        out[column_name] = col_sum
+    return out
+
+
+def sum_data(data: Mapping) -> dict:
+    return aggregate_data(data, sum)
+
+
+def count_data(data: Mapping) -> dict:
+    return aggregate_data(data, len)
