@@ -1,3 +1,4 @@
+from curses import tigetflag
 import pathlib
 from setuptools import setup, find_packages
 
@@ -20,8 +21,10 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
     ],
-    packages=find_packages(where='src'),
-    package_dir={'': 'src'},
+    packages=['tinytim'],
+    py_modules=['tinytim.columns', 'tinytim.copy', 'tinytim.edit'
+                'tinytim.features', 'tinytim.filter', 'tinytim.group',
+                'tinytim.rows', 'tinytim.utils', 'tinytim.validate'],
     include_package_data=True,
     python_requires='>=3.6',
     install_requires=[]

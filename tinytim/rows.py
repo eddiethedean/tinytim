@@ -1,12 +1,11 @@
 from typing import Generator, MutableMapping, Tuple
 
-import tinytim.features as features
-from tinytim.utils import row_values_generator, row_dicts_to_data, row_value_tuples
+from tinytim.features import column_names, index, table_value
 
 
 def row_dict(data: MutableMapping, index: int) -> dict: 
     """Return one row from data at index."""
-    return {col: features.table_value(data, col, index) for col in features.column_names(data)}
+    return {col: table_value(data, col, index) for col in column_names(data)}
 
 
 def row_values(data: MutableMapping, index: int) -> tuple:
@@ -16,7 +15,7 @@ def row_values(data: MutableMapping, index: int) -> tuple:
 
 def iterrows(data: MutableMapping) -> Generator[Tuple[int, dict], None, None]:
     """Return a generator of tuple row index, row dict values."""
-    for i in features.index(data):
+    for i in index(data):
         yield i, row_dict(data, i)
 
 

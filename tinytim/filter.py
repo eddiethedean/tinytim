@@ -1,7 +1,7 @@
 import random
 from typing import Callable, Iterable, List, MutableMapping, MutableSequence, Optional, Sequence
 
-import tinytim.features as features
+from tinytim.features import row_count
 
 
 TableFilter = Iterable[bool]
@@ -80,7 +80,7 @@ def sample(data: MutableMapping, n: int, random_state: Optional[int] = None) -> 
     """return random sample of n rows"""
     if random_state is not None:
         random.seed(random_state)
-    indexes = random.sample(range(features.row_count(data)), n)
+    indexes = random.sample(range(row_count(data)), n)
     return filter_by_indexes(data, indexes)
 
 
@@ -93,4 +93,4 @@ def sample_indexes(data: MutableMapping, n: int, random_state: Optional[int] = N
     """return random sample of n indexes"""
     if random_state is not None:
         random.seed(random_state)
-    return random.sample(range(features.row_count(data)), n)
+    return random.sample(range(row_count(data)), n)
