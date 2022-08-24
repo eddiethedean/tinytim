@@ -1,13 +1,13 @@
 from collections import namedtuple
 from typing import Callable, Collection, List, Mapping, MutableMapping, Tuple, Union
 
-import tinytim.filter as filter
-import tinytim.utils as utils
+from tinytim.filter import column_filter, filter_data
+from tinytim.utils import row_dicts_to_data, row_value_tuples, uniques
 
 
 def groupbycolumn(data: MutableMapping, column: Collection) -> List[tuple]:
-    keys = utils.uniques(column)
-    return [(k, filter.filter_data(data, filter.column_filter(column, lambda x: x == k)))
+    keys = uniques(column)
+    return [(k, filter_data(data, column_filter(column, lambda x: x == k)))
                 for k in keys]
 
 
@@ -16,7 +16,7 @@ def groupbyone(data: MutableMapping, column_name: str) -> List[tuple]:
 
 
 def groupbymulti(data: MutableMapping, column_names: Collection[str]) -> List[tuple]:
-    return groupbycolumn(data, utils.row_value_tuples(data, column_names))
+    return groupbycolumn(data, row_value_tuples(data, column_names))
 
 
 def groupby(data: MutableMapping, by: Union[str, Collection[str]]) -> List[tuple]:
@@ -46,7 +46,7 @@ def aggregate_groups(groups: List[tuple], by: Collection[str], func: Callable, t
             keys = _keys(key, by)
             labels.append(GroupbyKey(*keys.values()))
             rows.append(row)
-    return labels, utils.row_dicts_to_data(rows)
+    return labels, row_dicts_to_data(rows)
 
 
 def sum_groups(groups: List[tuple], by: Collection[str]) -> Tuple[List, dict]:

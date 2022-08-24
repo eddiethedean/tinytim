@@ -1,7 +1,5 @@
 from typing import Any, MutableMapping, MutableSequence, Tuple
 
-from tinytim.rows import values
-
 
 def column_count(data: MutableMapping) -> int:
     """Return the number of columns in data."""
