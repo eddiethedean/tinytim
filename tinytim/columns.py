@@ -5,11 +5,11 @@ import tinytim.data as data_features
 
 def column_dict(data: Mapping[str, Sequence], col: str) -> Dict[str, Sequence]:
     """Return a dict of {col_name, col_values} from data.
-    
+
        Example:
        data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
        column_dict(data, 'x') -> {'x': [1, 2, 3]}
-       column_dict(data, 'y') -> {'x': [6, 7, 8]}
+       column_dict(data, 'y') -> {'y': [6, 7, 8]}
     """
     return {col: data[col]}
 
