@@ -150,7 +150,7 @@ def edit_column(data: MutableMapping, column_name: str, values: MutableSequence)
        data -> {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
     new_data = copy.copy_table(data)
-    edit_column_inplace(data, column_name, values)
+    edit_column_inplace(new_data, column_name, values)
     return new_data
 
 
@@ -163,7 +163,7 @@ def edit_value(data: MutableMapping, column_name: str, index: int, value: Any) -
        data -> {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
     new_data = copy.copy_table(data)
-    edit_value_inplace(data, column_name, index, value)
+    edit_value_inplace(new_data, column_name, index, value)
     return new_data
 
 
@@ -176,7 +176,7 @@ def drop_row(data: MutableMapping, index: int) -> MutableMapping:
        data -> {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
     new_data = copy.copy_table(data)
-    drop_row_inplace(data, index)
+    drop_row_inplace(new_data, index)
     return new_data
 
 
@@ -207,5 +207,5 @@ def drop_column(data: MutableMapping, column_name: str) -> MutableMapping:
        data -> {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
     new_data = copy.copy_table(data)
-    drop_column_inplace(data, column_name)
+    drop_column_inplace(new_data, column_name)
     return new_data

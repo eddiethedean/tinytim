@@ -1,8 +1,14 @@
 from collections import defaultdict
-from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping, MutableMapping, Optional
+from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping, MutableMapping, Optional, Tuple
 
 
 def uniques(values: Iterable) -> List:
+    """Return a list of the unique items in values.
+
+       Examples:
+       values = [1, 1, 2, 4, 5, 2, 0, 6, 1]
+       uniques(values) -> [1, 2, 4, 5, 0, 6]
+    """
     out = []
     for value in values:
         if value not in out:
@@ -10,8 +16,13 @@ def uniques(values: Iterable) -> List:
     return out
 
 
-def row_value_tuples(data: MutableMapping, column_names: Collection[str]) -> List[tuple]:
-    return list(zip(*[data[col] for col in column_names]))
+def row_value_tuples(data: MutableMapping, column_names: Collection[str]) -> Tuple[tuple]:
+    """Return row value tuples for only columns in column_names.
+
+       data = {'x': [1, 2, 3], 'y': [6, 7, 8], 'z': [9, 10, 11]}
+       row_value_tuples(data, ['x', 'z']) -> ((1, 9), (2, 10), (3, 11))
+    """
+    return tuple(zip(*[data[col] for col in column_names]))
 
 
 def _keys(key, by) -> dict:
@@ -24,7 +35,16 @@ def _keys(key, by) -> dict:
     return keys
 
 
-def row_dicts_to_data(rows: List[dict]) -> dict:
+def row_dicts_to_data(rows: Collection[dict], missing_value=None) -> Dict[str, list]:
+    """Convert a list of row dicts to dict[col_name: values] format.
+
+       Examples:
+       rows = [{'x': 1, 'y': 20}, {'x': 2, 'y': 21}, {'x': 3, 'y': 22}]
+       row_dicts_to_data(rows) -> {'x': [1, 2, 3], 'y': [20, 21, 22]}
+
+       rows = [{'x': 1, 'y': 20}, {'x': 2}, {'x': 3, 'y': 22}]
+       row_dicts_to_data(rows) -> {'x': [1, 2, 3], 'y': [20, None, 22]}
+    """
     keys = all_keys(rows)
     data = defaultdict(list)
     for row in rows:
@@ -32,7 +52,7 @@ def row_dicts_to_data(rows: List[dict]) -> dict:
             if col in row:
                 data[col].append(row[col])
             else:
-                data[col].append(None)
+                data[col].append(missing_value)
     return dict(data)
 
 
@@ -48,7 +68,7 @@ def has_mapping_attrs(obj: Any) -> bool:
     return all(hasattr(obj, a) for a in mapping_attrs)
 
 
-def all_keys(dicts: List[dict]) -> List:
+def all_keys(dicts: Collection[dict]) -> List:
     keys = []
     for d in dicts:
         for key in d:
