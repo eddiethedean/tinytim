@@ -39,7 +39,7 @@ def size(data: Mapping) -> int:
     
        Example:
        data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-       size(data) -> 5
+       size(data) -> 6
     """
     rows, columns = shape(data)
     return rows * columns
