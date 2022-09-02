@@ -1,5 +1,6 @@
 from collections import defaultdict
-from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping, MutableMapping, Optional, Tuple
+from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping
+from typing import MutableMapping, Optional, Sequence, Tuple
 
 
 def uniques(values: Iterable) -> List:
@@ -56,12 +57,29 @@ def row_dicts_to_data(rows: Collection[dict], missing_value=None) -> Dict[str, l
     return dict(data)
 
 
-def all_bool(l: List) -> bool:
-    return all(isinstance(item, bool) for item in l)
+def all_bool(values: Collection) -> bool:
+    """Return if all items in values are bool or not.
+       
+       Examples:
+       values = [1, True, False, True]
+       all_bool(values) -> False
+
+       values = [True, True, False, True]
+       all_bool(values) -> True
+    """
+    return all(isinstance(item, bool) for item in values)
 
 
 def has_mapping_attrs(obj: Any) -> bool:
-    """Check if object has all Mapping attrs."""
+    """Check if object has all Mapping attrs.
+    
+       Examples:
+       obj = dict()
+       has_mapping_attrs(obj) -> True
+
+       obj = list()
+       has_mapping_attrs(obj) -> False
+    """
     mapping_attrs = ['__getitem__', '__iter__', '__len__',
                      '__contains__', 'keys', 'items', 'values',
                      'get', '__eq__', '__ne__']
@@ -69,6 +87,12 @@ def has_mapping_attrs(obj: Any) -> bool:
 
 
 def all_keys(dicts: Collection[dict]) -> List:
+    """Return all the unique keys from a collection of dicts.
+    
+       Examples:
+       dicts = [{'x': 1, 'y': 2}, {'x': 4, 'z': 7}]
+       all_keys(dicts) -> ['x', 'y', 'z']
+    """
     keys = []
     for d in dicts:
         for key in d:
@@ -78,6 +102,16 @@ def all_keys(dicts: Collection[dict]) -> List:
 
 
 def row_values_generator(row: Mapping) -> Generator[Any, None, None]:
+    """Return a generator that yields values from a row dict.
+       
+       Examples:
+       row = {'x': 1, 'y': 4, 'z': 8}
+       generator = row_values_generator(row)
+       next(generator) -> 1
+       next(generator) -> 4
+       next(generator) -> 8
+       next(generator) -> StopIteration
+    """
     for key in row:
         yield row[key]
 
@@ -85,6 +119,13 @@ def row_values_generator(row: Mapping) -> Generator[Any, None, None]:
 def slice_to_range(s: slice, stop: Optional[int] = None) -> range:
     """Convert an int:int:int slice object to a range object.
        Needs stop if s.stop is None since range is not allowed to have stop=None.
+
+       Examples:
+       s = slice(1, 4, 0)
+       slice_to_range(s) -> ValueError
+
+       s = slice(0, 3, 1)
+       slice_to_range(s) -> range(0, 3, 1)
     """
     step = 1 if s.step is None else s.step
     if step == 0:
@@ -108,12 +149,23 @@ def slice_to_range(s: slice, stop: Optional[int] = None) -> range:
     return range(start, stop, step)
 
 
-def combine_names_rows(column_names, rows) -> Dict[str, List]:
+def combine_names_rows(column_names: Sequence, rows: Sequence) -> Dict[str, List]:
+    """Convert a sequence of column names and a sequence of row values into dict[column_name: values] format.
+
+       Examples:
+       column_names = ['x', 'y']
+       rows = ((1, 2), (4, 5), (8, 10))
+       combine_names_rows(column_names, rows) -> {'x': [1, 4, 8], 'y': [2, 5, 10]}
+    """
     return dict(zip(column_names, map(list, zip(*rows))))
 
 
 def nunique(data: MutableMapping) -> Dict[str, int]:
     """Count number of distinct values in each column.
        Return dict with number of distinct values.
+
+       Examples:
+       data = {'x': [1, 2, 2], 'y': [6, 7, 8], 'z': [9, 9, 9]}
+       nunique(data) -> {'x': 2, 'y': 3, 'z': 1}
     """
     return {col: len(uniques(values)) for col, values in data.items()}
