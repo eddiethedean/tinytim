@@ -1,10 +1,16 @@
-from typing import Any, List, Mapping, MutableMapping, MutableSequence, Sequence, Union
+from typing import Any, Dict, List, Mapping, MutableMapping, MutableSequence, Sequence, Union
 
 import tinytim.data as data_features
 import tinytim.copy as copy
 
+MutableDataMapping = MutableMapping[str, MutableSequence]
 
-def edit_row_items_inplace(data: MutableMapping, index: int, items: Mapping) -> None:
+
+def edit_row_items_inplace(
+    data: MutableDataMapping,
+    index: int,
+    items: Mapping[str, Any]
+) -> None:
     """Changes row index to mapping items values.
     
        Example:
@@ -16,7 +22,11 @@ def edit_row_items_inplace(data: MutableMapping, index: int, items: Mapping) -> 
         data[col][index] = items[col]
 
 
-def edit_row_values_inplace(data: MutableMapping, index: int, values: Sequence) -> None:
+def edit_row_values_inplace(
+    data: MutableDataMapping,
+    index: int,
+    values: Sequence
+) -> None:
     """Changed row index to values.
     
        Example:
@@ -30,7 +40,11 @@ def edit_row_values_inplace(data: MutableMapping, index: int, values: Sequence) 
         data[col][index] = value
 
 
-def edit_column_inplace(data: MutableMapping, column_name: str, values: MutableSequence) -> None:
+def edit_column_inplace(
+    data: MutableDataMapping,
+    column_name: str,
+    values: MutableSequence
+) -> None:
     """Add values to data in named column.
        Overrides existing values if column exists,
        Created new column with values if column does not exist.
@@ -45,7 +59,7 @@ def edit_column_inplace(data: MutableMapping, column_name: str, values: MutableS
     data[column_name] = values
 
 
-def drop_row_inplace(data: MutableMapping, index: int) -> None:
+def drop_row_inplace(data: MutableDataMapping, index: int) -> None:
     """Remove index row from data.
     
        Example:
@@ -73,7 +87,7 @@ def drop_label_inplace(labels: Union[None, List], index) -> None:
         labels.pop(index)
 
 
-def drop_column_inplace(data: MutableMapping, column_name: str) -> None:
+def drop_column_inplace(data: MutableDataMapping, column_name: str) -> None:
     """Return a new dict with the named column removed from data.
     
        Example:
@@ -84,7 +98,7 @@ def drop_column_inplace(data: MutableMapping, column_name: str) -> None:
     del data[column_name]
 
 
-def edit_value_inplace(data: MutableMapping, column_name: str, index: int, value: Any) -> None:
+def edit_value_inplace(data: MutableDataMapping, column_name: str, index: int, value: Any) -> None:
     """Edit the value in named column as row index.
     
        Example:
@@ -95,7 +109,7 @@ def edit_value_inplace(data: MutableMapping, column_name: str, index: int, value
     data[column_name][index] = value
 
 
-def replace_column_names(data: MutableMapping, new_names: Sequence[str]) -> dict:
+def replace_column_names(data: MutableDataMapping, new_names: Sequence[str]) -> Dict[str, MutableSequence]:
     """Return a new dict same column data but new column names.
     
        Example:
@@ -109,7 +123,7 @@ def replace_column_names(data: MutableMapping, new_names: Sequence[str]) -> dict
     return {new_name: data[old_name] for new_name, old_name in zip(new_names, old_names)}
 
 
-def edit_row_items(data: MutableMapping, index: int, items: Mapping) -> MutableMapping:
+def edit_row_items(data: MutableDataMapping, index: int, items: Mapping) -> MutableDataMapping:
     """Return a new dict with row index changed to mapping items values.
     
        Examples:
@@ -126,7 +140,7 @@ def edit_row_items(data: MutableMapping, index: int, items: Mapping) -> MutableM
     return new_data
 
 
-def edit_row_values(data: MutableMapping, index: int, values: Sequence) -> MutableMapping:
+def edit_row_values(data: MutableDataMapping, index: int, values: Sequence) -> MutableDataMapping:
     """Return a new dict with row index changed to values.
     
        Example:
@@ -139,7 +153,7 @@ def edit_row_values(data: MutableMapping, index: int, values: Sequence) -> Mutab
     return new_data
 
 
-def edit_column(data: MutableMapping, column_name: str, values: MutableSequence) -> MutableMapping:
+def edit_column(data: MutableDataMapping, column_name: str, values: MutableSequence) -> MutableDataMapping:
     """Returns a new dict with values added to data in named column.
        Overrides existing values if column exists,
        Created new column with values if column does not exist.
@@ -154,7 +168,7 @@ def edit_column(data: MutableMapping, column_name: str, values: MutableSequence)
     return new_data
 
 
-def edit_value(data: MutableMapping, column_name: str, index: int, value: Any) -> MutableMapping:
+def edit_value(data: MutableDataMapping, column_name: str, index: int, value: Any) -> MutableDataMapping:
     """Return a new table with the value in named column changed at row index.
     
        Example:
@@ -167,7 +181,7 @@ def edit_value(data: MutableMapping, column_name: str, index: int, value: Any) -
     return new_data
 
 
-def drop_row(data: MutableMapping, index: int) -> MutableMapping:
+def drop_row(data: MutableDataMapping, index: int) -> MutableDataMapping:
     """Return a new dict with index row removed from data.
     
        Example:
@@ -198,7 +212,7 @@ def drop_label(labels: Union[None, List], index: int) -> Union[None, List]:
     return new_labels
 
 
-def drop_column(data: MutableMapping, column_name: str) -> MutableMapping:
+def drop_column(data: MutableDataMapping, column_name: str) -> MutableDataMapping:
     """Return a new dict with the named column removed from data.
     
        Example:

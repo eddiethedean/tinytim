@@ -2,8 +2,10 @@ from typing import Dict, Generator, Mapping, Sequence, Tuple
 
 import tinytim.data as data_features
 
+DataMapping = Mapping[str, Sequence]
 
-def column_dict(data: Mapping[str, Sequence], col: str) -> Dict[str, Sequence]:
+
+def column_dict(data:DataMapping, col: str) -> Dict[str, Sequence]:
     """Return a dict of {col_name, col_values} from data.
 
        Example:
@@ -14,7 +16,7 @@ def column_dict(data: Mapping[str, Sequence], col: str) -> Dict[str, Sequence]:
     return {col: data[col]}
 
 
-def itercolumns(data: Mapping) -> Generator[Tuple[str, tuple], None, None]:
+def itercolumns(data: DataMapping) -> Generator[Tuple[str, tuple], None, None]:
     """Return a generator of tuple column name, column values.
        
        Example:
