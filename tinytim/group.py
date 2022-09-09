@@ -1,7 +1,8 @@
 from typing import Any, Callable, Dict, List, Mapping, Sequence, Tuple, Union
+from statistics import mean, mode, stdev, pstdev
 
 from tinytim.filter import column_filter, filter_data
-from tinytim.utils import row_dicts_to_data, row_value_tuples, uniques
+from tinytim.utils import nuniques, row_dicts_to_data, row_value_tuples, uniques
 
 DataMapping = Mapping[str, Sequence]
 DataDict = Dict[str, list]
@@ -53,6 +54,34 @@ def count_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, count_data)
 
 
+def mean_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+    return aggregate_groups(groups, mean_data)
+
+
+def min_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+    return aggregate_groups(groups, min_data)
+
+
+def max_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+    return aggregate_groups(groups, max_data)
+
+
+def mode_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+    return aggregate_groups(groups, mode_data)
+
+
+def stdev_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+    return aggregate_groups(groups, stdev_data)
+
+
+def pstdev_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+    return aggregate_groups(groups, pstdev_data)
+
+
+def nunique_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+    return aggregate_groups(groups, nunique_data)
+
+
 def aggregate_data(data: Mapping, func: Callable) -> RowDict:
     out = {}
     for column_name in data.keys():
@@ -70,3 +99,31 @@ def sum_data(data: Mapping) -> RowNumDict:
 
 def count_data(data: Mapping) -> RowNumDict:
     return aggregate_data(data, len)
+
+
+def mean_data(data: Mapping) -> RowNumDict:
+    return aggregate_data(data, mean)
+
+
+def min_data(data: Mapping) -> RowNumDict:
+    return aggregate_data(data, min)
+
+
+def max_data(data: Mapping) -> RowNumDict:
+    return aggregate_data(data, max)
+
+
+def mode_data(data: Mapping) -> RowNumDict:
+    return aggregate_data(data, mode)
+
+
+def stdev_data(data: Mapping) -> RowNumDict:
+    return aggregate_data(data, stdev)
+
+
+def pstdev_data(data: Mapping) -> RowNumDict:
+    return aggregate_data(data, pstdev)
+
+
+def nunique_data(data: Mapping) -> RowNumDict:
+    return aggregate_data(data, nuniques)

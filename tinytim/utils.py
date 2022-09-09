@@ -20,6 +20,10 @@ def uniques(values: Iterable) -> List:
     return out
 
 
+def nuniques(values: Sequence) -> int:
+    return len(uniques(values))
+    
+
 def row_value_tuples(
     data: DataMapping,
     column_names: Sequence[str]
