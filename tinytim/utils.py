@@ -22,7 +22,7 @@ def uniques(values: Iterable) -> List:
 
 def nuniques(values: Sequence) -> int:
     return len(uniques(values))
-    
+
 
 def row_value_tuples(
     data: DataMapping,

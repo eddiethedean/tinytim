@@ -1,7 +1,5 @@
 from typing import Any, Dict, Mapping, Sequence, Tuple
 
-from dictanykey import DefaultDictAnyKey, DictAnyKey
-
 DataMapping = Mapping[str, Sequence]
 
 
@@ -118,10 +116,3 @@ def column_values(data: DataMapping, column_name: str) -> Sequence:
        column_values(data, 'y') -> [6, 7, 8]
     """
     return data[column_name]
-
-
-def value_counts(values) -> DictAnyKey:
-    d = DefaultDictAnyKey(int)
-    for value in values:
-        d[value] += 1
-    return DictAnyKey(d)

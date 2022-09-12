@@ -1,4 +1,5 @@
-from typing import Generator, Mapping, MutableMapping, Tuple
+from collections import defaultdict
+from typing import Dict, Generator, Mapping, MutableMapping, Sequence, Tuple
 
 import tinytim.data as data_features
 
@@ -38,7 +39,7 @@ def iterrows(data: Mapping) -> Generator[Tuple[int, dict], None, None]:
         yield i, row_dict(data, i)
 
 
-def itertuples(data: MutableMapping) -> Generator[tuple, None, None]:
+def itertuples(data: Mapping) -> Generator[tuple, None, None]:
     """Return a generator of tuple row values.
     
        Examples:
@@ -76,3 +77,28 @@ def values(data: MutableMapping) -> Tuple[tuple]:
        values(data) -> ((1, 6), (2, 7), (3, 8))
     """
     return tuple(itervalues(data))
+
+
+def row_value_counts(
+    data: Mapping[str, Sequence],
+    sort=True,
+    ascending=True
+) -> Dict[tuple, int]:
+    """Count up the unique rows.
+       Return dict[(row_values)] -> count
+
+       Example:
+       data = {'x': [1, 2, 3, 3], 'y': [6, 7, 3, 3]}
+       row_value_counts(data) -> {(3, 3): 2,
+                                  (1, 6): 1,
+                                  (2, 7): 1}
+    """
+    d = defaultdict(int)
+    for row in itertuples(data):
+        d[row] += 1
+    if sort:
+        return dict(sorted(d.items(),
+                           key=lambda item: item[1],
+                           reverse=ascending))
+    else:
+        return dict(d)

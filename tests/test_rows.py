@@ -1,6 +1,6 @@
 import unittest
 
-from tinytim.rows import row_dict, row_values, iterrows
+from tinytim.rows import row_dict, row_value_counts, row_values, iterrows
 from tinytim.rows import itertuples, itervalues, values
 
 
@@ -68,3 +68,11 @@ class TestValues(unittest.TestCase):
         results = values(DATA)
         self.assertTupleEqual(results, ((1, 6), (2, 7), (3, 8)))
         self.assertDictEqual(DATA, {'x': [1, 2, 3], 'y': [6, 7, 8]})
+
+
+class TestRowValueCounts(unittest.TestCase):
+    def test_basic(self):
+        data = {'x': [1, 2, 3, 3], 'y': [6, 7, 3, 3]}
+        result = row_value_counts(data)
+        expected = {(3, 3): 2, (1, 6): 1, (2, 7): 1}
+        self.assertDictEqual(expected, result)

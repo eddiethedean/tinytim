@@ -1,7 +1,7 @@
 from os import unlink
 import unittest
 
-from tinytim.columns import column_dict, itercolumns
+from tinytim.columns import column_dict, itercolumns, value_counts
 
 
 DATA = {'x': [1, 2, 3], 'y': [6, 7, 8]}
@@ -20,3 +20,10 @@ class TestItercolumns(unittest.TestCase):
         cols = list(itercolumns(DATA))
         self.assertTupleEqual(('x', (1, 2, 3)), cols[0])
         self.assertTupleEqual(('y', (6, 7, 8)), cols[1])
+
+
+class TestValueCounts(unittest.TestCase):
+    def test_basic(self):
+        values = [4, 1, 1, 4, 5, 1]
+        results = value_counts(values)
+        self.assertEqual({1: 3, 4: 2, 5: 1}, results)
