@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="tinytim",
-    version="1.2.0",
+    version="1.3.0",
     description="Pure Python data table functions.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -23,5 +23,5 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     python_requires='>=3.6',
-    install_requires=[]
+    install_requires=['dictanykey>=0.0.2']
 )
