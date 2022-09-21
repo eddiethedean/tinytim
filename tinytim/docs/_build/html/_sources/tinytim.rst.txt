@@ -12,14 +12,6 @@ tinytim.columns module
    :undoc-members:
    :show-inheritance:
 
-tinytim.conf module
--------------------
-
-.. automodule:: tinytim.conf
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 tinytim.copy module
 -------------------
 
