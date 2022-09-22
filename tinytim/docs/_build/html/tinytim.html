@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="tinytim" href="modules.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
 
     <meta name="generator" content="sphinx-5.0.2, furo 2022.09.15"/>
         <title>tinytim package - TinyTim documentation</title>
@@ -155,11 +155,8 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">tinytim</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">tinytim package</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code Documentation</a></li>
 </ul>
 
 </div>
@@ -207,16 +204,18 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> – data mapping of {column name: column values}</p></li>
-<li><p><strong>col</strong> – column name to pull out of data.</p></li>
+<li><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>col</strong> (<em>str</em>) – column name to pull out of data.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict{column_name: column_values}</p>
+<dd class="field-even"><p>{column_name: column_values}</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Sequence]</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">column_dict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
 <span class="go">{&#39;x&#39;: [1, 2, 3]}</span>
@@ -232,18 +231,20 @@
 <dd><p>Return a generator of tuple column name, column values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>generator that yields tuples(column_name, column_values)</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[Tuple[str, tuple], None, None]</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itercolumns</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="go">(&#39;x&#39;, (1, 2, 3)) </span>
+<span class="go">(&#39;x&#39;, (1, 2, 3))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="go">(&#39;y&#39;, (6, 7, 8))</span>
 </pre></div>
@@ -256,25 +257,27 @@
 <dd><p>Count up each value.
 Return a DictAnyKey[value] -&gt; count
 Allows for unhashable values.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> – values to be counted up</p></li>
-<li><p><strong>sort</strong> – default True, sort results by counts</p></li>
-<li><p><strong>ascending</strong> – default True, sort highest to lowest</p></li>
+<li><p><strong>sort</strong> (<em>default True</em><em>, </em><em>sort results by counts</em>) – </p></li>
+<li><p><strong>ascending</strong> (<em>default True</em><em>, </em><em>sort highest to lowest</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Return DictAnyKey{value<span class="colon">:</span></dt>
-<dd class="field-even"><p>value_count}</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>{value: value_count}</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DictAnyKey[Any, int]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">value_counts</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
 <span class="go">DictAnyKey((1, 3), (4, 2), (5, 1))</span>
 </pre></div>
 </div>
-</dd>
-</dl>
 </dd></dl>
 
 </section>
@@ -309,14 +312,16 @@ Allows for unhashable values.</p>
 <dd><p>Return the number of columns in data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>number of columns in data</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">column_count</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="go">2</span>
@@ -330,14 +335,16 @@ Allows for unhashable values.</p>
 <dd><p>Return data column names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple of data column names</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[str]</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">column_names</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="go">(&#39;x&#39;, &#39;y&#39;)</span>
@@ -351,14 +358,19 @@ Allows for unhashable values.</p>
 <dd><p>Return all the values from one column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – name of column</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>column values</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sequence</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">column_values</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span>
 <span class="go">[6, 7, 8]</span>
@@ -373,14 +385,19 @@ Allows for unhashable values.</p>
 Raises StopIteration if data has zero columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>name of first column</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>StopIteration</strong> – if data has zero columns</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">first_column_name</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="go">&#39;x&#39;</span>
@@ -395,16 +412,18 @@ Raises StopIteration if data has zero columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> – data mapping of {column name: column values}</p></li>
-<li><p><strong>n</strong> – default 5, number of rows to return from top of data</p></li>
+<li><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – number of rows to return from top of data</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict of column name: top n column values</p>
+<dd class="field-even"><p>{column name: top n column values}</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Sequence]</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">head</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="go">{&#39;x&#39;: [1, 2], &#39;y&#39;: [6, 7]}</span>
@@ -418,14 +437,16 @@ Raises StopIteration if data has zero columns.</p>
 <dd><p>Return tuple of data column indexes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple of row indexes</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int]</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="go">(0, 1, 2)</span>
@@ -439,14 +460,16 @@ Raises StopIteration if data has zero columns.</p>
 <dd><p>Return the number of rows in data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>number of rows in data</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">row_count</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="go">3</span>
@@ -460,14 +483,16 @@ Raises StopIteration if data has zero columns.</p>
 <dd><p>Return data row count, column count tuple.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple(row count, column count)</p>
+<dd class="field-even"><p>(row count, column count)</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int, int]</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="go">(3, 2)</span>
@@ -481,14 +506,16 @@ Raises StopIteration if data has zero columns.</p>
 <dd><p>Return data row count multiplied by column count.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>row count * column count</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">size</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="go">6</span>
@@ -502,20 +529,20 @@ Raises StopIteration if data has zero columns.</p>
 <dd><p>Return one value from column at row index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – data mapping of {column name: column values}</p>
-</dd>
-<dt class="field-even">Column_name<span class="colon">:</span></dt>
-<dd class="field-even"><p>name of column</p>
-</dd>
-<dt class="field-odd">Index<span class="colon">:</span></dt>
-<dd class="field-odd"><p>index of column value</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – name of column</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – index of column value</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>value of column at index</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">table_value</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="go">2</span>
@@ -530,16 +557,18 @@ Raises StopIteration if data has zero columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> – data mapping of {column name: column values}</p></li>
-<li><p><strong>n</strong> – default 5, number of rows to return from bottom of data</p></li>
+<li><p><strong>data</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – number of rows to return from bottom of data</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict of column name: bottom n column values</p>
+<dd class="field-even"><p>{column name: bottom n column values}</p>
 </dd>
-<dt class="field-odd">Example<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
 </dl>
+<p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tail</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="go">{&#39;x&#39;: [2, 3], &#39;y&#39;: [7, 8]}</span>
@@ -1219,17 +1248,7 @@ uniques(values) -&gt; [1, 2, 4, 5, 0, 6]</p>
         
         <div class="related-pages">
           
-          <a class="prev-page" href="modules.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">tinytim</div>
-                
-              </div>
-            </a>
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

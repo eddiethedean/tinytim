@@ -7,38 +7,57 @@ DataMapping = Mapping[str, Sequence]
 
 
 def column_dict(data: DataMapping, col: str) -> Dict[str, Sequence]:
-    """ Return a dict of {col_name, col_values} from data.
-
-        :param data: data mapping of {column name: column values}
-        :param col: column name to pull out of data.
-        :return: dict{column_name: column_values}
-
-        :Example:
-        >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-        >>> column_dict(data, 'x')
-        {'x': [1, 2, 3]}
-        >>> column_dict(data, 'y')
-        {'y': [6, 7, 8]}
     """
-    return {col: data[col]}
+    Return a dict of {col_name, col_values} from data.
+        
+    Parameters
+    ----------
+    data : Mapping[str, Sequence]
+        data mapping of {column name: column values}
+    col : str
+        column name to pull out of data.
+
+    Returns
+    -------
+    dict[str, Sequence]
+        {column_name: column_values}
+
+    Example
+    -------
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> column_dict(data, 'x')
+    {'x': [1, 2, 3]}
+    >>> column_dict(data, 'y')
+    {'y': [6, 7, 8]}
+    """
+    return {col: data_features.column_values(data, col)}
 
 
 def itercolumns(data: DataMapping) -> Generator[Tuple[str, tuple], None, None]:
-    """ Return a generator of tuple column name, column values.
+    """
+    Return a generator of tuple column name, column values.
 
-        :param data: data mapping of {column name: column values}
-        :return: generator that yields tuples(column_name, column_values)
+    Parameters
+    ----------
+    data : Mapping[str, Sequence]
+        data mapping of {column name: column values}
+    
+    Returns
+    -------
+    Generator[Tuple[str, tuple], None, None]
+        generator that yields tuples(column_name, column_values)
         
-        :Example:
-        >>> data = 'x': [1, 2, 3], 'y': [6, 7, 8]}
-        >>> cols = list(itercolumns(data))
-        >>> cols[0]
-        ('x', (1, 2, 3)) 
-        >>> cols[1]
-        ('y', (6, 7, 8))
+    Example
+    -------
+    >>> data = 'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> cols = list(itercolumns(data))
+    >>> cols[0]
+    ('x', (1, 2, 3)) 
+    >>> cols[1]
+    ('y', (6, 7, 8))
     """
     for col in data_features.column_names(data):
-        yield col, tuple(data[col])
+        yield col, tuple(data_features.column_values(data, col))
 
 
 def value_counts(
@@ -46,19 +65,29 @@ def value_counts(
    sort=True,
    ascending=True
 ) -> DictAnyKey:
-    """ Count up each value.
-        Return a DictAnyKey[value] -> count
-        Allows for unhashable values.
+    """
+    Count up each value.
+    Return a DictAnyKey[value] -> count
+    Allows for unhashable values.
 
-        :param values: values to be counted up
-        :param sort: default True, sort results by counts
-        :param ascending: default True, sort highest to lowest
-        :return DictAnyKey{value: value_count}
+    Parameters
+    ----------
+    values :
+        values to be counted up
+    sort : default True, sort results by counts
+    ascending: default True, sort highest to lowest
 
-        :Example:
-         >>> values = [4, 1, 1, 4, 5, 1]
-         >>> value_counts(values)
-         DictAnyKey((1, 3), (4, 2), (5, 1))
+
+    Returns
+    -------
+    DictAnyKey[Any, int]
+        {value: value_count}
+
+    Example
+    -------
+    >>> values = [4, 1, 1, 4, 5, 1]
+    >>> value_counts(values)
+    DictAnyKey((1, 3), (4, 2), (5, 1))
     """
     d = DefaultDictAnyKey(int)
     for value in values:

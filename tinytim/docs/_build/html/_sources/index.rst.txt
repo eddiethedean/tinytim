@@ -10,7 +10,7 @@ Welcome to TinyTim's documentation!
    :maxdepth: 3
    :caption: Contents:
 
-   modules
+   code
 
 Indices and tables
 ==================
