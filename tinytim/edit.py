@@ -495,13 +495,6 @@ def drop_column(
     data: MutableDataMapping,
     column_name: str
 ) -> MutableDataMapping:
-    """Return a new dict with the named column removed from data.
-    
-       Example:
-       data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-       drop_column(data, 'y') -> {'x': [1, 2, 3]}
-       data -> {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    """
     """
     Return a new dict with the named column removed from data.
 

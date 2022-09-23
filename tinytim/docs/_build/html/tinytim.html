@@ -286,22 +286,106 @@ Allows for unhashable values.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.copy.copy_list">
 <span class="sig-prename descclassname"><span class="pre">tinytim.copy.</span></span><span class="sig-name descname"><span class="pre">copy_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span></span></span><a class="headerlink" href="#tinytim.copy.copy_list" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Copy list and return the copy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>list</em>) – list of values</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of list</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values_copy</span> <span class="o">=</span> <span class="n">copy_list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values_copy</span>
+<span class="go">[1, 2, 3, 6, 7, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values_copy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values_copy</span>
+<span class="go">[11, 2, 3, 6, 7, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values</span>
+<span class="go">[1, 2, 3, 6, 7, 8]</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.copy.copy_table">
-<span class="sig-prename descclassname"><span class="pre">tinytim.copy.</span></span><span class="sig-name descname"><span class="pre">copy_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MutableMapping</span></span></span><a class="headerlink" href="#tinytim.copy.copy_table" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">tinytim.copy.</span></span><span class="sig-name descname"><span class="pre">copy_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tinytim.copy.copy_table" title="Permalink to this definition">#</a></dt>
+<dd><p>Copy data and return the copy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MutableMapping[str, MutableSequence]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">copy_table</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.copy.deepcopy_list">
 <span class="sig-prename descclassname"><span class="pre">tinytim.copy.</span></span><span class="sig-name descname"><span class="pre">deepcopy_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span></span></span><a class="headerlink" href="#tinytim.copy.deepcopy_list" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Deep copy list and return the copy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>list</em>) – list of values</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>deep copy of list</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values_copy</span> <span class="o">=</span> <span class="n">deepcopy_list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values_copy</span>
+<span class="go">[1, 2, 3, 6, 7, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values_copy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values_copy</span>
+<span class="go">[11, 2, 3, 6, 7, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values</span>
+<span class="go">[1, 2, 3, 6, 7, 8]</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.copy.deepcopy_table">
-<span class="sig-prename descclassname"><span class="pre">tinytim.copy.</span></span><span class="sig-name descname"><span class="pre">deepcopy_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#tinytim.copy.deepcopy_table" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">tinytim.copy.</span></span><span class="sig-name descname"><span class="pre">deepcopy_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#tinytim.copy.deepcopy_table" title="Permalink to this definition">#</a></dt>
+<dd><p>Deep copy data and return the copy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MutableMapping[str, MutableSequence]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">deepcopy_table</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </section>
 <section id="module-tinytim.data">
@@ -592,37 +676,90 @@ data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.drop_column_inplace">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">drop_column_inplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tinytim.edit.drop_column_inplace" title="Permalink to this definition">#</a></dt>
-<dd><p>Return a new dict with the named column removed from data.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-drop_column_inplace(data, ‘y’) -&gt; None
-data -&gt; {‘x’: [1, 2, 3]}</p>
+<dd><p>Remove named column from data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – name of column to remove from data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">drop_column_inplace</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.drop_label">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">drop_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tinytim.edit.drop_label" title="Permalink to this definition">#</a></dt>
 <dd><p>If labels exists, drop item at index.</p>
-<p>Examples:
-labels = [1, 2, 3, 4]
-drop_label(labels, 1) -&gt; [1, 3, 4]
-labels -&gt; [1, 2, 3, 4]</p>
-<p>labels = None
-drop_label(labels, 1) -&gt; None
-labels -&gt; None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<em>list</em><em>, </em><em>optional</em>) – list of values used as labels</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – index of value to remove from labels list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of labels with row dropped</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list | None</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">drop_label</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">[1, 3, 4]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span>
+<span class="go">[1, 3, 4, 5]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">drop_label</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span>
+<span class="go">None</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.drop_label_inplace">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">drop_label_inplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tinytim.edit.drop_label_inplace" title="Permalink to this definition">#</a></dt>
 <dd><p>If labels exists, drop item at index.</p>
-<p>Examples:
-labels = [1, 2, 3, 4, 5]
-drop_label_inplace(labels, 1) -&gt; None
-labels -&gt; [1, 3, 4, 5]</p>
-<p>labels = None
-drop_label_inplace(labels, 1) -&gt; None
-labels -&gt; None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<em>list</em><em>, </em><em>optional</em>) – list of values used as labels</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – index of value to remove from labels list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">drop_label_inplace</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span>
+<span class="go">[1, 3, 4, 5]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">drop_label_inplace</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span>
+<span class="go">None</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -639,10 +776,24 @@ data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
 <dt class="sig sig-object py" id="tinytim.edit.drop_row_inplace">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">drop_row_inplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tinytim.edit.drop_row_inplace" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove index row from data.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-drop_row_inplace(data, 1) -&gt; None
-data -&gt; {‘x’: [1, 3], ‘y’: [6, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – index of row to remove from data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">drop_row_inplace</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [1, 3], &#39;y&#39;: [6, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -651,10 +802,29 @@ data -&gt; {‘x’: [1, 3], ‘y’: [6, 8]}</p>
 <dd><p>Returns a new dict with values added to data in named column.
 Overrides existing values if column exists,
 Created new column with values if column does not exist.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-edit_column(data, ‘x’, [4, 5, 6]) -&gt; {‘x’: [4, 5, 6], ‘y’: [6, 7, 8]}
-data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – column name to edit in data</p></li>
+<li><p><strong>values</strong> (<em>Sequence</em>) – new values to replace in data column</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of data with new column values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MutableMapping[str, MutableSequence]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_column</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="go">{&#39;x&#39;: [4, 5, 6], &#39;y&#39;: [6, 7, 8]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go"> {&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -663,83 +833,224 @@ data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
 <dd><p>Add values to data in named column.
 Overrides existing values if column exists,
 Created new column with values if column does not exist.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-edit_column_inplace(data, ‘x’, [11, 22, 33]) -&gt; None
-data -&gt; {‘x’: [11, 22, 33], ‘y’: [6, 7, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – column name to edit in data</p></li>
+<li><p><strong>values</strong> (<em>Sequence</em>) – new values to replace in data column</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_column_inplace</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">33</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [11, 22, 33], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.edit_row_items">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">edit_row_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tinytim.edit.edit_row_items" title="Permalink to this definition">#</a></dt>
 <dd><p>Return a new dict with row index changed to mapping items values.</p>
-<p>Examples:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-edit_row_items(data, 2, {‘x’: 33, ‘y’: 88}) -&gt; {‘x’: [1, 2, 33], ‘y’: [6, 7, 88]}
-data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
-<p>data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-edit_row_items(data, 0, {‘x’: 55}) -&gt; {‘x’: [55, 2, 3], ‘y’: [6, 7, 8]}
-data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – index of row to edit</p></li>
+<li><p><strong>items</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – {column names: value} of new values to edit in data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of data with edited row values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MutableMapping[str, MutableSequence]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_row_items</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">33</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">})</span>
+<span class="go">{&#39;x&#39;: [1, 2, 33], &#39;y&#39;: [6, 7, 88]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_row_items</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">55</span><span class="p">})</span>
+<span class="go">{&#39;x&#39;: [55, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.edit_row_items_inplace">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">edit_row_items_inplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tinytim.edit.edit_row_items_inplace" title="Permalink to this definition">#</a></dt>
 <dd><p>Changes row index to mapping items values.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-edit_row_items_inplace(data, 0, {‘x’: 11, ‘y’: 66}) -&gt; None
-data -&gt; {‘x’: [11, 2, 3], ‘y’: [66, 7, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – index of row to edit</p></li>
+<li><p><strong>items</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – {column names: value} of new values to edit in data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_row_items_inplace</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mi">66</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [11, 2, 3], &#39;y&#39;: [66, 7, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.edit_row_values">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">edit_row_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tinytim.edit.edit_row_values" title="Permalink to this definition">#</a></dt>
 <dd><p>Return a new dict with row index changed to values.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-edit_row_values(data, 1, (22, 77)) -&gt; {‘x’: [1, 22, 3], ‘y’: [6, 77, 8]}
-data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – index of row to edit</p></li>
+<li><p><strong>values</strong> (<em>Sequence</em>) – new values to replace in data row</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of data with row at index changed to values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MutableMapping[str, MutableSequence]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_row_values</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">77</span><span class="p">))</span>
+<span class="go">{&#39;x&#39;: [1, 22, 3], &#39;y&#39;: [6, 77, 8]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.edit_row_values_inplace">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">edit_row_values_inplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tinytim.edit.edit_row_values_inplace" title="Permalink to this definition">#</a></dt>
 <dd><p>Changed row index to values.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-edit_row_values_inplace(data, 1, (22, 77)) -&gt; None
-data -&gt; {‘x’: [1, 22, 3], ‘y’: [6, 77, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – index of row to edit</p></li>
+<li><p><strong>values</strong> (<em>Sequence</em>) – new values to replace in data row</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_row_values_inplace</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">77</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [1, 22, 3], &#39;y&#39;: [6, 77, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.edit_value">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">edit_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tinytim.edit.edit_value" title="Permalink to this definition">#</a></dt>
 <dd><p>Return a new table with the value in named column changed at row index.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-edit_value(data, ‘y’, 2, 88) -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 88]}
-data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – name of column to remove from data</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – row index of column to edit</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – new value to change to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of data with new value changed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MutableMapping[str, MutableSequence]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_value</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">88</span><span class="p">)</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 88]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.edit_value_inplace">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">edit_value_inplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tinytim.edit.edit_value_inplace" title="Permalink to this definition">#</a></dt>
 <dd><p>Edit the value in named column as row index.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-edit_value_inplace(data, ‘x’, 0, 11) -&gt; None
-data -&gt; {‘x’: [11, 2, 3], ‘y’: [6, 7, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – name of column to remove from data</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – row index of column to edit</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – new value to change to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_value_inplace</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [11, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tinytim.edit.replace_column_names">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">replace_column_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tinytim.edit.replace_column_names" title="Permalink to this definition">#</a></dt>
 <dd><p>Return a new dict same column data but new column names.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-replace_column_names(data, (‘xx’, ‘yy’)) -&gt; {‘xx’: [1, 2, 3], ‘yy’: [6, 7, 8]}
-data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>new_names</strong> (<em>Sequence</em><em>[</em><em>str</em><em>]</em>) – new names of columns</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of data with new column names</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, MutableSequence]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replace_column_names</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s1">&#39;xx&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;yy&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
