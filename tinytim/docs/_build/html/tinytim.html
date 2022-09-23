@@ -667,10 +667,28 @@ Raises StopIteration if data has zero columns.</p>
 <dt class="sig sig-object py" id="tinytim.edit.drop_column">
 <span class="sig-prename descclassname"><span class="pre">tinytim.edit.</span></span><span class="sig-name descname"><span class="pre">drop_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MutableSequence</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tinytim.edit.drop_column" title="Permalink to this definition">#</a></dt>
 <dd><p>Return a new dict with the named column removed from data.</p>
-<p>Example:
-data = {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}
-drop_column(data, ‘y’) -&gt; {‘x’: [1, 2, 3]}
-data -&gt; {‘x’: [1, 2, 3], ‘y’: [6, 7, 8]}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>MutableSequence</em><em>]</em>) – data mapping of {column name: column values}</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – name of column to remove from data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>copy of data with column dropped</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MutableMapping[str, MutableSequence]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">drop_column</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">{&#39;x&#39;: [1, 2, 3], &#39;y&#39;: [6, 7, 8]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">

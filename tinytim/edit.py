@@ -417,13 +417,6 @@ def drop_row(
     data: MutableDataMapping,
     index: int
 ) -> MutableDataMapping:
-    """Return a new dict with index row removed from data.
-    
-       Example:
-       data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-       drop_row(data, 0) -> {'x': [2, 3], 'y': [7, 8]}
-       data -> {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    """
     """
     Return a new dict with index row removed from data.
 
