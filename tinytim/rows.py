@@ -224,3 +224,70 @@ def row_value_counts(
                            reverse=ascending))
     else:
         return dict(d)
+
+
+def records(d: Mapping[str, Sequence]) -> Generator[Mapping, None, None]:
+    """
+    Yield each record (row) in d.
+    
+    Parameters
+    ----------
+    d : Mapping[str, Sequence]
+        data mapping of {column name: column values}
+    
+    Example
+    -------
+    >>> d = {'x': [1, 2, 3, 4], 'y': [55, 66, 77, 88]}
+    >>> generator = records(d)
+    >>> next(generator)
+    {'x': 1, 'y': 55}
+    >>> next(generator)
+    {'x': 2, 'y': 66}
+    >>> next(generator)
+    {'x': 3, 'y': 77}
+    >>> next(generator)
+    {'x': 4, 'y': 88}
+    """
+    for _, record in iterrows(d):
+        yield record
+    
+
+def records_equal(d1: Mapping[str, Sequence], d2: Mapping[str, Sequence]) -> bool:
+    """
+    Compare d1 and d2 records (rows) to see if they are equal.
+    Order of records or columns does not matter.
+    
+    Parameters
+    ----------
+    d1 : Mapping[str, Sequence]
+        data mapping of {column name: column values}
+    d2 : Mapping[str, Sequence]
+        data mapping of {column name: column values}
+    
+    Examples
+    --------
+    >>> d1 = {'x': [1, 2, 3, 4], 'y': [55, 66, 77, 88]}
+    >>> d2 = {'x': [2, 1, 4, 3], 'y': [66, 55, 88, 77]}
+    >>> records_equal(d1, d2)
+    True
+    
+    >>> d1 = {'x': [1, 2, 3, 4], 'y': [55, 66, 77, 88]}
+    >>> d2 = {'x': [2, 1, 4, 3], 'y': [55, 77, 88, 66]}
+    >>> records_equal(d1, d2)
+    False
+    """
+    if set(data_features.column_names(d1)) != set(data_features.column_names(d2)):
+        return False
+    
+    if data_features.row_count(d1) != data_features.row_count(d2):
+        return False
+    
+    d2_rows = [row for row in records(d2)]
+    
+    for row in records(d1):
+        if row in d2_rows:
+            d2_rows.remove(row)
+        else:
+            return False
+    
+    return True
