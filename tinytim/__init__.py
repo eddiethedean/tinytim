@@ -10,3 +10,4 @@ import tinytim.group
 import tinytim.rows
 import tinytim.utils
 import tinytim.validate
+import tinytim.join
