@@ -265,6 +265,75 @@ def filter_values_by_index_matches(
     return [None if i is None else values[i] for i in indexes]
 
 
+def missing_col_error(col: str, table_name: str) -> ValueError:
+    return ValueError(f'column {col} is missing from {table_name} table')
+
+
+def sequence_of_str(value) -> bool:
+    if len(value) == 0:
+        return False
+    if isinstance(value, str):
+        return False
+    return all(isinstance(x, str) for x in value)
+
+
+def check_on_types(left_on, right_on) -> None:
+    error = ValueError('right_on and left_on must both be str or sequence of str.')
+    right_is_str_sequence = sequence_of_str(right_on)
+    left_is_str = isinstance(left_on, str)
+    left_is_str_sequence = sequence_of_str(left_on)
+    right_is_str = isinstance(right_on, str)
+    if not ((right_is_str and left_is_str) or (right_is_str_sequence and left_is_str_sequence)):
+        raise error
+    if left_is_str_sequence and right_is_str_sequence:
+        if len(left_on) != len(right_on):
+            raise ValueError('left_on sequence must be same len as right_on sequence')
+
+
+def check_for_missing_on(
+    table: Mapping[str, Sequence],
+    on_name: Union[str, Sequence[str]],
+    table_name: str
+) -> None:
+    if isinstance(on_name, str):
+        if on_name not in table:
+            raise missing_col_error(on_name, table_name)
+    else:
+        for col in on_name:
+            if col not in table:
+                missing_col_error(col, table_name)
+
+
+def tuple_keys(
+    table: DataMapping,
+    column_names: Sequence[str]
+) -> Tuple[Tuple]:
+    """
+    Return tuple row values for just column_names.
+    
+    Parameters
+    ----------
+    table : DataMapping
+        data mapping of {column name: column values}
+    column_names : Sequence[str]
+        column names to include in row values tuples
+        
+    Returns
+    -------
+    tuple[tuple]
+        row values tuples
+        
+    Example
+    -------
+    >>> table = {'id': [1, 2, 3, 4],
+                 'x': [3, 4, 2, 1],
+                 'y': [4, 3, 2, 1]}
+    >>> tuple_keys(table, ['x', 'y'])
+    ((3, 4), (4, 3), (2, 2), (1, 1))
+    """
+    return tuple(zip(*[table[col] for col in column_names]))
+
+
 def join(
     left: DataMapping,
     right: DataMapping,
@@ -320,12 +389,15 @@ def join(
      'y': [11, 33, 44, None, None, 22]}
     """
     right_on = left_on if right_on is None else right_on
-    if left_on not in left:
-        raise ValueError(f'column {left_on} is missing from left table')
-    if right_on not in right:
-        raise ValueError(f'column {right_on} is missing from right table')
-        
-    indexes = join_strategy(left[left_on], right[right_on])
+    check_on_types(left_on, right_on)
+    check_for_missing_on(left, left_on, 'left')
+    check_for_missing_on(right, right_on, 'right')
+    
+    if isinstance(left_on, str):
+        indexes = join_strategy(left[left_on], right[right_on])
+    else:
+        indexes = join_strategy(tuple_keys(left, left_on), tuple_keys(right, right_on))
+
     values = [x.value for x in indexes]
     left_indexes = [x.left_index for x in indexes]
     right_indexes = [x.right_index for x in indexes]
@@ -334,8 +406,15 @@ def join(
     for col in right:
         if col not in [left_on, right_on]:
             out[col] = filter_values_by_index_matches(right[col], right_indexes)
-    out[right_on] = values
-    out[left_on] = values
+            
+    if isinstance(right_on, str):
+        out[right_on] = values
+        out[left_on] = values
+    else:
+        for i, col in enumerate(right_on):
+            out[col] = [x[i] for x in values]
+        for i, col in enumerate(left_on):
+            out[col] = [x[i] for x in values]
     if select:
         return {col: out[col] for col in select}
     return out
