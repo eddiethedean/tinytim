@@ -41,7 +41,7 @@ def locate(
     return [i for i, x in enumerate(l) if x == value]
 
 
-def name_matches(matches: Iterable[Tuple[Any, int, int]]) -> Tuple[MatchIndexes]:
+def _name_matches(matches: Iterable[Tuple[Any, int, int]]) -> Tuple[MatchIndexes]:
     """
     Convert tuples into MatchIndexes namedtuples.
     
@@ -102,7 +102,7 @@ def inner_matching_indexes(
     for i, value in enumerate(left):
         right_i = locate(right, value)
         count = len(right_i)
-        out.extend(name_matches(zip(repeat(value, count), repeat(i, count), right_i)))
+        out.extend(_name_matches(zip(repeat(value, count), repeat(i, count), right_i)))
     return tuple(out)
 
 
@@ -142,7 +142,7 @@ def left_matching_indexes(
         right_i = locate(right, value)
         if right_i:
             count = len(right_i)
-            out.extend(name_matches(zip(repeat(value, count), repeat(i, count), right_i)))
+            out.extend(_name_matches(zip(repeat(value, count), repeat(i, count), right_i)))
         else:
             out.append(MatchIndexes(value, left_index=i))
     return tuple(out)
@@ -182,7 +182,7 @@ def right_matching_indexes(
         l1_i = locate(l1, value)
         if l1_i:
             count = len(l1_i)
-            out.extend(name_matches(zip(repeat(value, count), l1_i, repeat(i, count))))
+            out.extend(_name_matches(zip(repeat(value, count), l1_i, repeat(i, count))))
         else:
             out.append(MatchIndexes(value, right_index=i))
     return tuple(out)
@@ -225,7 +225,7 @@ def full_matching_indexes(
         right_i = locate(right, value)
         if right_i:
             count = len(right_i)
-            out.extend(name_matches(zip(repeat(value, count), repeat(i, count), right_i)))
+            out.extend(_name_matches(zip(repeat(value, count), repeat(i, count), right_i)))
         else:
             out.append(MatchIndexes(value, left_index=i))    
     found_rights = set(x.right_index for x in out)
@@ -265,11 +265,11 @@ def filter_values_by_index_matches(
     return [None if i is None else values[i] for i in indexes]
 
 
-def missing_col_error(col: str, table_name: str) -> ValueError:
+def _missing_col_error(col: str, table_name: str) -> ValueError:
     return ValueError(f'column {col} is missing from {table_name} table')
 
 
-def sequence_of_str(value) -> bool:
+def _sequence_of_str(value) -> bool:
     if len(value) == 0:
         return False
     if isinstance(value, str):
@@ -277,11 +277,11 @@ def sequence_of_str(value) -> bool:
     return all(isinstance(x, str) for x in value)
 
 
-def check_on_types(left_on, right_on) -> None:
+def _check_on_types(left_on, right_on) -> None:
     error = ValueError('right_on and left_on must both be str or sequence of str.')
-    right_is_str_sequence = sequence_of_str(right_on)
+    right_is_str_sequence = _sequence_of_str(right_on)
     left_is_str = isinstance(left_on, str)
-    left_is_str_sequence = sequence_of_str(left_on)
+    left_is_str_sequence = _sequence_of_str(left_on)
     right_is_str = isinstance(right_on, str)
     if not ((right_is_str and left_is_str) or (right_is_str_sequence and left_is_str_sequence)):
         raise error
@@ -290,18 +290,18 @@ def check_on_types(left_on, right_on) -> None:
             raise ValueError('left_on sequence must be same len as right_on sequence')
 
 
-def check_for_missing_on(
+def _check_for_missing_on(
     table: Mapping[str, Sequence],
     on_name: Union[str, Sequence[str]],
     table_name: str
 ) -> None:
     if isinstance(on_name, str):
         if on_name not in table:
-            raise missing_col_error(on_name, table_name)
+            raise _missing_col_error(on_name, table_name)
     else:
         for col in on_name:
             if col not in table:
-                missing_col_error(col, table_name)
+                _missing_col_error(col, table_name)
 
 
 def tuple_keys(
@@ -389,9 +389,9 @@ def join(
      'y': [11, 33, 44, None, None, 22]}
     """
     right_on = left_on if right_on is None else right_on
-    check_on_types(left_on, right_on)
-    check_for_missing_on(left, left_on, 'left')
-    check_for_missing_on(right, right_on, 'right')
+    _check_on_types(left_on, right_on)
+    _check_for_missing_on(left, left_on, 'left')
+    _check_for_missing_on(right, right_on, 'right')
     
     if isinstance(left_on, str):
         indexes = join_strategy(left[left_on], right[right_on])
