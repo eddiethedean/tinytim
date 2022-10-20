@@ -499,12 +499,12 @@ def full_join(
 
 
 def left_join(
-    left: dict,
-    right: dict,
+    left: DataMapping,
+    right: DataMapping,
     left_on: str,
     right_on: Optional[str] = None,
     select: Optional[Sequence[str]] = None
-) -> dict:
+) -> DataDict:
     """
     Left Join two data dict on a specified column name(s).
     If right_on is None, joins both on same column name (left_on).
@@ -538,12 +538,12 @@ def left_join(
 
 
 def right_join(
-    left: dict,
-    right: dict,
+    left: DataMapping,
+    right: DataMapping,
     left_on: str,
     right_on: Optional[str] = None,
     select: Optional[Sequence[str]] = None
-) -> dict:
+) -> DataDict:
     """
     Right Join two data dict on a specified column name(s).
     If right_on is None, joins both on same column name (left_on).
