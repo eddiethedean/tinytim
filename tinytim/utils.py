@@ -205,10 +205,7 @@ def has_mapping_attrs(obj: Any) -> bool:
     >>> has_mapping_attrs(obj)
     False
     """
-    mapping_attrs = ['__getitem__', '__iter__', '__len__',
-                     '__contains__', 'keys', 'items', 'values',
-                     'get', '__eq__', '__ne__']
-    return all(hasattr(obj, a) for a in mapping_attrs)
+    return issubclass(Mapping, obj)
 
 
 def row_values_generator(row: RowMapping) -> Generator[Any, None, None]:
