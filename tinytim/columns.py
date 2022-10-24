@@ -1,4 +1,7 @@
-from typing import Dict, Generator, Iterable, Mapping, Sequence, Tuple
+from itertools import repeat
+from numbers import Number
+from collections import abc
+from typing import Any, Callable, Dict, Generator, Iterable, Mapping, MutableSequence, Sequence, Sized, Tuple, Union
 
 import tinytim.data as data_features
 from dictanykey import DefaultDictAnyKey, DictAnyKey
@@ -98,3 +101,76 @@ def value_counts(
                                  reverse=ascending))
     else:
         return DictAnyKey(d)
+
+
+def operate_on_column(
+    column: Sequence,
+    values: Union[Sequence, str, Number],
+    func: Callable[[Any, Any], Any]
+) -> list:
+    """
+    Uses func operator on values in column.
+    If values is a sequence, operate on each column value with values.
+    values sequence must be same len as column.
+    If values is not a sequence, operate on each column value with the single value.
+
+    Parameters
+    ----------
+    column : MutableSequence
+        sequence of values in column
+    values : Sequence | str | Number
+        values to operate on column values
+    func : Callable[[Any, Any], Any]
+        operator function to use to use values on column values
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    >>> column = [1, 2, 3, 4]
+    >>> operate_on_columns(column, 1, lamda x, y : x + y)
+    [2, 3, 4, 5]
+
+    >>> column = [1, 2, 3, 4]
+    >>> operate_on_columns(column, [2, 3, 4, 5], lamda x, y : x + y)
+    [3, 5, 7, 9]
+    """
+    if isinstance(values, str) or not issubclass(type(values), Sequence):
+        return [func(x, y) for x, y in zip(column, repeat(values, len(column)))]
+    
+    if isinstance(values, Sequence):
+        if len(values) != len(column):
+            raise ValueError('values length must match data rows count.')
+        return [func(x, y) for x, y in zip(column, values)]
+    else:
+        raise TypeError('values must either be a sequence or number to operate on column')
+
+
+def add_to_column(column: Sequence, values: Union[Sequence, str, Number]) -> list:
+    return operate_on_column(column, values, lambda x, y : x + y)
+
+
+def subtract_from_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    return operate_on_column(column, values, lambda x, y : x - y)
+
+
+def multiply_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    return operate_on_column(column, values, lambda x, y : x * y)
+
+
+def divide_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    return operate_on_column(column, values, lambda x, y : x / y)
+
+
+def mod_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    return operate_on_column(column, values, lambda x, y : x % y)
+
+
+def exponent_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    return operate_on_column(column, values, lambda x, y : x ** y)
+
+
+def floor_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    return operate_on_column(column, values, lambda x, y : x // y)

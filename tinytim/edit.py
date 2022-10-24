@@ -1,10 +1,10 @@
-from decimal import DivisionByZero
 from itertools import repeat
 from numbers import Number
 from typing import Any, Dict, List, Mapping, MutableMapping, MutableSequence, Sequence, Union, Callable
 
 import tinytim.data as data_features
 import tinytim.copy as copy
+import tinytim.columns as columns
 
 MutableDataMapping = MutableMapping[str, MutableSequence]
 
@@ -140,12 +140,9 @@ def operator_column_inplace(
     -------
     None
     """
-    if isinstance(values, str) or not issubclass(type(values), Sequence):
-        data[column_name] = [func(x, y) for x, y in zip(data[column_name], repeat(values, len(data[column_name])))]
-        return
-    if len(values) != data_features.row_count(data):
-        raise ValueError('values length must match data rows count.')
-    data[column_name] = [func(x, y) for x, y in zip(data[column_name], values)]
+    new_values = columns.operate_on_column(data[column_name], values, func)
+    for i, value in enumerate(new_values):
+        data[column_name][i] = value
 
 
 def add_to_column_inplace(
