@@ -105,7 +105,7 @@ def value_counts(
 
 def operate_on_column(
     column: Sequence,
-    values: Union[Sequence, str, Number],
+    values: Union[Iterable, str, Number],
     func: Callable[[Any, Any], Any]
 ) -> list:
     """
@@ -137,10 +137,11 @@ def operate_on_column(
     >>> operate_on_columns(column, [2, 3, 4, 5], lamda x, y : x + y)
     [3, 5, 7, 9]
     """
-    if isinstance(values, str) or not issubclass(type(values), Sequence):
+    iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
+    if isinstance(values, str) or not iterable_and_sized:
         return [func(x, y) for x, y in zip(column, repeat(values, len(column)))]
     
-    if isinstance(values, Sequence):
+    if iterable_and_sized and not isinstance(values, Number):
         if len(values) != len(column):
             raise ValueError('values length must match data rows count.')
         return [func(x, y) for x, y in zip(column, values)]
