@@ -142,7 +142,7 @@ def operate_on_column(
         return [func(x, y) for x, y in zip(column, repeat(values, len(column)))]
     
     if iterable_and_sized and not isinstance(values, Number):
-        if len(values) != len(column):
+        if len(values) != len(column):  # type: ignore
             raise ValueError('values length must match data rows count.')
         return [func(x, y) for x, y in zip(column, values)]
     else:
