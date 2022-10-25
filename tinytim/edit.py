@@ -108,11 +108,17 @@ def edit_column_inplace(
     """
     iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
     if isinstance(values, str) or not iterable_and_sized:
-        set_values_to_one(data[column_name], values)
+        if column_name in data:
+            set_values_to_one(data[column_name], values)
+        else:
+            data[column_name] = list(repeat(values, data_features.row_count(data)))
         return
     if len(values) != data_features.row_count(data):
         raise ValueError('values length must match data rows count.')
-    set_values_to_many(data[column_name], values)
+    if column_name in data:
+        set_values_to_many(data[column_name], values)
+    else:
+        data[column_name] = list(values)
 
 
 def operator_column_inplace(
