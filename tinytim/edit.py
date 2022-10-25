@@ -1,10 +1,11 @@
 from itertools import repeat
 from numbers import Number
-from typing import Any, Dict, List, Mapping, MutableMapping, MutableSequence, Sequence, Union, Callable
+from typing import Any, Dict, Iterable, List, Mapping, MutableMapping, MutableSequence, Sequence, Sized, Union, Callable
 
 import tinytim.data as data_features
 import tinytim.copy as copy
 import tinytim.columns as columns
+from tinytim.utils import set_values_to_many, set_values_to_one
 
 MutableDataMapping = MutableMapping[str, MutableSequence]
 
@@ -105,12 +106,13 @@ def edit_column_inplace(
     >>> data
     {'x': [11, 22, 33], 'y': [6, 7, 8]}
     """
-    if isinstance(values, str) or not issubclass(type(values), Sequence):
-        data[column_name] = list(repeat(values, len(data[column_name])))
+    iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
+    if isinstance(values, str) or not iterable_and_sized:
+        set_values_to_one(data[column_name], values)
         return
     if len(values) != data_features.row_count(data):
         raise ValueError('values length must match data rows count.')
-    data[column_name] = values
+    set_values_to_many(data[column_name], values)
 
 
 def operator_column_inplace(
@@ -141,8 +143,7 @@ def operator_column_inplace(
     None
     """
     new_values = columns.operate_on_column(data[column_name], values, func)
-    for i, value in enumerate(new_values):
-        data[column_name][i] = value
+    set_values_to_many(data[column_name], new_values)
 
 
 def add_to_column_inplace(
