@@ -23,5 +23,5 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     python_requires='>=3.6',
-    install_requires=['dictanykey>=0.0.2']
+    install_requires=['dictanykey>=0.0.2', 'hasattrs>=0.0.2']
 )

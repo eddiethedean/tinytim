@@ -180,34 +180,6 @@ def all_bool(values: Collection) -> bool:
     return all(isinstance(item, bool) for item in values)
 
 
-def has_mapping_attrs(obj: Any) -> bool:
-    """
-    Check if object has all Mapping attrs.
-
-    Parameters
-    ----------
-    obj : Any
-        any object to check for mapping attrs
-
-    Returns
-    -------
-    bool
-        True, if obj has all mapping attrs
-        False, if obj does not have all mapping attrs
-
-    Examples
-    --------
-    >>> obj = dict()
-    >>> has_mapping_attrs(obj)
-    True
-    
-    >>> obj = list()
-    >>> has_mapping_attrs(obj)
-    False
-    """
-    return issubclass(Mapping, obj)
-
-
 def row_values_generator(row: RowMapping) -> Generator[Any, None, None]:
     """
     Return a generator that yields values from a row dict.

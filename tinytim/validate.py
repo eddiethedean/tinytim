@@ -3,6 +3,8 @@ from typing import MutableMapping
 import tinytim.data as data_features
 import tinytim.utils as utils
 
+from hasattrs import has_mapping_attrs
+
 
 def data_columns_same_len(data: MutableMapping) -> bool:
     """Check if data columns are all the same len."""
@@ -14,5 +16,5 @@ def data_columns_same_len(data: MutableMapping) -> bool:
 
 def valid_table_mapping(data: MutableMapping) -> bool:
     """Check if data is a true TableMapping."""
-    if not utils.has_mapping_attrs(data): return False
+    if not has_mapping_attrs(data): return False
     return data_columns_same_len(data)
