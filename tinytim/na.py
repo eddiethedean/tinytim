@@ -1,5 +1,5 @@
 from copy import copy, deepcopy
-from typing import Any, Mapping, MutableMapping, MutableSequence, Optional, Union
+from typing import Any, Mapping, MutableMapping, MutableSequence, Optional, Sequence, Union
 
 import tinytim.data as data_features
 from hasattrs import has_mapping_attrs
@@ -7,17 +7,20 @@ from tinytim.edit import edit_row_items_inplace
 
 from tinytim.rows import iterrows, row_dict
 
+MutableDataMapping = MutableMapping[str, MutableSequence]
+MutableRowMapping = MutableMapping[str, Any]
+
 
 def fillna(
-    data: Mapping,
+    data: MutableDataMapping,
     value: Optional[Any] = None,
     method: Optional[str] = None,
-    axis: Optional[int] = None,
+    axis: Optional[int] = 1,
     inplace: bool = False,
     limit: Optional[int] = None,
     downcast: Optional[dict] = None,
     na_value: Optional[Any] = None
-) -> Union[Mapping, None]:
+) -> Union[MutableDataMapping, None]:
     """
     Fill missing values using the specified method.
 
@@ -39,17 +42,192 @@ def fillna(
     Mapping or None
         Object with missing values filled or None if inplace=True
     """
+    if method is None:
+        if inplace:
+            fill_with_value_inplace(data, value, axis, limit, downcast, na_value)
+        else:
+            return fill_with_value(data, value, axis, limit, downcast, na_value)
+    elif method in ['backfill', 'bfill']:
+        if value is not None:
+            raise ValueError("Cannot specify both 'value' and 'method'.")
+        if inplace:
+            backfill_inplace(data, axis, limit, downcast, na_value)
+        else:
+            return backfill(data, axis, limit, downcast, na_value)
+    elif method in ['pad', 'ffill']:
+        if value is not None:
+            raise ValueError("Cannot specify both 'value' and 'method'.")
+        if inplace:
+            forwardfill_inplace(data, axis, limit, downcast, na_value)
+        else:
+            return forwardfill(data, axis, limit, downcast, na_value)
+
+# ------------------------------------------------------------------------------------------ #
+# ----------------------------Backfill Functions-------------------------------------------- #
+# ------------------------------------------------------------------------------------------ #
+
+def backfill_inplace(data: MutableDataMapping, axis, limit, downcast, na_value) -> None:
+    if axis in [1, 'column']:
+        backfill_columns_inplace(data, limit, downcast, na_value)
+    elif axis in [0, 'row']:
+        backfill_rows_inplace(data, limit, downcast, na_value)
+
+
+def backfill(data: MutableDataMapping, axis, limit, downcast, na_value) -> MutableDataMapping:
+    data = deepcopy(data)
+    backfill_inplace(data, axis, limit, downcast, na_value)
+    return data
+
+
+def backfill_columns_inplace(data: MutableDataMapping, limit, downcast, na_value) -> None:
+    for col in data:
+        backfill_column_inplace(data[col], limit, downcast, na_value)
+
+
+def backfill_columns(data: MutableDataMapping, limit, downcast, na_value) -> MutableDataMapping:
+    data = deepcopy(data)
+    backfill_columns_inplace(data, limit, downcast, na_value)
+    return data
+
+
+def back(values: Sequence, index: int, na_value=None) -> Any:
+    """Return the next value after index."""
+    if index >= len(values) - 1:
+        return na_value
+    return values[index + 1]
+
+
+def backfill_column_inplace(column: MutableSequence, limit, downcast, na_value) -> None:
+    fill_count = 0
+    for i, item in reversed(list(enumerate(column))):
+        if limit is not None:
+            if fill_count >= limit:
+                return
+        if item == na_value:
+            b = back(column, i, na_value)
+            if b == na_value:
+                continue
+            column[i] = b
+            fill_count += 1
+
+
+def backfill_column(column: MutableSequence, limit, downcast, na_value) -> MutableSequence:
+    column = copy(column)
+    backfill_column_inplace(column, limit, downcast, na_value)
+    return column
+
+
+def backfill_rows_inplace(data: MutableDataMapping, limit, downcast, na_value) -> None:
+    for i, row in iterrows(data):
+        new_row = backfill_row(row, limit, downcast, na_value)
+        edit_row_items_inplace(data, i, new_row)
+
+
+def backfill_rows(data: MutableDataMapping, limit, downcast, na_value) -> MutableDataMapping:
+    data = deepcopy(data)
+    backfill_rows_inplace(data, limit, downcast, na_value)
+    return data
+
+
+def backfill_row_inplace(row: MutableRowMapping, limit, downcast, na_value) -> None:
     ...
 
 
+def backfill_row(row: MutableRowMapping, limit, downcast, na_value) -> MutableRowMapping:
+    row = deepcopy(row)
+    backfill_row_inplace(row, limit, downcast, na_value)
+    return row
+
+# ------------------------------------------------------------------------------------------ #
+# ----------------------------Forwardfill Functions----------------------------------------- #
+# ------------------------------------------------------------------------------------------ #
+
+def forwardfill_inplace(data: MutableDataMapping, axis, limit, downcast, na_value) -> None:
+    if axis in [1, 'column']:
+        forwardfill_columns_inplace(data, limit, downcast, na_value)
+    elif axis in [0, 'row']:
+        forwardfill_rows_inplace(data, limit, downcast, na_value)
+
+
+def forwardfill(data: MutableDataMapping, axis, limit, downcast, na_value) -> MutableDataMapping:
+    data = deepcopy(data)
+    forwardfill_inplace(data, axis, limit, downcast, na_value)
+    return data
+
+
+def forwardfill_columns_inplace(data: MutableDataMapping, limit, downcast, na_value) -> None:
+    for col in data:
+        forwardfill_column_inplace(data[col], limit, downcast, na_value)
+
+
+def forwardfill_columns(data: MutableDataMapping, limit, downcast, na_value) -> MutableDataMapping:
+    data = deepcopy(data)
+    forwardfill_columns_inplace(data, limit, downcast, na_value)
+    return data
+
+
+def forward(values: Sequence, index: int, na_value=None) -> Any:
+    """Return the previoud value before index."""
+    if index < 1:
+        return na_value
+    return values[index - 1]
+
+
+def forwardfill_column_inplace(column: MutableSequence, limit, downcast, na_value) -> None:
+    fill_count = 0
+    for i, item in enumerate(column):
+        if limit is not None:
+            if fill_count >= limit:
+                return
+        if item == na_value:
+            f = forward(column, i, na_value)
+            if f == na_value:
+                continue
+            column[i] = f
+            fill_count += 1
+
+
+def forwardfill_column(column: MutableSequence, limit, downcast, na_value) -> MutableSequence:
+    column = copy(column)
+    forwardfill_column_inplace(column, limit, downcast, na_value)
+    return column
+
+
+def forwardfill_rows_inplace(data: MutableDataMapping, limit, downcast, na_value) -> None:
+    for i, row in iterrows(data):
+        new_row = forwardfill_row(row, limit, downcast, na_value)
+        edit_row_items_inplace(data, i, new_row)
+
+
+def forwardfill_rows(data: MutableDataMapping, limit, downcast, na_value) -> MutableDataMapping:
+    data = deepcopy(data)
+    forwardfill_rows_inplace(data, limit, downcast, na_value)
+    return data
+
+
+def forwardfill_row_inplace(row: MutableRowMapping, limit, downcast, na_value) -> None:
+    ...
+
+
+def forwardfill_row(row: MutableRowMapping, limit, downcast, na_value) -> MutableRowMapping:
+    row = deepcopy(row)
+    forwardfill_row_inplace(row, limit, downcast, na_value)
+    return row
+
+
+
+# ------------------------------------------------------------------------------------------ #
+# ----------------------------Fill With Value Functions------------------------------------- #
+# ------------------------------------------------------------------------------------------ #
+
 def fill_with_value(
-    data: MutableMapping,
+    data: MutableDataMapping,
     value: Any,
     axis: Optional[Union[int, str]] = 1,
     limit: Optional[int] = None,
     downcast: Optional[dict] = None,
     na_value: Optional[Any] = None
-) -> MutableMapping:
+) -> MutableDataMapping:
     """
     Fill data columns with given value.
 
@@ -68,7 +246,7 @@ def fill_with_value(
 
 
 def fill_with_value_inplace(
-    data: MutableMapping,
+    data: MutableDataMapping,
     value: Any,
     axis: Optional[Union[int, str]] = 1,
     limit: Optional[int] = None,
@@ -94,12 +272,12 @@ def fill_with_value_inplace(
 
 
 def fill_columns_with_value(
-    data: MutableMapping,
+    data: MutableDataMapping,
     value: Any,
     limit: Optional[int] = None,
     downcast: Optional[dict] = None,
     na_value: Optional[Any] = None
-) -> MutableMapping:
+) -> MutableDataMapping:
     data = deepcopy(data)
     fill_columns_with_value_inplace(data, value, limit, downcast, na_value)
     return data
@@ -119,7 +297,7 @@ def _get_fill_value(value, column):
 
 
 def fill_columns_with_value_inplace(
-    data: MutableMapping,
+    data: MutableDataMapping,
     value: Any,
     limit: Optional[int] = None,
     downcast: Optional[dict] = None,
@@ -135,19 +313,19 @@ def fill_columns_with_value_inplace(
 
 
 def fill_rows_with_value(
-    data: MutableMapping,
+    data: MutableDataMapping,
     value: Any,
     limit: Optional[int] = None,
     downcast: Optional[dict] = None,
     na_value: Optional[Any] = None
-) -> MutableMapping:
+) -> MutableDataMapping:
     data = deepcopy(data)
     fill_rows_with_value_inplace(data, value, limit, downcast, na_value)
     return data
 
 
 def fill_rows_with_value_inplace(
-    data: MutableMapping,
+    data: MutableDataMapping,
     value: Any,
     limit: Optional[int] = None,
     downcast: Optional[dict] = None,
@@ -174,9 +352,6 @@ def fill_column_with_value(
         column of values
     value : Any
         value to use to fill missing values
-    inplace : bool, default False
-        return MutableSequence if False,
-        return None if True and change column inplace
     limit : int, default None
         max number of values to fill, fill all if None
     na_value : Any, default None
@@ -184,7 +359,7 @@ def fill_column_with_value(
     
     Returns
     -------
-    MutableSequence | None
+    MutableSequence
 
     Examples
     --------
@@ -240,19 +415,18 @@ def fill_column_with_value_inplace(
             if fill_count >= limit:
                 return
         if item == na_value:
-
             column[i] = value
             fill_count += 1
             
 
 
 def fill_row_with_value(
-    row: MutableMapping[str, Any],
+    row: MutableRowMapping,
     value: Optional[Any] = None,
     limit: Optional[int] = None,
     downcast: Optional[dict] = None,
     na_value: Optional[Any] = None
-) -> MutableMapping[str, Any]:
+) -> MutableRowMapping:
     """
     Fill missing values in row with given value.
 
@@ -288,7 +462,7 @@ def fill_row_with_value(
 
 
 def fill_row_with_value_inplace(
-    row: MutableMapping[str, Any],
+    row: MutableRowMapping,
     value: Any,
     limit: Optional[int] = None,
     downcast: Optional[dict] = None,
@@ -336,3 +510,4 @@ def fill_row_with_value_inplace(
             except Continue:
                 continue
             row[key] = fill_value
+            fill_count += 1
