@@ -46,11 +46,10 @@ def fill_with_value(
     data: MutableMapping,
     value: Any,
     axis: Optional[Union[int, str]] = 1,
-    inplace: bool = False,
     limit: Optional[int] = None,
     downcast: Optional[dict] = None,
     na_value: Optional[Any] = None
-) -> Union[Mapping, None]:
+) -> MutableMapping:
     """
     Fill data columns with given value.
 
@@ -63,24 +62,9 @@ def fill_with_value(
         If value is Mapping: {column_name: value},
         fill missing values in each column with each value.
     """
-    if not inplace:
-        data = deepcopy(data)
-
-    if axis in [1, 'column']:
-        columns = data_features.column_names(data)
-        for col in columns:
-            if has_mapping_attrs(value):
-                fill_value = value[col]
-            else:
-                fill_value = value
-            fill_column_with_value_inplace(data[col], fill_value)
-    elif axis in [0, 'row']:
-        for i, row in iterrows(data):
-            new_row = fill_row_with_value(row, value)
-            edit_row_items_inplace(data, i, new_row)
-
-    if not inplace:
-        return data
+    data = deepcopy(data)
+    fill_with_value_inplace(data, value, axis, limit, downcast, na_value)
+    return data
 
 
 def fill_with_value_inplace(
@@ -104,19 +88,74 @@ def fill_with_value_inplace(
         fill missing values in each column with each value.
     """
     if axis in [1, 'column']:
-        columns = data_features.column_names(data)
-        for col in columns:
-            if has_mapping_attrs(value):
-                if col not in value:
-                    continue
-                fill_value = value[col]
-            else:
-                fill_value = value
-            fill_column_with_value_inplace(data[col], fill_value)
+        fill_columns_with_value_inplace(data, value, limit, downcast, na_value)
     elif axis in [0, 'row']:
-        for i, row in iterrows(data):
-            new_row = fill_row_with_value(row, value)
-            edit_row_items_inplace(data, i, new_row)
+        fill_rows_with_value_inplace(data, value, limit, downcast, na_value)
+
+
+def fill_columns_with_value(
+    data: MutableMapping,
+    value: Any,
+    limit: Optional[int] = None,
+    downcast: Optional[dict] = None,
+    na_value: Optional[Any] = None
+) -> MutableMapping:
+    data = deepcopy(data)
+    fill_columns_with_value_inplace(data, value, limit, downcast, na_value)
+    return data
+
+
+class Continue(Exception):
+    pass
+
+
+def _get_fill_value(value, column):
+    if has_mapping_attrs(value):
+        if column not in value:
+            raise Continue()
+        return value[column]
+    else:
+        return value
+
+
+def fill_columns_with_value_inplace(
+    data: MutableMapping,
+    value: Any,
+    limit: Optional[int] = None,
+    downcast: Optional[dict] = None,
+    na_value: Optional[Any] = None
+) -> None:
+    columns = data_features.column_names(data)
+    for col in columns:
+        try:
+            fill_value = _get_fill_value(value, col)
+        except Continue:
+            continue
+        fill_column_with_value_inplace(data[col], fill_value, limit, downcast, na_value)
+
+
+def fill_rows_with_value(
+    data: MutableMapping,
+    value: Any,
+    limit: Optional[int] = None,
+    downcast: Optional[dict] = None,
+    na_value: Optional[Any] = None
+) -> MutableMapping:
+    data = deepcopy(data)
+    fill_rows_with_value_inplace(data, value, limit, downcast, na_value)
+    return data
+
+
+def fill_rows_with_value_inplace(
+    data: MutableMapping,
+    value: Any,
+    limit: Optional[int] = None,
+    downcast: Optional[dict] = None,
+    na_value: Optional[Any] = None
+) -> None:
+    for i, row in iterrows(data):
+        new_row = fill_row_with_value(row, value, limit, downcast, na_value)
+        edit_row_items_inplace(data, i, new_row)
 
 
 def fill_column_with_value(
@@ -196,11 +235,12 @@ def fill_column_with_value_inplace(
     [1, 0, 3, 0, 5]
     """
     fill_count = 0
-    for i, value in enumerate(column):
+    for i, item in enumerate(column):
         if limit is not None:
             if fill_count >= limit:
                 return
-        if value == na_value:
+        if item == na_value:
+
             column[i] = value
             fill_count += 1
             
@@ -237,16 +277,13 @@ def fill_row_with_value(
     Examples
     --------
     >>> row = {'a': 1, 'b': None, 'c': 3, 'd': None, 'e': 5}
-    >>> fill_row_with_value(col, 0)
+    >>> fill_row_with_value(row, 0)
     {'a': 1, 'b': 0, 'c': 3, 'd': 0, 'e': 5}
-    >>> col
-    row = {'a': 1, 'b': None, 'c': 3, 'd': None, 'e': 5}
-
-    >>> row = {'a': 1, 'b': None, 'c': 3, 'd': None, 'e': 5}
-    >>> fill_row_with_value(col, 0, inplace=True)
-    >>> col
-    {'a': 1, 'b': 0, 'c': 3, 'd': 0, 'e': 5}
+    >>> row
+    {'a': 1, 'b': None, 'c': 3, 'd': None, 'e': 5}
     """
+    row = deepcopy(row)
+    fill_row_with_value_inplace(row, value, limit, downcast, na_value)
     return row
 
 
@@ -279,13 +316,13 @@ def fill_row_with_value_inplace(
     --------
     >>> row = {'a': 1, 'b': None, 'c': 3, 'd': None, 'e': 5}
     >>> fill_row_with_value_inplace(col, 0)
-    >>> col
+    >>> row
     {'a': 1, 'b': 0, 'c': 3, 'd': 0, 'e': 5}
 
     >>> row = {'a': 1, 'b': None, 'c': 3, 'd': None, 'e': 5}
     >>> values = {'a': 11, 'b': 22, 'c': 33, 'd': 44, 'e': 55}
     >>> fill_row_with_value_inplace(col, values)
-    >>> col
+    >>> row
     {'a': 1, 'b': 22, 'c': 3, 'd': 44, 'e': 5}
     """
     fill_count = 0
@@ -294,10 +331,8 @@ def fill_row_with_value_inplace(
             if fill_count >= limit:
                 return
         if item == na_value:
-            if has_mapping_attrs(value):
-                if key not in value:
-                    continue
-                fill_value = value[key]
-            else:
-                fill_value = value
+            try:
+                fill_value = _get_fill_value(value, key)
+            except Continue:
+                continue
             row[key] = fill_value
