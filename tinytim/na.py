@@ -77,6 +77,94 @@ isna = isnull
 notna = notnull
 
 
+def dropna(data: MutableDataMapping, axis=0, how='any', thresh=None, subset=None, inplace=False, na_value=None) -> Union[MutableDataMapping, None]:
+    """
+    Remove missing values.
+
+    Parameters
+    ----------
+    data : MutableMapping[str, MutableSequence]
+        data mapping of {column name: column values}
+
+    Returns
+    -------
+    MutableDataMapping | None
+    """
+    if how == 'any':
+        if inplace:
+            dropna_any_inplace(data, axis, thresh, subset, na_value)
+        else:
+            return dropna_any(data, axis, thresh, subset, na_value)
+    elif how == 'all':
+        if inplace:
+            dropna_all_inplace(data, axis, thresh, subset, na_value)
+        else:
+            return dropna_all(data, axis, thresh, subset, na_value)
+
+
+# ------------------------------------------------------------------------------------------ #
+# ----------------------------Dropna Functions---------------------------------------------- #
+# ------------------------------------------------------------------------------------------ #
+
+def dropna_any_inplace(data, axis, thresh, subset, na_value=None) -> None:
+    ...
+
+
+def dropna_any(data: MutableDataMapping, axis, thresh, subset, na_value=None) -> MutableDataMapping:
+    data = deepcopy(data)
+    dropna_any_inplace(data, axis, thresh, subset, na_value)
+    return data
+
+
+def drop_columns_inplace(data, thresh, na_value=None) -> None:
+    ...
+
+
+def drop_columns(data, thresh, na_value=None) -> MutableDataMapping:
+    data = deepcopy(data)
+    drop_columns_inplace(data, thresh, na_value)
+    return data
+
+
+def drop_rows_inplace(data, thresh, na_value=None) -> None:
+    ...
+
+
+def drop_rows(data, thresh, na_value=None) -> MutableDataMapping:
+    data = deepcopy(data)
+
+    return data
+
+
+def column_any_na(column: Sequence, na_value=None) -> bool:
+    ...
+
+
+def row_any_na(row: MutableRowMapping, na_value=None) -> bool:
+    ...
+
+
+def column_all_na(column: Sequence, na_value=None) -> bool:
+    ...
+
+
+def row_all_na(row: MutableRowMapping, na_value=None) -> bool:
+    ...
+
+
+def dropna_all_inplace(data, axis, thresh, subset, na_value=None) -> None:
+    ...
+
+
+def dropna_all(data: MutableDataMapping, axis, thresh, subset, na_value=None) -> MutableDataMapping:
+    data = deepcopy(data)
+    dropna_all_inplace(data, axis, thresh, subset, na_value)
+    return data
+
+# ------------------------------------------------------------------------------------------ #
+# ----------------------------Is/Not Null Functions----------------------------------------- #
+# ------------------------------------------------------------------------------------------ #
+
 def isnull_inplace(data: MutableDataMapping, na_value=None) -> None:
     for col in data_features.column_names(data):
         column_isnull_inplace(data[col], na_value)
