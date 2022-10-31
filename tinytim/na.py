@@ -113,7 +113,12 @@ def dropna(
     MutableDataMapping | None
         Object with missing values removed or None if inplace=True
     """
-    if how == 'any':
+    if thresh is not None:
+        if inplace:
+            dropna_thresh_inplace(data, thresh, axis, subset, na_value)
+        else:
+            return dropna_thresh(data, thresh, axis, subset, na_value)
+    elif how == 'any':
         if inplace:
             dropna_any_inplace(data, axis, subset, na_value)
         else:
@@ -123,11 +128,6 @@ def dropna(
             dropna_all_inplace(data, axis, subset, na_value)
         else:
             return dropna_all(data, axis, subset, na_value)
-    elif thresh is not None:
-        if inplace:
-            dropna_thresh_inplace(data, thresh, axis, subset, na_value)
-        else:
-            return dropna_thresh(data, thresh, axis, subset, na_value)
 
 # ------------------------------------------------------------------------------------------ #
 # ----------------------------Dropna Functions---------------------------------------------- #
@@ -139,9 +139,9 @@ def dropna_any_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    if axis == 0:
+    if axis in [1, 'columns']:
         dropna_columns_any_inplace(data, subset, na_value)
-    elif axis == 1:
+    elif axis in [0, 'rows']:
         dropna_rows_any_inplace(data, subset, na_value)
 
 
@@ -163,9 +163,9 @@ def dropna_thresh_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    if axis == 0:
+    if axis in [1, 'columns']:
         dropna_columns_thresh_inplace(data, thresh, subset, na_value)
-    elif axis == 1:
+    elif axis in [0, 'rows']:
         dropna_rows_thresh_inplace(data, thresh, subset, na_value)
 
 
@@ -286,9 +286,9 @@ def dropna_all_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    if axis == 0:
+    if axis == 1:
         dropna_columns_all_inplace(data, subset, na_value)
-    elif axis == 1:
+    elif axis == 0:
         dropna_rows_all_inplace(data, subset, na_value)
 
 
