@@ -62,7 +62,8 @@ def row_values(
 
 
 def iterrows(
-    data: Mapping
+    data: Mapping,
+    reverse: bool = False
 ) -> Generator[Tuple[int, dict], None, None]:
     """
     Return a generator of tuple row index, row dict values.
@@ -91,7 +92,9 @@ def iterrows(
     ...
     StopIteration
     """
-    for i in data_features.index(data):
+    indexes = data_features.index(data)
+    indexes = reversed(indexes) if reverse else indexes
+    for i in indexes:
         yield i, row_dict(data, i)
 
 

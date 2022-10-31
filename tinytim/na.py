@@ -226,7 +226,7 @@ def dropna_rows_any_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    for i, row in iterrows(data):
+    for i, row in iterrows(data, reverse=True):
         if row_any_na(row, subset, na_value):
             drop_row_inplace(data, i)
 
@@ -330,7 +330,7 @@ def dropna_rows_all_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    for i, row in iterrows(data):
+    for i, row in iterrows(data, reverse=True):
         if row_all_na(row, subset, na_value):
             drop_row_inplace(data, i)
 
@@ -384,7 +384,7 @@ def dropna_rows_thresh_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    for i, row in iterrows(data):
+    for i, row in iterrows(data, reverse=True):
         if not row_na_thresh(row, thresh, subset, na_value):
             drop_row_inplace(data, i)
 
