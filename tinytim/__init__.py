@@ -1,4 +1,4 @@
-__version__ = '1.8.0'
+__version__ = '1.8.1'
 
 
 import tinytim.columns
@@ -11,3 +11,4 @@ import tinytim.rows
 import tinytim.utils
 import tinytim.validate
 import tinytim.join
+import tinytim.na
