@@ -6,7 +6,7 @@ from typing import Dict, List, Mapping, Sequence
 import json
 
 from tinytim.rows import iterrows
-from tinytim.utils import row_dicts_to_data
+from tinytim.rows import row_dicts_to_data
 
 
 def data_to_json_list(data: Mapping[str, Sequence]) -> List[Dict]:

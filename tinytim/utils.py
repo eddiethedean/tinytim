@@ -1,9 +1,11 @@
-from collections import defaultdict
 from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping, MutableSequence
 from typing import Optional, Sequence, Tuple
 
 DataMapping = Mapping[str, Sequence]
+DataDict = Dict[str, list]
 RowMapping = Mapping[str, Any]
+
+from tinytim.rows import row_dicts_to_data
 
 
 def uniques(values: Iterable) -> List:
@@ -112,44 +114,7 @@ def all_keys(dicts: Sequence[Mapping]) -> List:
     return keys
 
 
-def row_dicts_to_data(
-    rows: Sequence[RowMapping],
-    missing_value: Optional[Any] = None
-) -> Dict[str, list]:
-    """
-    Convert a list of row dicts to dict[col_name: values] format.
 
-    Parameters
-    ----------
-    rows : Sequence[Mapping[str, Any]]
-        sequence of row mappings
-    missing_value : Any, optional
-        value to insert if column is missing values
-
-    Returns
-    -------
-    dict[str, list]
-        data table formatted: {column name: column values}
-
-    Examples
-    --------
-    >>> rows = [{'x': 1, 'y': 20}, {'x': 2, 'y': 21}, {'x': 3, 'y': 22}]
-    >>> row_dicts_to_data(rows)
-    {'x': [1, 2, 3], 'y': [20, 21, 22]}
-
-    >>> rows = [{'x': 1, 'y': 20}, {'x': 2}, {'x': 3, 'y': 22}]
-    >>> row_dicts_to_data(rows)
-    {'x': [1, 2, 3], 'y': [20, None, 22]}
-    """
-    keys = all_keys(rows)
-    data = defaultdict(list)
-    for row in rows:
-        for col in keys:
-            if col in row:
-                data[col].append(row[col])
-            else:
-                data[col].append(missing_value)
-    return dict(data)
 
 
 def all_bool(values: Collection) -> bool:

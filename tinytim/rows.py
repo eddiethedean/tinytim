@@ -1,7 +1,14 @@
 from collections import defaultdict
-from typing import Dict, Generator, Mapping, MutableMapping, Sequence, Tuple
+from itertools import zip_longest
+from typing import Any, Dict, Generator, Mapping, MutableMapping, Optional, Sequence, Tuple
 
 import tinytim.data as data_features
+from tinytim.edit import replace_column_names
+from tinytim.utils import all_keys
+
+DataMapping = Mapping[str, Sequence]
+DataDict = Dict[str, list]
+RowMapping = Mapping[str, Any]
 
 
 def row_dict(
@@ -294,3 +301,78 @@ def records_equal(d1: Mapping[str, Sequence], d2: Mapping[str, Sequence]) -> boo
             return False
     
     return True
+
+
+def row_dicts_to_data(
+    rows: Sequence[RowMapping],
+    columns: Optional[Sequence[str]] = None,
+    missing_value: Optional[Any] = None
+) -> Dict[str, list]:
+    """
+    Convert a list of row dicts to dict[col_name: values] format.
+
+    Parameters
+    ----------
+    rows : Sequence[Mapping[str, Any]]
+        sequence of row mappings
+    missing_value : Any, optional
+        value to insert if column is missing values
+
+    Returns
+    -------
+    dict[str, list]
+        data table formatted: {column name: column values}
+
+    Examples
+    --------
+    >>> rows = [{'x': 1, 'y': 20}, {'x': 2, 'y': 21}, {'x': 3, 'y': 22}]
+    >>> row_dicts_to_data(rows)
+    {'x': [1, 2, 3], 'y': [20, 21, 22]}
+
+    >>> rows = [{'x': 1, 'y': 20}, {'x': 2}, {'x': 3, 'y': 22}]
+    >>> row_dicts_to_data(rows)
+    {'x': [1, 2, 3], 'y': [20, None, 22]}
+    """
+    keys = all_keys(rows)
+    data = defaultdict(list)
+    for row in rows:
+        for col in keys:
+            if col in row:
+                data[col].append(row[col])
+            else:
+                data[col].append(missing_value)
+    if columns:
+        data = replace_column_names(dict(data), columns)
+        return {col: list(values) for col, values in data.items()}
+    return dict(data)
+    
+
+def row_values_to_data(
+    rows: Sequence[Sequence],
+    column_names: Sequence[str],
+    missing_value: Optional[Any] = None
+) -> DataDict:
+    """
+    Convert sequence of row values: [col1_value, col2_value, col3_value]
+    and column names: [col1_name, col2_name, col3_name]
+    to data dict: {column_name: column_values}
+    
+    Examples
+    --------
+    >>> rows = [[1, 20], [2, 21], [3, 22]]
+    >>> columns = ['x', 'y']
+    >>> row_values_to_data(rows, columns)
+    {'x': [1, 2, 3], 'y': [20, 21, 22]}
+
+    >>> rows = [[1, 20], [2], [3, 22]]
+    >>> row_values_to_data(rows, columns)
+    {'x': [1, 2, 3], 'y': [20, None, 22]}
+    """
+    data = defaultdict(list)
+    col_count = len(column_names)
+    for row in rows:
+        if len(row) > col_count:
+            raise ValueError('row values cannot be longer than column names.')
+        for col, val in zip_longest(column_names, row, fillvalue=missing_value):
+            data[col].append(val)
+    return dict(data)
