@@ -1,10 +1,10 @@
 import copy
-from typing import List, MutableMapping, MutableSequence
+from typing import List, Mapping, Sequence
 
-MutableDataMapping = MutableMapping[str, MutableSequence]
+DataMapping = Mapping[str, Sequence]
 
 
-def copy_table(data: MutableDataMapping) -> MutableDataMapping:
+def copy_table(data: DataMapping) -> DataMapping:
     """
     Copy data and return the copy.
 
@@ -27,7 +27,7 @@ def copy_table(data: MutableDataMapping) -> MutableDataMapping:
     return copy.deepcopy(data)
 
 
-def deepcopy_table(data: MutableDataMapping) -> dict:
+def deepcopy_table(data: DataMapping) -> dict:
     """
     Deep copy data and return the copy.
 

@@ -1,17 +1,18 @@
 from itertools import repeat
 from numbers import Number
-from typing import Any, Dict, Iterable, List, Mapping, MutableMapping, MutableSequence, Sequence, Sized, Union, Callable
+from typing import Any, Dict, Iterable, List, Mapping, Sequence, Sized, Union, Callable
 
 import tinytim.data as data_features
 import tinytim.copy as copy
 import tinytim.columns as columns
 from tinytim.utils import set_values_to_many, set_values_to_one
 
-MutableDataMapping = MutableMapping[str, MutableSequence]
+DataMapping = Mapping[str, Sequence]
+DataDict = Dict[str, list]
 
 
 def edit_row_items_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     index: int,
     items: Mapping[str, Any]
 ) -> None:
@@ -43,7 +44,7 @@ def edit_row_items_inplace(
 
 
 def edit_row_values_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     index: int,
     values: Sequence
 ) -> None:
@@ -77,9 +78,9 @@ def edit_row_values_inplace(
 
 
 def edit_column_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     column_name: str,
-    values: Union[MutableSequence, str]
+    values: Union[Sequence, str]
 ) -> None:
     """
     Edit values in named column.
@@ -122,9 +123,9 @@ def edit_column_inplace(
 
 
 def operator_column_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     column_name: str,
-    values: Union[MutableSequence, str, Number],
+    values: Union[Sequence, str, Number],
     func: Callable[[Any, Any], Any]
 ) -> None:
     """
@@ -153,9 +154,9 @@ def operator_column_inplace(
 
 
 def add_to_column_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     column_name: str,
-    values: Union[MutableSequence, str, Number]
+    values: Union[Sequence, str, Number]
 ) -> None:
     """
     Add values to existing named column.
@@ -192,9 +193,9 @@ def add_to_column_inplace(
 
 
 def subtract_from_column_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     column_name: str,
-    values: Union[MutableSequence, Number]
+    values: Union[Sequence, Number]
 ) -> None:
     """
     Subtract values from existing named column.
@@ -231,9 +232,9 @@ def subtract_from_column_inplace(
 
 
 def multiply_column_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     column_name: str,
-    values: Union[MutableSequence, Number]
+    values: Union[Sequence, Number]
 ) -> None:
     """
     Multiply values with existing named column.
@@ -270,9 +271,9 @@ def multiply_column_inplace(
 
 
 def divide_column_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     column_name: str,
-    values: Union[MutableSequence, Number]
+    values: Union[Sequence, Number]
 ) -> None:
     """
     Divide values from existing named column.
@@ -314,7 +315,7 @@ def divide_column_inplace(
 
 
 def drop_row_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     index: int
 ) -> None:
     """
@@ -374,7 +375,7 @@ def drop_label_inplace(labels: Union[None, List], index) -> None:
 
 
 def drop_column_inplace(
-    data: MutableDataMapping,
+    data: DataDict,
     column_name: str
 ) -> None:
     """
@@ -402,7 +403,7 @@ def drop_column_inplace(
 
 
 def edit_value_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     column_name: str,
     index: int,
     value: Any
@@ -436,9 +437,9 @@ def edit_value_inplace(
 
 
 def replace_column_names(
-    data: MutableDataMapping,
+    data: DataMapping,
     new_names: Sequence[str]
-) -> Dict[str, MutableSequence]:
+) -> Dict[str, Sequence]:
     """
     Return a new dict same column data but new column names.
 

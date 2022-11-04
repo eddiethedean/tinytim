@@ -1,7 +1,6 @@
 from itertools import repeat
 from numbers import Number
-from collections import abc
-from typing import Any, Callable, Dict, Generator, Iterable, Mapping, MutableSequence, Sequence, Sized, Tuple, Union
+from typing import Any, Callable, Dict, Generator, Iterable, Mapping, Sequence, Sized, Tuple, Union
 
 import tinytim.data as data_features
 from dictanykey import DefaultDictAnyKey, DictAnyKey

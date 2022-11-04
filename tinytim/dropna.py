@@ -1,23 +1,23 @@
 from copy import deepcopy
-from typing import Any, Mapping, MutableMapping, MutableSequence, Optional, Sequence, Union
+from typing import Any, Mapping, Optional, Sequence, Union
 
 import tinytim.data as data_features
 from tinytim.edit import drop_row_inplace, drop_column_inplace
 from tinytim.rows import iterrows
 
-MutableDataMapping = MutableMapping[str, MutableSequence]
-MutableRowMapping = MutableMapping[str, Any]
+DataMapping = Mapping[str, Sequence]
+RowMapping = Mapping[str, Any]
 
 
 def dropna(
-    data: MutableDataMapping,
+    data: DataMapping,
     axis: Union[int, str] = 0,
     how: str = 'any',
     thresh: Optional[int] = None,
     subset: Optional[Sequence[str]] = None,
     inplace: bool = False,
     na_value: Optional[Any] = None
-) -> Union[MutableDataMapping, None]:
+) -> Union[DataMapping, None]:
     """
     Remove missing values.
 
@@ -59,7 +59,7 @@ def dropna(
 
 
 def dropna_any_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
@@ -71,18 +71,18 @@ def dropna_any_inplace(
 
 
 def dropna_any(
-    data: MutableDataMapping,
+    data: DataMapping,
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_any_inplace(data, axis, subset, na_value)
     return data
 
 
 def dropna_thresh_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     thresh: int,
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
@@ -95,19 +95,19 @@ def dropna_thresh_inplace(
 
 
 def dropna_thresh(
-    data: MutableDataMapping,
+    data: DataMapping,
     thresh: int,
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_thresh_inplace(data, thresh, axis, subset, na_value)
     return data
 
 
 def dropna_columns_any_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
@@ -118,7 +118,7 @@ def dropna_columns_any_inplace(
 
 
 def dropna_column_any_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     column_name: str,
     na_value: Optional[Any] = None
 ) -> None:
@@ -127,27 +127,27 @@ def dropna_column_any_inplace(
 
 
 def dropna_column_any(
-    data: MutableDataMapping,
+    data: DataMapping,
     column_name: str,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_column_any_inplace(data, column_name, na_value)
     return data
 
 
 def dropna_columns_any(
-    data: MutableDataMapping,
+    data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_columns_any_inplace(data, subset, na_value)
     return data
 
 
 def dropna_rows_any_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
@@ -157,10 +157,10 @@ def dropna_rows_any_inplace(
 
 
 def dropna_rows_any(
-    data: MutableDataMapping,
+    data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_rows_any_inplace(data, subset, na_value)
     return data
@@ -181,7 +181,7 @@ def subset_row_values(
 
 
 def row_any_na(
-    row: MutableRowMapping,
+    row: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> bool:
@@ -197,7 +197,7 @@ def column_all_na(
 
 
 def row_all_na(
-    row: MutableRowMapping,
+    row: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> bool:
@@ -206,7 +206,7 @@ def row_all_na(
 
 
 def dropna_all_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
@@ -218,18 +218,18 @@ def dropna_all_inplace(
 
 
 def dropna_all(
-    data: MutableDataMapping,
+    data: DataMapping,
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_all_inplace(data, axis, subset, na_value)
     return data
 
 
 def dropna_columns_all_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
@@ -241,17 +241,17 @@ def dropna_columns_all_inplace(
 
 
 def dropna_columns_all(
-    data: MutableDataMapping,
+    data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_columns_all_inplace(data, subset, na_value)
     return data
 
 
 def dropna_rows_all_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
@@ -261,17 +261,17 @@ def dropna_rows_all_inplace(
 
 
 def dropna_rows_all(
-    data: MutableDataMapping,
+    data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_rows_all_inplace(data, subset, na_value)
     return data
 
 
 def dropna_columns_thresh_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     thresh: int,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
@@ -283,7 +283,7 @@ def dropna_columns_thresh_inplace(
 
 
 def dropna_column_thresh_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     column_name: str,
     thresh: int,
     na_value: Optional[Any] = None
@@ -293,18 +293,18 @@ def dropna_column_thresh_inplace(
 
 
 def dropna_columns_thresh(
-    data: MutableDataMapping,
+    data: DataMapping,
     thresh: int,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_columns_thresh_inplace(data, thresh, subset, na_value)
     return data
 
 
 def dropna_rows_thresh_inplace(
-    data: MutableDataMapping,
+    data: DataMapping,
     thresh: int,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
@@ -315,11 +315,11 @@ def dropna_rows_thresh_inplace(
 
 
 def dropna_rows_thresh(
-    data: MutableDataMapping,
+    data: DataMapping,
     thresh: int,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> MutableDataMapping:
+) -> DataMapping:
     data = deepcopy(data)
     dropna_rows_thresh_inplace(data, thresh, subset, na_value)
     return data
