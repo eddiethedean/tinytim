@@ -4,20 +4,18 @@ from typing import Any, Mapping, Optional, Sequence, Union
 import tinytim.data as data_features
 from tinytim.edit import drop_row_inplace, drop_column_inplace
 from tinytim.rows import iterrows
-
-DataMapping = Mapping[str, Sequence]
-RowMapping = Mapping[str, Any]
+from tinytim.types import DataMapping, DataDict, RowMapping, data_dict
 
 
 def dropna(
-    data: DataMapping,
+    data: DataDict,
     axis: Union[int, str] = 0,
     how: str = 'any',
     thresh: Optional[int] = None,
     subset: Optional[Sequence[str]] = None,
     inplace: bool = False,
     na_value: Optional[Any] = None
-) -> Union[DataMapping, None]:
+) -> Union[DataDict, None]:
     """
     Remove missing values.
 
@@ -59,7 +57,7 @@ def dropna(
 
 
 def dropna_any_inplace(
-    data: DataMapping,
+    data: DataDict,
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
@@ -75,14 +73,14 @@ def dropna_any(
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_any_inplace(data, axis, subset, na_value)
     return data
 
 
 def dropna_thresh_inplace(
-    data: DataMapping,
+    data: DataDict,
     thresh: int,
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
@@ -100,14 +98,14 @@ def dropna_thresh(
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_thresh_inplace(data, thresh, axis, subset, na_value)
     return data
 
 
 def dropna_columns_any_inplace(
-    data: DataMapping,
+    data: DataDict,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
@@ -118,7 +116,7 @@ def dropna_columns_any_inplace(
 
 
 def dropna_column_any_inplace(
-    data: DataMapping,
+    data: DataDict,
     column_name: str,
     na_value: Optional[Any] = None
 ) -> None:
@@ -130,8 +128,8 @@ def dropna_column_any(
     data: DataMapping,
     column_name: str,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_column_any_inplace(data, column_name, na_value)
     return data
 
@@ -140,14 +138,14 @@ def dropna_columns_any(
     data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_columns_any_inplace(data, subset, na_value)
     return data
 
 
 def dropna_rows_any_inplace(
-    data: DataMapping,
+    data: DataDict,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
@@ -160,8 +158,8 @@ def dropna_rows_any(
     data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_rows_any_inplace(data, subset, na_value)
     return data
 
@@ -174,7 +172,7 @@ def column_any_na(
 
 
 def subset_row_values(
-    row: Mapping[str, Any],
+    row: RowMapping,
     subset: Optional[Sequence[str]] = None
 ) -> list:
     return list(row.values()) if subset is None else [val for key, val in row.items() if key in subset]
@@ -206,7 +204,7 @@ def row_all_na(
 
 
 def dropna_all_inplace(
-    data: DataMapping,
+    data: DataDict,
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
@@ -222,14 +220,14 @@ def dropna_all(
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_all_inplace(data, axis, subset, na_value)
     return data
 
 
 def dropna_columns_all_inplace(
-    data: DataMapping,
+    data: DataDict,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
@@ -244,14 +242,14 @@ def dropna_columns_all(
     data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_columns_all_inplace(data, subset, na_value)
     return data
 
 
 def dropna_rows_all_inplace(
-    data: DataMapping,
+    data: DataDict,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
@@ -264,14 +262,14 @@ def dropna_rows_all(
     data: DataMapping,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_rows_all_inplace(data, subset, na_value)
     return data
 
 
 def dropna_columns_thresh_inplace(
-    data: DataMapping,
+    data: DataDict,
     thresh: int,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
@@ -283,7 +281,7 @@ def dropna_columns_thresh_inplace(
 
 
 def dropna_column_thresh_inplace(
-    data: DataMapping,
+    data: DataDict,
     column_name: str,
     thresh: int,
     na_value: Optional[Any] = None
@@ -297,14 +295,14 @@ def dropna_columns_thresh(
     thresh: int,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_columns_thresh_inplace(data, thresh, subset, na_value)
     return data
 
 
 def dropna_rows_thresh_inplace(
-    data: DataMapping,
+    data: DataDict,
     thresh: int,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
@@ -319,8 +317,8 @@ def dropna_rows_thresh(
     thresh: int,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
-) -> DataMapping:
-    data = deepcopy(data)
+) -> DataDict:
+    data = data_dict(data)
     dropna_rows_thresh_inplace(data, thresh, subset, na_value)
     return data
 
@@ -334,7 +332,7 @@ def column_na_thresh(
 
 
 def row_na_thresh(
-    row: Mapping[str, Any],
+    row: RowMapping,
     thresh: int,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] =None

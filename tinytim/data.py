@@ -1,6 +1,6 @@
-from typing import Any, Dict, Mapping, Sequence, Tuple
+from typing import Any, Tuple
 
-DataMapping = Mapping[str, Sequence]
+from tinytim.types import DataDict, DataMapping
 
 
 def column_count(data: DataMapping) -> int:
@@ -151,7 +151,7 @@ def column_names(data: DataMapping) -> Tuple[str]:
     return tuple(data)
 
 
-def head(data: DataMapping, n: int = 5) -> Dict[str, Sequence]:
+def head(data: DataMapping, n: int = 5) -> DataDict:
     """
     Return the first n rows of data.
 
@@ -173,10 +173,10 @@ def head(data: DataMapping, n: int = 5) -> Dict[str, Sequence]:
     >>> head(data, 2)
     {'x': [1, 2], 'y': [6, 7]}
     """
-    return {col: values[:n] for col, values in data.items()}
+    return {col: list(values[:n]) for col, values in data.items()}
 
 
-def tail(data: DataMapping, n: int = 5) -> Dict[str, Sequence]:
+def tail(data: DataMapping, n: int = 5) -> DataDict:
     """
     Return the last n rows of data.
 
@@ -199,7 +199,7 @@ def tail(data: DataMapping, n: int = 5) -> Dict[str, Sequence]:
     >>> tail(data, 2)
     {'x': [2, 3], 'y': [7, 8]}
     """
-    return {col: values[-n:] for col, values in data.items()}
+    return {col: list(values[-n:]) for col, values in data.items()}
 
 
 def index(data: DataMapping) -> Tuple[int]:
@@ -252,7 +252,7 @@ def table_value(data: DataMapping, column_name: str, index: int) -> Any:
     return data[column_name][index]
 
 
-def column_values(data: DataMapping, column_name: str) -> Sequence:
+def column_values(data: DataMapping, column_name: str) -> list:
     """
     Return all the values from one column.
     
@@ -274,4 +274,4 @@ def column_values(data: DataMapping, column_name: str) -> Sequence:
     >>> column_values(data, 'y')
     [6, 7, 8]
     """
-    return data[column_name]
+    return list(data[column_name])

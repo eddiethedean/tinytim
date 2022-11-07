@@ -1,14 +1,13 @@
 from itertools import repeat
 from numbers import Number
-from typing import Any, Callable, Dict, Generator, Iterable, Mapping, Sequence, Sized, Tuple, Union
+from typing import Any, Callable, Generator, Iterable, Sequence, Sized, Tuple, Union
 
-import tinytim.data as data_features
 from dictanykey import DefaultDictAnyKey, DictAnyKey
+import tinytim.data as data_features
+from tinytim.types import DataMapping, DataDict
 
-DataMapping = Mapping[str, Sequence]
 
-
-def column_dict(data: DataMapping, col: str) -> Dict[str, Sequence]:
+def column_dict(data: DataMapping, col: str) -> DataDict:
     """
     Return a dict of {col_name, col_values} from data.
         

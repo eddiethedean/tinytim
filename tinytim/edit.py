@@ -1,14 +1,12 @@
 from itertools import repeat
 from numbers import Number
-from typing import Any, Dict, Iterable, List, Mapping, Sequence, Sized, Union, Callable
+from typing import Any, Dict, Iterable, List, Mapping, Sequence, Sized, Union, Callable, MutableMapping, MutableSequence
 
 import tinytim.data as data_features
 import tinytim.copy as copy
 import tinytim.columns as columns
 from tinytim.utils import set_values_to_many, set_values_to_one
-
-DataMapping = Mapping[str, Sequence]
-DataDict = Dict[str, list]
+from tinytim.types import DataDict, DataMapping, data_dict
 
 
 def edit_row_items_inplace(
@@ -231,45 +229,6 @@ def subtract_from_column_inplace(
     operator_column_inplace(data, column_name, values, lambda x, y : x - y)
 
 
-def multiply_column_inplace(
-    data: DataDict,
-    column_name: str,
-    values: Union[Sequence, Number]
-) -> None:
-    """
-    Multiply values with existing named column.
-    If values is a Sequence, multiply each value with each existing value.
-    Must be same len as column.
-    If not a Sequence, multiply value with all existing values.
-
-    Parameters
-    ----------
-    data : MutableMapping[str, MutableSequence]
-        data mapping of {column name: column values}
-    column_name : str
-        column name to edit in data
-    values : Sequence
-        values to multiply with data column
-
-    Returns
-    -------
-    None
-
-    Examples
-    --------
-    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> subtract_from_column_inplace(data, 'x', [11, 22, 33])
-    >>> data
-    {'x': [66, 44, 99], 'y': [6, 7, 8]}
-
-    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> subtract_from_column_inplace(data, 'x', 2)
-    >>> data
-    {'x': [2, 4, 6], 'y': [6, 7, 8]}
-    """
-    operator_column_inplace(data, column_name, values, lambda x, y : x * y)
-
-
 def divide_column_inplace(
     data: DataDict,
     column_name: str,
@@ -343,7 +302,7 @@ def drop_row_inplace(
         data[col].pop(index)
 
 
-def drop_label_inplace(labels: Union[None, List], index) -> None:
+def drop_label_inplace(labels: Union[None, List], index: int) -> None:
     """
     If labels exists, drop item at index.
 
@@ -403,7 +362,7 @@ def drop_column_inplace(
 
 
 def edit_value_inplace(
-    data: DataMapping,
+    data: DataDict,
     column_name: str,
     index: int,
     value: Any
@@ -436,50 +395,17 @@ def edit_value_inplace(
     data[column_name][index] = value
 
 
-def replace_column_names(
-    data: DataMapping,
-    new_names: Sequence[str]
-) -> Dict[str, Sequence]:
-    """
-    Return a new dict same column data but new column names.
-
-    Parameters
-    ----------
-    data : MutableMapping[str, MutableSequence]
-        data mapping of {column name: column values}
-    new_names : Sequence[str]
-        new names of columns
-
-    Returns
-    -------
-    Dict[str, MutableSequence]
-        copy of data with new column names
-
-    Example
-    -------
-    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> replace_column_names(data, ('xx', 'yy'))
-    >>> {'xx': [1, 2, 3], 'yy': [6, 7, 8]}
-    >>> data
-    {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    """
-    old_names = data_features.column_names(data)
-    if len(new_names) != len(old_names):
-        raise ValueError('new_names must be same size as data column_count.')
-    return {new_name: data[old_name] for new_name, old_name in zip(new_names, old_names)}
-
-
 def edit_row_items(
-    data: MutableDataMapping,
+    data: DataMapping,
     index: int,
-    items: Mapping
-) -> MutableDataMapping:
+    items: Mapping[str, Any]
+) -> DataDict:
     """
-    Return a new dict with row index changed to mapping items values.
+    Changes row index to mapping items values.
 
     Parameters
     ----------
-    data : MutableMapping[str, MutableSequence]
+    data : Mapping[str, Sequence]
         data mapping of {column name: column values}
     index : int
         index of row to edit
@@ -488,39 +414,32 @@ def edit_row_items(
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
-        copy of data with edited row values
+    Dict[str, list]
 
-    Examples
-    --------
+    Example
+    -------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> edit_row_items(data, 2, {'x': 33, 'y': 88})
-    {'x': [1, 2, 33], 'y': [6, 7, 88]}
-    >>> data
-    {'x': [1, 2, 3], 'y': [6, 7, 8]}
-
-    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> edit_row_items(data, 0, {'x': 55})
-    {'x': [55, 2, 3], 'y': [6, 7, 8]}
+    >>> edit_row_items(data, 0, {'x': 11, 'y': 66})
+    {'x': [11, 2, 3], 'y': [66, 7, 8]}
     >>> data
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    new_data = copy.copy_table(data)
-    edit_row_items_inplace(new_data, index, items)
-    return new_data
+    data = data_dict(data)
+    edit_row_items_inplace(data, index, items)
+    return data
 
 
 def edit_row_values(
-    data: MutableDataMapping,
+    data: DataMapping,
     index: int,
     values: Sequence
-) -> MutableDataMapping:
+) -> DataDict:
     """
-    Return a new dict with row index changed to values.
+    Changed row index to values.
 
     Parameters
     ----------
-    data : MutableMapping[str, MutableSequence]
+    data : Mapping[str, Sequence]
         data mapping of {column name: column values}
     index : int
         index of row to edit
@@ -529,8 +448,7 @@ def edit_row_values(
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
-        copy of data with row at index changed to values
+    Dict[str, list]
 
     Example
     -------
@@ -540,18 +458,21 @@ def edit_row_values(
     >>> data
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    new_data = copy.copy_table(data)
-    edit_row_values_inplace(new_data, index, values)
-    return new_data
+    data = data_dict(data)
+    if len(values) != data_features.column_count(data):
+        raise AttributeError('values length must match columns length.')
+    for col, value in zip(data_features.column_names(data), values):
+        data[col][index] = value
+    return data
 
 
 def edit_column(
-    data: MutableDataMapping,
+    data: DataMapping,
     column_name: str,
-    values: MutableSequence
-) -> MutableDataMapping:
+    values: Union[Sequence, str]
+) -> DataDict:
     """
-    Returns a new dict with values added to data in named column.
+    Edit values in named column.
     Overrides existing values if column exists,
     Created new column with values if column does not exist.
 
@@ -566,29 +487,89 @@ def edit_column(
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
-        copy of data with new column values
+    Dict[str, list]
 
     Example
     -------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> edit_column(data, 'x', [4, 5, 6])
-    {'x': [4, 5, 6], 'y': [6, 7, 8]}
+    >>> edit_column(data, 'x', [11, 22, 33])
+    {'x': [11, 22, 33], 'y': [6, 7, 8]}
     >>> data
-     {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    new_data = copy.copy_table(data)
-    edit_column_inplace(new_data, column_name, values)
-    return new_data
+    data = data_dict(data)
+    iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
+    if isinstance(values, str) or not iterable_and_sized:
+        if column_name in data:
+            set_values_to_one(data[column_name], values)
+        else:
+            data[column_name] = list(repeat(values, data_features.row_count(data)))
+        return data
+    if len(values) != data_features.row_count(data):
+        raise ValueError('values length must match data rows count.')
+    if column_name in data:
+        set_values_to_many(data[column_name], values)
+    else:
+        data[column_name] = list(values)
+    return data
+
+
+def operator_column(
+    data: DataMapping,
+    column_name: str,
+    values: Union[Sequence, str, Number],
+    func: Callable[[Any, Any], Any]
+) -> DataDict:
+    """
+    Uses func operator on values from existing named column.
+    If values is a Sequence, operate each value from each existing value.
+    Must be same len as column.
+    If not a Sequence, operate value from all existing values.
+
+    Parameters
+    ----------
+    data : MutableMapping[str, MutableSequence]
+        data mapping of {column name: column values}
+    column_name : str
+        column name to edit in data
+    values : Sequence
+        values to subtract from data column
+    func : Callable[[Any, Any], Any]
+        operator function to use to use values on existing column values
+
+    Returns
+    -------
+    Dict[str, list]
+
+    Examples
+    --------
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> operator_column(data, 'x', 1, lambda x, y : x + y)
+    {'x': [2, 3, 4], 'y': [6, 7, 8]}
+    >>> data
+    {'x': [1, 2, 3], 'y': [6, 7, 8]}
+
+    >>> operator_column(data, 'x', [3, 4, 5], lambda x, y : x + y)
+    {'x': [4, 6, 8], 'y': [6, 7, 8]}
+    >>> data
+    {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    """
+    data = data_dict(data)
+    new_values = columns.operate_on_column(data[column_name], values, func)
+    set_values_to_many(data[column_name], new_values)
+    return data
 
 
 def add_to_column(
-    data: MutableDataMapping,
+    data: DataMapping,
     column_name: str,
-    values: Union[MutableSequence, str, Number]
-) -> MutableDataMapping:
+    values: Union[Sequence, str, Number]
+) -> DataDict:
     """
-    Returns a new dict with values added to data in named column.
+    Add values to existing named column.
+    If values is a Sequence, add each value to each existing value.
+    Must be same len as column.
+    If not a Sequence, adds value to all existing values.
 
     Parameters
     ----------
@@ -601,29 +582,33 @@ def add_to_column(
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
-        copy of data with new column values
+    Dict[str, list]
 
-    Example
-    -------
+    Examples
+    --------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> edit_column(data, 'x', [4, 5, 6])
-    {'x': [4, 5, 6], 'y': [6, 7, 8]}
+    >>> add_to_column_inplace(data, 'x', [11, 22, 33])
     >>> data
-     {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    {'x': [12, 24, 36], 'y': [6, 7, 8]}
+
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> add_to_column_inplace(data, 'x', 1)
+    >>> data
+    {'x': [2, 3, 4], 'y': [6, 7, 8]}
     """
-    new_data = copy.copy_table(data)
-    add_to_column_inplace(new_data, column_name, values)
-    return new_data
+    return operator_column(data, column_name, values, lambda x, y : x + y)
 
 
 def subtract_from_column(
-    data: MutableDataMapping,
+    data: DataMapping,
     column_name: str,
-    values: Union[MutableSequence, Number]
-) -> MutableDataMapping:
+    values: Union[Sequence, Number]
+) -> DataDict:
     """
-    Returns a new dict with values subtracted from data in named column.
+    Subtract values from existing named column.
+    If values is a Sequence, subtract each value from each existing value.
+    Must be same len as column.
+    If not a Sequence, subtracts value from all existing values.
 
     Parameters
     ----------
@@ -636,29 +621,33 @@ def subtract_from_column(
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
-        copy of data with new column values
+    Dict[str, list]
 
-    Example
-    -------
+    Examples
+    --------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> subtract_from_column(data, 'x', [4, 5, 6])
-    {'x': [-3, -3, -3], 'y': [6, 7, 8]}
+    >>> subtract_from_column_inplace(data, 'x', [11, 22, 33])
     >>> data
-     {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    {'x': [-10, -20, -30], 'y': [6, 7, 8]}
+
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> subtract_from_column_inplace(data, 'x', 1)
+    >>> data
+    {'x': [0, 1, 2], 'y': [6, 7, 8]}
     """
-    new_data = copy.copy_table(data)
-    subtract_from_column_inplace(new_data, column_name, values)
-    return new_data
+    return operator_column(data, column_name, values, lambda x, y : x - y)
 
 
-def multiply_column(
-    data: MutableDataMapping,
+def multiply_column_inplace(
+    data: DataMapping,
     column_name: str,
-    values: Union[MutableSequence, Number]
-) -> MutableDataMapping:
+    values: Union[Sequence, Number]
+) -> DataDict:
     """
-    Returns a new dict with values multiplied with data in named column.
+    Multiply values with existing named column.
+    If values is a Sequence, multiply each value with each existing value.
+    Must be same len as column.
+    If not a Sequence, multiply value with all existing values.
 
     Parameters
     ----------
@@ -671,29 +660,33 @@ def multiply_column(
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
-        copy of data with new column values
+    Dict[str, list]
 
-    Example
-    -------
+    Examples
+    --------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> multiply_column(data, 'x', [4, 5, 6])
-    {'x': [4, 10, 18], 'y': [6, 7, 8]}
+    >>> subtract_from_column_inplace(data, 'x', [11, 22, 33])
     >>> data
-     {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    {'x': [66, 44, 99], 'y': [6, 7, 8]}
+
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> subtract_from_column_inplace(data, 'x', 2)
+    >>> data
+    {'x': [2, 4, 6], 'y': [6, 7, 8]}
     """
-    new_data = copy.copy_table(data)
-    multiply_column_inplace(new_data, column_name, values)
-    return new_data
+    return operator_column(data, column_name, values, lambda x, y : x * y)
 
 
 def divide_column(
-    data: MutableDataMapping,
+    data: DataMapping,
     column_name: str,
-    values: Union[MutableSequence, Number]
-) -> MutableDataMapping:
+    values: Union[Sequence, Number]
+) -> DataDict:
     """
-    Returns a new dict with values divided from data in named column.
+    Divide values from existing named column.
+    If values is a Sequence, Divide each value from each existing value.
+    Must be same len as column.
+    If not a Sequence, divide value from all existing values.
 
     Parameters
     ----------
@@ -706,66 +699,34 @@ def divide_column(
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
-        copy of data with new column values
+    Dict[str, list]
 
-    Example
-    -------
+    Raises
+    ------
+    ZeroDivisionError
+        if values is 0 or contains 0
+
+    Examples
+    --------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> divide_column(data, 'x', [4, 5, 6])
-    {'x': [0.25, 0.4, 0.5], 'y': [6, 7, 8]}
+    >>> divide_column_inplace(data, 'x', [2, 3, 4])
     >>> data
-     {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    """
-    new_data = copy.copy_table(data)
-    divide_column_inplace(new_data, column_name, values)
-    return new_data
+    {'x': [0.5, 0.6666666666666666, 0.75], 'y': [6, 7, 8]}
 
-
-def edit_value(
-    data: MutableDataMapping,
-    column_name: str,
-    index: int,
-    value: Any
-) -> MutableDataMapping:
-    """
-    Return a new table with the value in named column changed at row index.
-
-    Parameters
-    ----------
-    data : MutableMapping[str, MutableSequence]
-        data mapping of {column name: column values}
-    column_name : str
-        name of column to remove from data
-    index : int
-        row index of column to edit
-    value : Any
-        new value to change to
-
-    Returns
-    -------
-    MutableMapping[str, MutableSequence]
-        copy of data with new value changed
-
-    Example
-    -------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> edit_value(data, 'y', 2, 88)
-    {'x': [1, 2, 3], 'y': [6, 7, 88]}
+    >>> divide_column_inplace(data, 'x', 2)
     >>> data
-    {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    {'x': [0.5, 1.0, 1.5], 'y': [6, 7, 8]}
     """
-    new_data = copy.copy_table(data)
-    edit_value_inplace(new_data, column_name, index, value)
-    return new_data
+    return operator_column(data, column_name, values, lambda x, y : x / y)
 
 
 def drop_row(
-    data: MutableDataMapping,
+    data: DataMapping,
     index: int
-) -> MutableDataMapping:
+) -> DataDict:
     """
-    Return a new dict with index row removed from data.
+    Remove index row from data.
 
     Parameters
     ----------
@@ -776,24 +737,23 @@ def drop_row(
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
-        copy of data with dropped row
+    Dict[str, list]
 
     Example
     -------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> drop_row(data, 0)
-    {'x': [2, 3], 'y': [7, 8]}
+    >>> drop_row_inplace(data, 1)
     >>> data
-    {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    {'x': [1, 3], 'y': [6, 8]}
     """
-    new_data = copy.copy_table(data)
-    drop_row_inplace(new_data, index)
-    return new_data
+    data = data_dict(data)
+    for col in data_features.column_names(data):
+        data[col].pop(index)
+    return data
 
 
 def drop_label(
-    labels: Union[None, List],
+    labels: Union[None, Sequence],
     index: int
 ) -> Union[None, List]:
     """
@@ -808,35 +768,32 @@ def drop_label(
 
     Returns
     -------
-    list | None
-        copy of labels with row dropped
+    None | list
 
     Examples
     --------
-    >>> labels = [1, 2, 3, 4]
-    >>> drop_label(labels, 1)
-    [1, 3, 4]
+    >>> labels = [1, 2, 3, 4, 5]
+    >>> drop_label_inplace(labels, 1)
     >>> labels
     [1, 3, 4, 5]
 
     >>> labels = None
-    >>> drop_label(labels, 1)
-    None
+    >>> drop_label_inplace(labels, 1)
     >>> labels
     None
     """
-    if labels is None: return
-    new_labels = copy.copy_list(labels)
-    drop_label_inplace(new_labels, index)
-    return new_labels
+    if labels is not None:
+        labels = list(labels)
+        labels.pop(index)
+    return labels
 
 
 def drop_column(
-    data: MutableDataMapping,
+    data: DataMapping,
     column_name: str
-) -> MutableDataMapping:
+) -> DataDict:
     """
-    Return a new dict with the named column removed from data.
+    Remove named column from data.
 
     Parameters
     ----------
@@ -847,17 +804,84 @@ def drop_column(
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
-        copy of data with column dropped
+    Dict[str, list]
 
     Example
     -------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> drop_column(data, 'y')
+    >>> drop_column_inplace(data, 'y')
+    >>> data
     {'x': [1, 2, 3]}
+    """
+    data = data_dict(data)
+    del data[column_name]
+    return data
+
+
+def edit_value(
+    data: DataMapping,
+    column_name: str,
+    index: int,
+    value: Any
+) -> DataDict:
+    """
+    Edit the value in named column as row index.
+
+    Parameters
+    ----------
+    data : MutableMapping[str, MutableSequence]
+        data mapping of {column name: column values}
+    column_name : str
+        name of column to remove from data
+    index : int
+        row index of column to edit
+    value : Any
+        new value to change to
+
+    Returns
+    -------
+    Dict[str, list]
+
+    Example
+    -------
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> edit_value_inplace(data, 'x', 0, 11)
+    >>> data
+    {'x': [11, 2, 3], 'y': [6, 7, 8]}
+    """
+    data = data_dict(data)
+    data[column_name][index] = value
+    return data
+
+
+def replace_column_names(
+    data: DataMapping,
+    new_names: Sequence[str]
+) -> DataDict:
+    """
+    Return a new dict same column data but new column names.
+
+    Parameters
+    ----------
+    data : MutableMapping[str, MutableSequence]
+        data mapping of {column name: column values}
+    new_names : Sequence[str]
+        new names of columns
+
+    Returns
+    -------
+    Dict[str, list]
+        copy of data with new column names
+
+    Example
+    -------
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> replace_column_names(data, ('xx', 'yy'))
+    >>> {'xx': [1, 2, 3], 'yy': [6, 7, 8]}
     >>> data
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    new_data = copy.copy_table(data)
-    drop_column_inplace(new_data, column_name)
-    return new_data
+    old_names = data_features.column_names(data)
+    if len(new_names) != len(old_names):
+        raise ValueError('new_names must be same size as data column_count.')
+    return {new_name: list(data[old_name]) for new_name, old_name in zip(new_names, old_names)}
