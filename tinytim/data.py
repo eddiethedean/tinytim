@@ -1,9 +1,9 @@
-from typing import Any, Tuple
+from typing import Any, Sequence, Sized, Tuple
 
 from tinytim.types import DataDict, DataMapping
 
 
-def column_count(data: DataMapping) -> int:
+def column_count(data: Sized) -> int:
     """
     Return the number of columns in data.
 
@@ -252,7 +252,7 @@ def table_value(data: DataMapping, column_name: str, index: int) -> Any:
     return data[column_name][index]
 
 
-def column_values(data: DataMapping, column_name: str) -> list:
+def column_values(data: DataMapping, column_name: str) -> tuple:
     """
     Return all the values from one column.
     
@@ -274,4 +274,4 @@ def column_values(data: DataMapping, column_name: str) -> list:
     >>> column_values(data, 'y')
     [6, 7, 8]
     """
-    return list(data[column_name])
+    return tuple(data[column_name])

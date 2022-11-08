@@ -31,7 +31,7 @@ def column_dict(data: DataMapping, col: str) -> DataDict:
     >>> column_dict(data, 'y')
     {'y': [6, 7, 8]}
     """
-    return {col: data_functions.column_values(data, col)}
+    return {col: list(data_functions.column_values(data, col))}
 
 
 def itercolumns(data: DataMapping) -> Generator[Tuple[str, tuple], None, None]:
