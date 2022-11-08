@@ -2,9 +2,9 @@ from collections import defaultdict
 from itertools import zip_longest
 from typing import Any, Dict, Generator, Optional, Sequence, Tuple
 
-import tinytim.data as data_features
-from tinytim.edit import replace_column_names
-from tinytim.utils import all_keys
+import tinytim.data as data_functions
+import tinytim.edit as edit_functions
+import tinytim.utils as utils_functions
 from tinytim.types import DataDict, DataMapping, RowMapping, RowDict
 
 
@@ -33,8 +33,8 @@ def row_dict(
     >>> row_dict(data, 1)
     {'x': 2, 'y': 7}
     """
-    return {col: data_features.table_value(data, col, index)
-                for col in data_features.column_names(data)}
+    return {col: data_functions.table_value(data, col, index)
+                for col in data_functions.column_names(data)}
 
 
 def row_values(
@@ -96,7 +96,7 @@ def iterrows(
     ...
     StopIteration
     """
-    indexes = data_features.index(data)
+    indexes = data_functions.index(data)
     indexes = reversed(indexes) if reverse else indexes
     for i in indexes:
         yield i, row_dict(data, i)
@@ -283,10 +283,10 @@ def records_equal(d1: DataMapping, d2: DataMapping) -> bool:
     >>> records_equal(d1, d2)
     False
     """
-    if set(data_features.column_names(d1)) != set(data_features.column_names(d2)):
+    if set(data_functions.column_names(d1)) != set(data_functions.column_names(d2)):
         return False
     
-    if data_features.row_count(d1) != data_features.row_count(d2):
+    if data_functions.row_count(d1) != data_functions.row_count(d2):
         return False
     
     d2_rows = [row for row in records(d2)]
@@ -330,7 +330,7 @@ def row_dicts_to_data(
     >>> row_dicts_to_data(rows)
     {'x': [1, 2, 3], 'y': [20, None, 22]}
     """
-    keys = all_keys(rows)
+    keys = utils_functions.all_keys(rows)
     data = defaultdict(list)
     for row in rows:
         for col in keys:
@@ -339,7 +339,7 @@ def row_dicts_to_data(
             else:
                 data[col].append(missing_value)
     if columns:
-        data = replace_column_names(dict(data), columns)
+        data = edit_functions.replace_column_names(dict(data), columns)
         return {col: list(values) for col, values in data.items()}
     return dict(data)
     

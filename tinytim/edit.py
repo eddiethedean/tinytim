@@ -2,9 +2,9 @@ from itertools import repeat
 from numbers import Number
 from typing import Any, Iterable, List, Mapping, Sequence, Sized, Union, Callable
 
-import tinytim.data as data_features
-import tinytim.columns as columns
-from tinytim.utils import set_values_to_many, set_values_to_one
+import tinytim.data as data_functions
+import tinytim.columns as columns_functions
+import tinytim.utils as utils_functions
 from tinytim.types import DataDict, DataMapping, data_dict
 
 
@@ -68,9 +68,9 @@ def edit_row_values_inplace(
     >>> data
     {'x': [1, 22, 3], 'y': [6, 77, 8]}
     """
-    if len(values) != data_features.column_count(data):
+    if len(values) != data_functions.column_count(data):
         raise AttributeError('values length must match columns length.')
-    for col, value in zip(data_features.column_names(data), values):
+    for col, value in zip(data_functions.column_names(data), values):
         data[col][index] = value
 
 
@@ -107,14 +107,14 @@ def edit_column_inplace(
     iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
     if isinstance(values, str) or not iterable_and_sized:
         if column_name in data:
-            set_values_to_one(data[column_name], values)
+            utils_functions.set_values_to_one(data[column_name], values)
         else:
-            data[column_name] = list(repeat(values, data_features.row_count(data)))
+            data[column_name] = list(repeat(values, data_functions.row_count(data)))
         return
-    if len(values) != data_features.row_count(data):
+    if len(values) != data_functions.row_count(data):
         raise ValueError('values length must match data rows count.')
     if column_name in data:
-        set_values_to_many(data[column_name], values)
+        utils_functions.set_values_to_many(data[column_name], values)
     else:
         data[column_name] = list(values)
 
@@ -146,8 +146,8 @@ def operator_column_inplace(
     -------
     None
     """
-    new_values = columns.operate_on_column(data[column_name], values, func)
-    set_values_to_many(data[column_name], new_values)
+    new_values = columns_functions.operate_on_column(data[column_name], values, func)
+    utils_functions.set_values_to_many(data[column_name], new_values)
 
 
 def add_to_column_inplace(
@@ -297,7 +297,7 @@ def drop_row_inplace(
     >>> data
     {'x': [1, 3], 'y': [6, 8]}
     """
-    for col in data_features.column_names(data):
+    for col in data_functions.column_names(data):
         data[col].pop(index)
 
 
@@ -458,9 +458,9 @@ def edit_row_values(
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
     data = data_dict(data)
-    if len(values) != data_features.column_count(data):
+    if len(values) != data_functions.column_count(data):
         raise AttributeError('values length must match columns length.')
-    for col, value in zip(data_features.column_names(data), values):
+    for col, value in zip(data_functions.column_names(data), values):
         data[col][index] = value
     return data
 
@@ -500,14 +500,14 @@ def edit_column(
     iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
     if isinstance(values, str) or not iterable_and_sized:
         if column_name in data:
-            set_values_to_one(data[column_name], values)
+            utils_functions.set_values_to_one(data[column_name], values)
         else:
-            data[column_name] = list(repeat(values, data_features.row_count(data)))
+            data[column_name] = list(repeat(values, data_functions.row_count(data)))
         return data
-    if len(values) != data_features.row_count(data):
+    if len(values) != data_functions.row_count(data):
         raise ValueError('values length must match data rows count.')
     if column_name in data:
-        set_values_to_many(data[column_name], values)
+        utils_functions.set_values_to_many(data[column_name], values)
     else:
         data[column_name] = list(values)
     return data
@@ -554,8 +554,8 @@ def operator_column(
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
     data = data_dict(data)
-    new_values = columns.operate_on_column(data[column_name], values, func)
-    set_values_to_many(data[column_name], new_values)
+    new_values = columns_functions.operate_on_column(data[column_name], values, func)
+    utils_functions.set_values_to_many(data[column_name], new_values)
     return data
 
 
@@ -746,7 +746,7 @@ def drop_row(
     {'x': [1, 3], 'y': [6, 8]}
     """
     data = data_dict(data)
-    for col in data_features.column_names(data):
+    for col in data_functions.column_names(data):
         data[col].pop(index)
     return data
 
@@ -880,7 +880,7 @@ def replace_column_names(
     >>> data
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    old_names = data_features.column_names(data)
+    old_names = data_functions.column_names(data)
     if len(new_names) != len(old_names):
         raise ValueError('new_names must be same size as data column_count.')
     return {new_name: list(data[old_name]) for new_name, old_name in zip(new_names, old_names)}

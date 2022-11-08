@@ -1,8 +1,8 @@
 from typing import Any, Optional, Sequence, Union
 
-import tinytim.data as data_features
-from tinytim.edit import drop_row_inplace, drop_column_inplace
-from tinytim.rows import iterrows
+import tinytim.data as data_functions
+import tinytim.edit as edit_functions
+import tinytim.rows as rows_functions
 from tinytim.types import DataMapping, DataDict, RowMapping, data_dict
 
 
@@ -108,7 +108,7 @@ def dropna_columns_any_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    for col in data_features.column_names(data):
+    for col in data_functions.column_names(data):
         if subset is not None and col not in subset:
             continue
         dropna_column_any_inplace(data, col, na_value)
@@ -120,7 +120,7 @@ def dropna_column_any_inplace(
     na_value: Optional[Any] = None
 ) -> None:
     if column_any_na(data[column_name], na_value):
-        drop_column_inplace(data, column_name)
+        edit_functions.drop_column_inplace(data, column_name)
 
 
 def dropna_column_any(
@@ -148,9 +148,9 @@ def dropna_rows_any_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    for i, row in iterrows(data, reverse=True):
+    for i, row in rows_functions.iterrows(data, reverse=True):
         if row_any_na(row, subset, na_value):
-            drop_row_inplace(data, i)
+            edit_functions.drop_row_inplace(data, i)
 
 
 def dropna_rows_any(
@@ -230,11 +230,11 @@ def dropna_columns_all_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    for col in data_features.column_names(data):
+    for col in data_functions.column_names(data):
         if subset is not None and col not in subset:
             continue
         if column_all_na(data[col], na_value):
-            drop_column_inplace(data, col)
+            edit_functions.drop_column_inplace(data, col)
 
 
 def dropna_columns_all(
@@ -252,9 +252,9 @@ def dropna_rows_all_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    for i, row in iterrows(data, reverse=True):
+    for i, row in rows_functions.iterrows(data, reverse=True):
         if row_all_na(row, subset, na_value):
-            drop_row_inplace(data, i)
+            edit_functions.drop_row_inplace(data, i)
 
 
 def dropna_rows_all(
@@ -273,7 +273,7 @@ def dropna_columns_thresh_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    for col in data_features.column_names(data):
+    for col in data_functions.column_names(data):
         if subset is not None and col not in subset:
             continue
         dropna_column_thresh_inplace(data, col, thresh, na_value)
@@ -286,7 +286,7 @@ def dropna_column_thresh_inplace(
     na_value: Optional[Any] = None
 ) -> None:
     if not column_na_thresh(data[column_name], thresh, na_value):
-        drop_column_inplace(data, column_name)
+        edit_functions.drop_column_inplace(data, column_name)
 
 
 def dropna_columns_thresh(
@@ -306,9 +306,9 @@ def dropna_rows_thresh_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    for i, row in iterrows(data, reverse=True):
+    for i, row in rows_functions.iterrows(data, reverse=True):
         if not row_na_thresh(row, thresh, subset, na_value):
-            drop_row_inplace(data, i)
+            edit_functions.drop_row_inplace(data, i)
 
 
 def dropna_rows_thresh(

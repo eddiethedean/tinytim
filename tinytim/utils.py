@@ -2,7 +2,6 @@ from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping
 from typing import Optional, Sequence, Tuple
 
 from tinytim.types import DataMapping, RowMapping
-from tinytim.rows import row_dicts_to_data
 
 
 def uniques(values: Iterable) -> List:

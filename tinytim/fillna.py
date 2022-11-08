@@ -1,9 +1,10 @@
 from typing import Any, Optional, Sequence, Union
 
-import tinytim.data as data_features
 from hasattrs import has_mapping_attrs
-from tinytim.edit import edit_row_items_inplace
-from tinytim.rows import iterrows
+
+import tinytim.data as data_functions
+import tinytim.edit as edit_functions
+import tinytim.rows as rows_functions
 from tinytim.types import DataDict, DataMapping, RowDict, RowMapping, data_dict, row_dict
 
 
@@ -205,7 +206,7 @@ def fill_columns_with_value_inplace(
     -------
     None
     """
-    columns = data_features.column_names(data)
+    columns = data_functions.column_names(data)
     for col in columns:
         try:
             fill_value = _get_fill_value(value, col)
@@ -230,9 +231,9 @@ def fill_rows_with_value_inplace(
     -------
     None
     """
-    for i, row in iterrows(data):
+    for i, row in rows_functions.iterrows(data):
         new_row = fill_row_with_value(row, value, limit, na_value)
-        edit_row_items_inplace(data, i, new_row)
+        edit_functions.edit_row_items_inplace(data, i, new_row)
 
 
 def backfill_columns_inplace(
@@ -299,9 +300,9 @@ def backfill_rows_inplace(
     -------
     None
     """
-    for i, row in iterrows(data):
+    for i, row in rows_functions.iterrows(data):
         new_row = backfill_row(row, limit, na_value)
-        edit_row_items_inplace(data, i, new_row)
+        edit_functions.edit_row_items_inplace(data, i, new_row)
 
 
 def forwardfill_columns_inplace(
@@ -358,9 +359,9 @@ def forwardfill_rows_inplace(
     -------
     None
     """
-    for i, row in iterrows(data):
+    for i, row in rows_functions.iterrows(data):
         new_row = forwardfill_row(row, limit, na_value)
-        edit_row_items_inplace(data, i, new_row)
+        edit_functions.edit_row_items_inplace(data, i, new_row)
 
 
 def forwardfill_rows(

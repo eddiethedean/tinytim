@@ -1,6 +1,6 @@
 from typing import Sequence
 
-import tinytim.data as data_features
+import tinytim.data as data_functions
 from tinytim.types import DataDict, DataMapping, data_dict, RowDict, RowMapping, row_dict
 
 
@@ -21,12 +21,12 @@ notna = notnull
 
 
 def isnull_inplace(data: DataDict, na_value=None) -> None:
-    for col in data_features.column_names(data):
+    for col in data_functions.column_names(data):
         column_isnull_inplace(data[col], na_value)
 
 
 def notnull_inplace(data: DataDict, na_value=None) -> None:
-    for col in data_features.column_names(data):
+    for col in data_functions.column_names(data):
         column_notnull_inplace(data[col], na_value)
 
 

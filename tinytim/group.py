@@ -1,8 +1,9 @@
 from typing import Any, Callable, Dict, List, Mapping, Sequence, Tuple, Union
 from statistics import mean, mode, stdev, pstdev
 
-from tinytim.filter import column_filter, filter_data
-from tinytim.utils import nuniques, row_dicts_to_data, row_value_tuples, uniques
+import tinytim.filter as filter_functions
+import tinytim.utils as utils_functions
+import tinytim.rows as rows_functions
 from tinytim.types import DataDict, DataMapping, RowDict, RowMapping
 
 
@@ -10,8 +11,9 @@ RowNumDict = Dict[str, Union[int, float]]
 
 
 def groupbycolumn(data: Mapping, column: Sequence) -> List[tuple]:
-    keys = uniques(column)
-    return [(k, filter_data(data, column_filter(column, lambda x: x == k)))
+    keys = utils_functions.uniques(column)
+    return [(k, filter_functions.filter_data(data,
+                                             filter_functions.column_filter(column, lambda x: x == k)))
                 for k in keys]
 
 
@@ -20,7 +22,7 @@ def groupbyone(data: Mapping, column_name: str) -> List[tuple]:
 
 
 def groupbymulti(data: Mapping, column_names: Sequence[str]) -> List[tuple]:
-    return groupbycolumn(data, row_value_tuples(data, column_names))
+    return groupbycolumn(data, utils_functions.row_value_tuples(data, column_names))
 
 
 def groupby(data: Mapping, by: Union[str, Sequence[str]]) -> List[tuple]:
@@ -41,7 +43,7 @@ def aggregate_groups(
         if len(row):
             labels.append(key)
             rows.append(row)
-    return labels, row_dicts_to_data(rows)
+    return labels, rows_functions.row_dicts_to_data(rows)
 
 
 def sum_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
@@ -124,4 +126,4 @@ def pstdev_data(data: Mapping) -> RowNumDict:
 
 
 def nunique_data(data: Mapping) -> RowNumDict:
-    return aggregate_data(data, nuniques)
+    return aggregate_data(data, utils_functions.nuniques)

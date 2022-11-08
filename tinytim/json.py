@@ -5,8 +5,7 @@ Module used for converting data format to json and json to data format.
 from typing import Dict, List, Sequence
 import json
 
-from tinytim.rows import iterrows
-from tinytim.rows import row_dicts_to_data
+import tinytim.rows as rows_functions
 from tinytim.types import DataMapping, DataDict, RowMapping
 
 
@@ -30,7 +29,7 @@ def data_to_json_list(data: DataMapping) -> List[Dict]:
     >>> data_to_json_list(data)
     [{'x': 1, 'y': 6}, {'x': 2, 'y': 7}, {'x': 3, 'y': 8}]
     """
-    return [row for _, row in iterrows(data)]
+    return [row for _, row in rows_functions.iterrows(data)]
 
 
 def json_list_to_data(l: Sequence[RowMapping]) -> DataDict:
@@ -53,7 +52,7 @@ def json_list_to_data(l: Sequence[RowMapping]) -> DataDict:
     >>> json_list_to_data(json)
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    return row_dicts_to_data(l)
+    return rows_functions.row_dicts_to_data(l)
 
 
 def data_to_json(data: DataMapping) -> str:

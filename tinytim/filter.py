@@ -1,7 +1,7 @@
 import random
 from typing import Any, Callable, List, Optional, Sequence
 
-import tinytim.data as data_features
+import tinytim.data as data_functions
 from tinytim.types import DataMapping, DataDict
 
 
@@ -85,7 +85,7 @@ def sample(data: DataMapping, n: int, random_state: Optional[int] = None) -> Dat
     """return random sample of n rows"""
     if random_state is not None:
         random.seed(random_state)
-    indexes = random.sample(range(data_features.row_count(data)), n)
+    indexes = random.sample(range(data_functions.row_count(data)), n)
     return filter_by_indexes(data, indexes)
 
 
@@ -98,4 +98,4 @@ def sample_indexes(data: DataMapping, n: int, random_state: Optional[int] = None
     """return random sample of n indexes"""
     if random_state is not None:
         random.seed(random_state)
-    return random.sample(range(data_features.row_count(data)), n)
+    return random.sample(range(data_functions.row_count(data)), n)

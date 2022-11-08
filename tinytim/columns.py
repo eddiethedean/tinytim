@@ -3,7 +3,7 @@ from numbers import Number
 from typing import Any, Callable, Generator, Iterable, Sequence, Sized, Tuple, Union
 
 from dictanykey import DefaultDictAnyKey, DictAnyKey
-import tinytim.data as data_features
+import tinytim.data as data_functions
 from tinytim.types import DataMapping, DataDict
 
 
@@ -31,7 +31,7 @@ def column_dict(data: DataMapping, col: str) -> DataDict:
     >>> column_dict(data, 'y')
     {'y': [6, 7, 8]}
     """
-    return {col: data_features.column_values(data, col)}
+    return {col: data_functions.column_values(data, col)}
 
 
 def itercolumns(data: DataMapping) -> Generator[Tuple[str, tuple], None, None]:
@@ -57,8 +57,8 @@ def itercolumns(data: DataMapping) -> Generator[Tuple[str, tuple], None, None]:
     >>> cols[1]
     ('y', (6, 7, 8))
     """
-    for col in data_features.column_names(data):
-        yield col, tuple(data_features.column_values(data, col))
+    for col in data_functions.column_names(data):
+        yield col, tuple(data_functions.column_values(data, col))
 
 
 def value_counts(
