@@ -2,12 +2,12 @@
 Module used for converting data format to json and json to data format.
 """
 
-from typing import Dict, List
+from typing import Dict, List, Sequence
 import json
 
 from tinytim.rows import iterrows
 from tinytim.rows import row_dicts_to_data
-from tinytim.types import DataMapping, DataDict
+from tinytim.types import DataMapping, DataDict, RowMapping
 
 
 def data_to_json_list(data: DataMapping) -> List[Dict]:
@@ -33,7 +33,7 @@ def data_to_json_list(data: DataMapping) -> List[Dict]:
     return [row for _, row in iterrows(data)]
 
 
-def json_list_to_data(l: List[Dict]) -> DataDict:
+def json_list_to_data(l: Sequence[RowMapping]) -> DataDict:
     """
     Convert list of row dicts to data table format.
 
