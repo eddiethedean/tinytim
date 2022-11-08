@@ -1,12 +1,11 @@
 import random
-from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence
+from typing import Any, Callable, List, Optional, Sequence
 
 import tinytim.data as data_features
+from tinytim.types import DataMapping, DataDict
 
 
 TableFilter = Sequence[bool]
-DataMapping = Mapping[str, Sequence]
-DataDict = Dict[str, Sequence]
 
 
 def column_filter(column: Sequence, func: Callable[[Any], bool]) -> List[bool]:
@@ -92,7 +91,7 @@ def sample(data: DataMapping, n: int, random_state: Optional[int] = None) -> Dat
 
 def only_columns(data: DataMapping, column_names: Sequence[str]) -> DataDict:
     """Return new TableDict with only column_names."""
-    return {col: data[col] for col in column_names}
+    return {str(col): list(data[col]) for col in column_names}
 
 
 def sample_indexes(data: DataMapping, n: int, random_state: Optional[int] = None) -> List[int]:

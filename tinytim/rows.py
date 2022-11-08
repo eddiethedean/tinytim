@@ -1,20 +1,17 @@
 from collections import defaultdict
 from itertools import zip_longest
-from typing import Any, Dict, Generator, Mapping, MutableMapping, Optional, Sequence, Tuple
+from typing import Any, Dict, Generator, Optional, Sequence, Tuple
 
 import tinytim.data as data_features
 from tinytim.edit import replace_column_names
 from tinytim.utils import all_keys
-
-DataMapping = Mapping[str, Sequence]
-DataDict = Dict[str, list]
-RowMapping = Mapping[str, Any]
+from tinytim.types import DataDict, DataMapping, RowMapping, RowDict
 
 
 def row_dict(
-    data: Mapping,
+    data: DataMapping,
     index: int
-) -> dict: 
+) -> RowDict: 
     """
     Return one row from data at index.
 
@@ -41,7 +38,7 @@ def row_dict(
 
 
 def row_values(
-    data: MutableMapping,
+    data: DataMapping,
     index: int
 ) -> tuple:
     """
@@ -69,9 +66,9 @@ def row_values(
 
 
 def iterrows(
-    data: Mapping,
+    data: DataMapping,
     reverse: bool = False
-) -> Generator[Tuple[int, dict], None, None]:
+) -> Generator[Tuple[int, RowDict], None, None]:
     """
     Return a generator of tuple row index, row dict values.
 
@@ -106,7 +103,7 @@ def iterrows(
 
 
 def itertuples(
-    data: Mapping
+    data: DataMapping
 ) -> Generator[tuple, None, None]:
     """
     Return a generator of tuple row values.
@@ -140,7 +137,7 @@ def itertuples(
 
 
 def itervalues(
-    data: MutableMapping
+    data: DataMapping
 ) -> Generator[tuple, None, None]:
     """
     Return a generator of tuple row values.
@@ -173,7 +170,7 @@ def itervalues(
 
 
 def values(
-    data: MutableMapping
+    data: DataMapping
 ) -> Tuple[tuple]:
     """
     Return tuple of tuple row values.
@@ -198,7 +195,7 @@ def values(
 
 
 def row_value_counts(
-    data: Mapping[str, Sequence],
+    data: DataMapping,
     sort=True,
     ascending=True
 ) -> Dict[tuple, int]:
@@ -236,7 +233,7 @@ def row_value_counts(
         return dict(d)
 
 
-def records(d: Mapping[str, Sequence]) -> Generator[Mapping, None, None]:
+def records(d: DataMapping) -> Generator[RowDict, None, None]:
     """
     Yield each record (row) in d.
     
@@ -262,7 +259,7 @@ def records(d: Mapping[str, Sequence]) -> Generator[Mapping, None, None]:
         yield record
     
 
-def records_equal(d1: Mapping[str, Sequence], d2: Mapping[str, Sequence]) -> bool:
+def records_equal(d1: DataMapping, d2: DataMapping) -> bool:
     """
     Compare d1 and d2 records (rows) to see if they are equal.
     Order of records or columns does not matter.
@@ -307,7 +304,7 @@ def row_dicts_to_data(
     rows: Sequence[RowMapping],
     columns: Optional[Sequence[str]] = None,
     missing_value: Optional[Any] = None
-) -> Dict[str, list]:
+) -> DataDict:
     """
     Convert a list of row dicts to dict[col_name: values] format.
 

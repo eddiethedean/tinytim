@@ -1,5 +1,4 @@
-from copy import copy, deepcopy
-from typing import Any, Dict, Mapping, Optional, Sequence, Union
+from typing import Any, Optional, Sequence, Union
 
 import tinytim.data as data_features
 from hasattrs import has_mapping_attrs

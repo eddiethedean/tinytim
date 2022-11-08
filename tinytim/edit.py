@@ -1,9 +1,8 @@
 from itertools import repeat
 from numbers import Number
-from typing import Any, Dict, Iterable, List, Mapping, Sequence, Sized, Union, Callable, MutableMapping, MutableSequence
+from typing import Any, Iterable, List, Mapping, Sequence, Sized, Union, Callable
 
 import tinytim.data as data_features
-import tinytim.copy as copy
 import tinytim.columns as columns
 from tinytim.utils import set_values_to_many, set_values_to_one
 from tinytim.types import DataDict, DataMapping, data_dict

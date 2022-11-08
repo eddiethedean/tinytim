@@ -3,11 +3,9 @@ from statistics import mean, mode, stdev, pstdev
 
 from tinytim.filter import column_filter, filter_data
 from tinytim.utils import nuniques, row_dicts_to_data, row_value_tuples, uniques
+from tinytim.types import DataDict, DataMapping, RowDict, RowMapping
 
-DataMapping = Mapping[str, Sequence]
-DataDict = Dict[str, list]
-RowMapping = Mapping[str, Any]
-RowDict = Dict[str, Any]
+
 RowNumDict = Dict[str, Union[int, float]]
 
 

@@ -1,7 +1,6 @@
 import copy
-from typing import List, Mapping, Sequence
 
-DataMapping = Mapping[str, Sequence]
+from tinytim.types import DataMapping
 
 
 def copy_table(data: DataMapping) -> DataMapping:
@@ -50,7 +49,7 @@ def deepcopy_table(data: DataMapping) -> dict:
     return {col: copy.deepcopy(values) for col, values in data.items()}
 
 
-def copy_list(values: List) -> List:
+def copy_list(values: list) -> list:
     """
     Copy list and return the copy.
 
@@ -79,7 +78,7 @@ def copy_list(values: List) -> List:
     return copy.copy(values)
 
 
-def deepcopy_list(values: List) -> List:
+def deepcopy_list(values: list) -> list:
     """
     Deep copy list and return the copy.
 

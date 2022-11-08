@@ -1,14 +1,16 @@
-from typing import Callable, Mapping, Sequence, Tuple, Any, Union, Optional, Dict, List, Iterable
+from typing import Callable, Mapping, Sequence, Tuple, Any, Union, Optional, List, Iterable
 from itertools import repeat
 from typing import NamedTuple
+
+from tinytim.types import DataDict, DataMapping
+
 
 class MatchIndexes(NamedTuple):
     value: Any
     left_index: Optional[int] = None
     right_index: Optional[int] = None
 
-DataMapping = Mapping[str, Sequence]
-DataDict = Dict[str, list]
+
 Matches = Tuple[MatchIndexes]
 JoinStrategy = Callable[[Sequence, Sequence], Matches]
 

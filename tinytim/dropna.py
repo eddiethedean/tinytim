@@ -1,5 +1,4 @@
-from copy import deepcopy
-from typing import Any, Mapping, Optional, Sequence, Union
+from typing import Any, Optional, Sequence, Union
 
 import tinytim.data as data_features
 from tinytim.edit import drop_row_inplace, drop_column_inplace

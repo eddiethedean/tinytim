@@ -2,14 +2,15 @@
 Module used for converting data format to json and json to data format.
 """
 
-from typing import Dict, List, Mapping, Sequence
+from typing import Dict, List
 import json
 
 from tinytim.rows import iterrows
 from tinytim.rows import row_dicts_to_data
+from tinytim.types import DataMapping, DataDict
 
 
-def data_to_json_list(data: Mapping[str, Sequence]) -> List[Dict]:
+def data_to_json_list(data: DataMapping) -> List[Dict]:
     """
     Convert data table to list of row dicts.
 
@@ -32,7 +33,7 @@ def data_to_json_list(data: Mapping[str, Sequence]) -> List[Dict]:
     return [row for _, row in iterrows(data)]
 
 
-def json_list_to_data(l: List[Dict]) -> Dict[str, list]:
+def json_list_to_data(l: List[Dict]) -> DataDict:
     """
     Convert list of row dicts to data table format.
 
@@ -55,7 +56,7 @@ def json_list_to_data(l: List[Dict]) -> Dict[str, list]:
     return row_dicts_to_data(l)
 
 
-def data_to_json(data: Mapping[str, Sequence]) -> str:
+def data_to_json(data: DataMapping) -> str:
     """
     Convert data table to list of row dicts json string.
 
@@ -79,7 +80,7 @@ def data_to_json(data: Mapping[str, Sequence]) -> str:
     return json.dumps(l)
 
 
-def json_to_data(j: str) -> Dict[str, list]:
+def json_to_data(j: str) -> DataDict:
     """
     Convert row dicts json string to data dict table.
 
