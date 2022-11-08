@@ -1,7 +1,9 @@
 import unittest
 
+from hasattrs import has_mapping_attrs
+
 from tinytim.utils import uniques, row_value_tuples, row_dicts_to_data
-from tinytim.utils import all_bool, has_mapping_attrs, all_keys
+from tinytim.utils import all_bool, all_keys
 from tinytim.utils import row_values_generator, slice_to_range
 from tinytim.utils import combine_names_rows, nunique
 

@@ -1,4 +1,3 @@
-from os import unlink
 import unittest
 
 from tinytim.columns import column_dict, itercolumns, value_counts
