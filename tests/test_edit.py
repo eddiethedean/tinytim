@@ -139,3 +139,7 @@ class TestDropColumn(unittest.TestCase):
         results = edit_functions.drop_column(data, 'y')
         self.assertDictEqual(results, {'x': [1, 2, 3]})
         self.assertDictEqual(data, {'x': [1, 2, 3], 'y': [6, 7, 8]})
+
+
+if __name__ == '__main__':
+    unittest.main()

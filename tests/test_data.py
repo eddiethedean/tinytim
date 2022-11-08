@@ -70,3 +70,7 @@ class TestColumnValues(unittest.TestCase):
     def test_basic(self):
         result = data_functions.column_values(DATA, 'y')
         self.assertEqual(result, [6, 7, 8])
+
+
+if __name__ == '__main__':
+    unittest.main()

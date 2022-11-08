@@ -97,3 +97,7 @@ class TestNunique(unittest.TestCase):
         data = {'x': [1, 2, 2], 'y': [6, 7, 8], 'z': [9, 9, 9]}
         results = utils_functions.nunique(data)
         self.assertDictEqual(results, {'x': 2, 'y': 3, 'z': 1})
+
+
+if __name__ == '__main__':
+    unittest.main()

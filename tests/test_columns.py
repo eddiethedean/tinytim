@@ -26,3 +26,7 @@ class TestValueCounts(unittest.TestCase):
         values = [4, 1, 1, 4, 5, 1]
         results = columns_functions.value_counts(values)
         self.assertEqual({1: 3, 4: 2, 5: 1}, results)
+
+
+if __name__ == '__main__':
+    unittest.main()

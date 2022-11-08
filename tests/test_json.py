@@ -40,3 +40,6 @@ class TestJsonListToData(unittest.TestCase):
         expected = DATA
         self.assertDictEqual(result, expected)
 
+
+if __name__ == '__main__':
+    unittest.main()

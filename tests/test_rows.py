@@ -87,3 +87,7 @@ class TestRowValueCounts(unittest.TestCase):
         result = rows_functions.row_value_counts(data)
         expected = {(3, 3): 2, (1, 6): 1, (2, 7): 1}
         self.assertDictEqual(expected, result)
+
+
+if __name__ == '__main__':
+    unittest.main()
