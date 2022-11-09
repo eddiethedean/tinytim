@@ -638,6 +638,45 @@ def subtract_from_column(
 
 
 def multiply_column_inplace(
+    data: DataDict,
+    column_name: str,
+    values: Union[Sequence, Number]
+) -> None:
+    """
+    Multiply values with existing named column.
+    If values is a Sequence, multiply each value with each existing value.
+    Must be same len as column.
+    If not a Sequence, multiply value with all existing values.
+
+    Parameters
+    ----------
+    data : MutableMapping[str, MutableSequence]
+        data mapping of {column name: column values}
+    column_name : str
+        column name to edit in data
+    values : Sequence
+        values to multiply with data column
+
+    Returns
+    -------
+    Dict[str, list]
+
+    Examples
+    --------
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> subtract_from_column_inplace(data, 'x', [11, 22, 33])
+    >>> data
+    {'x': [66, 44, 99], 'y': [6, 7, 8]}
+
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> subtract_from_column_inplace(data, 'x', 2)
+    >>> data
+    {'x': [2, 4, 6], 'y': [6, 7, 8]}
+    """
+    operator_column_inplace(data, column_name, values, lambda x, y : x * y)
+
+
+def multiply_column(
     data: DataMapping,
     column_name: str,
     values: Union[Sequence, Number]
@@ -673,6 +712,7 @@ def multiply_column_inplace(
     >>> data
     {'x': [2, 4, 6], 'y': [6, 7, 8]}
     """
+    data = data_dict(data)
     return operator_column(data, column_name, values, lambda x, y : x * y)
 
 

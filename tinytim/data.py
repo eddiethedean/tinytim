@@ -1,4 +1,4 @@
-from typing import Any, Sequence, Sized, Tuple
+from typing import Any, Sized, Tuple
 
 from tinytim.types import DataDict, DataMapping
 
