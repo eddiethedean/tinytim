@@ -2,6 +2,7 @@ import random
 from typing import Any, Callable, List, Optional, Sequence
 
 import tinytim.data as data_functions
+import tinytim.edit as edit_functions
 from tinytim.types import DataMapping, DataDict
 
 
@@ -24,6 +25,12 @@ def filter_list_by_indexes(values: Sequence, indexes: Sequence[int]) -> List:
 def filter_by_indexes(data: DataMapping, indexes: Sequence[int]) -> DataDict:
     """Return only rows in indexes"""
     return {col: filter_list_by_indexes(values, indexes) for col, values in data.items()}
+
+
+def filter_by_indexes_inplace(data: DataDict, indexes: Sequence[int]) -> None:
+    """Return only rows in indexes"""
+    for col, values in data.items():
+        data[col] = filter_list_by_indexes(values, indexes)
 
 
 def filter_data(data: DataMapping, f: TableFilter) -> DataDict:
@@ -89,9 +96,19 @@ def sample(data: DataMapping, n: int, random_state: Optional[int] = None) -> Dat
     return filter_by_indexes(data, indexes)
 
 
-def only_columns(data: DataMapping, column_names: Sequence[str]) -> DataDict:
+def filter_by_columns(data: DataMapping, column_names: Sequence[str]) -> DataDict:
     """Return new TableDict with only column_names."""
     return {str(col): list(data[col]) for col in column_names}
+
+
+def filter_by_columns_inplace(data: DataDict, column_names: Sequence[str]) -> None:
+    for col in data_functions.column_names(data):
+        if col not in column_names:
+            edit_functions.drop_column_inplace(data, col)
+
+
+only_columns = filter_by_columns
+only_columns_inplace = filter_by_columns_inplace
 
 
 def sample_indexes(data: DataMapping, n: int, random_state: Optional[int] = None) -> List[int]:
