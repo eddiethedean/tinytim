@@ -400,7 +400,7 @@ def edit_row_items(
     items: Mapping[str, Any]
 ) -> DataDict:
     """
-    Changes row index to mapping items values.
+    Return data with row values at index changed to mapping items values.
 
     Parameters
     ----------
@@ -434,7 +434,7 @@ def edit_row_values(
     values: Sequence
 ) -> DataDict:
     """
-    Changed row index to values.
+    Return data with row values at index changed to sequence of values.
 
     Parameters
     ----------
@@ -471,7 +471,7 @@ def edit_column(
     values: Union[Sequence, str]
 ) -> DataDict:
     """
-    Edit values in named column.
+    Return data with values changed in named column.
     Overrides existing values if column exists,
     Created new column with values if column does not exist.
 
@@ -495,6 +495,9 @@ def edit_column(
     {'x': [11, 22, 33], 'y': [6, 7, 8]}
     >>> data
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
+
+    >>> edit_column(data, 'z', [66, 77, 88])
+    {'x': [1, 2, 3], 'y': [6, 7, 8], 'z': [66, 77, 88]}
     """
     data = data_dict(data)
     iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
@@ -520,7 +523,7 @@ def operator_column(
     func: Callable[[Any, Any], Any]
 ) -> DataDict:
     """
-    Uses func operator on values from existing named column.
+    Return data with func operator used on values from named column.
     If values is a Sequence, operate each value from each existing value.
     Must be same len as column.
     If not a Sequence, operate value from all existing values.
@@ -565,7 +568,7 @@ def add_to_column(
     values: Union[Sequence, str, Number]
 ) -> DataDict:
     """
-    Add values to existing named column.
+    Return data with values added to named column values.
     If values is a Sequence, add each value to each existing value.
     Must be same len as column.
     If not a Sequence, adds value to all existing values.
@@ -586,13 +589,11 @@ def add_to_column(
     Examples
     --------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> add_to_column_inplace(data, 'x', [11, 22, 33])
-    >>> data
+    >>> add_to_column(data, 'x', [11, 22, 33])
     {'x': [12, 24, 36], 'y': [6, 7, 8]}
 
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> add_to_column_inplace(data, 'x', 1)
-    >>> data
+    >>> add_to_column(data, 'x', 1)
     {'x': [2, 3, 4], 'y': [6, 7, 8]}
     """
     return operator_column(data, column_name, values, lambda x, y : x + y)
@@ -604,7 +605,7 @@ def subtract_from_column(
     values: Union[Sequence, Number]
 ) -> DataDict:
     """
-    Subtract values from existing named column.
+    Return data with values subtracted from named column values.
     If values is a Sequence, subtract each value from each existing value.
     Must be same len as column.
     If not a Sequence, subtracts value from all existing values.
@@ -664,12 +665,12 @@ def multiply_column_inplace(
     Examples
     --------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> subtract_from_column_inplace(data, 'x', [11, 22, 33])
+    >>> multiply_column_inplace(data, 'x', [11, 22, 33])
     >>> data
-    {'x': [66, 44, 99], 'y': [6, 7, 8]}
+    {'x': [11, 44, 99], 'y': [6, 7, 8]}
 
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> subtract_from_column_inplace(data, 'x', 2)
+    >>> multiply_column_inplace(data, 'x', 2)
     >>> data
     {'x': [2, 4, 6], 'y': [6, 7, 8]}
     """
@@ -682,7 +683,7 @@ def multiply_column(
     values: Union[Sequence, Number]
 ) -> DataDict:
     """
-    Multiply values with existing named column.
+    Return data with values multiplied with named column values.
     If values is a Sequence, multiply each value with each existing value.
     Must be same len as column.
     If not a Sequence, multiply value with all existing values.
@@ -703,13 +704,11 @@ def multiply_column(
     Examples
     --------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> subtract_from_column_inplace(data, 'x', [11, 22, 33])
-    >>> data
-    {'x': [66, 44, 99], 'y': [6, 7, 8]}
+    >>> multiply_column(data, 'x', [11, 22, 33])
+    {'x': [11, 44, 99], 'y': [6, 7, 8]}
 
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> subtract_from_column_inplace(data, 'x', 2)
-    >>> data
+    >>> multiply_column(data, 'x', 2)
     {'x': [2, 4, 6], 'y': [6, 7, 8]}
     """
     data = data_dict(data)
@@ -722,7 +721,7 @@ def divide_column(
     values: Union[Sequence, Number]
 ) -> DataDict:
     """
-    Divide values from existing named column.
+    Return data with named column divided by values.
     If values is a Sequence, Divide each value from each existing value.
     Must be same len as column.
     If not a Sequence, divide value from all existing values.
@@ -748,13 +747,11 @@ def divide_column(
     Examples
     --------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> divide_column_inplace(data, 'x', [2, 3, 4])
-    >>> data
+    >>> divide_column(data, 'x', [2, 3, 4])
     {'x': [0.5, 0.6666666666666666, 0.75], 'y': [6, 7, 8]}
 
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> divide_column_inplace(data, 'x', 2)
-    >>> data
+    >>> divide_column(data, 'x', 2)
     {'x': [0.5, 1.0, 1.5], 'y': [6, 7, 8]}
     """
     return operator_column(data, column_name, values, lambda x, y : x / y)
@@ -765,7 +762,7 @@ def drop_row(
     index: int
 ) -> DataDict:
     """
-    Remove index row from data.
+    Return data with row at index removed from data.
 
     Parameters
     ----------
@@ -781,8 +778,7 @@ def drop_row(
     Example
     -------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> drop_row_inplace(data, 1)
-    >>> data
+    >>> drop_row(data, 1)
     {'x': [1, 3], 'y': [6, 8]}
     """
     data = data_dict(data)
@@ -832,7 +828,7 @@ def drop_column(
     column_name: str
 ) -> DataDict:
     """
-    Remove named column from data.
+    Return data with named column dropped.
 
     Parameters
     ----------
@@ -848,8 +844,7 @@ def drop_column(
     Example
     -------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> drop_column_inplace(data, 'y')
-    >>> data
+    >>> drop_column(data, 'y')
     {'x': [1, 2, 3]}
     """
     data = data_dict(data)
@@ -864,7 +859,7 @@ def edit_value(
     value: Any
 ) -> DataDict:
     """
-    Edit the value in named column as row index.
+    Return data with value in named column and row index edited with value.
 
     Parameters
     ----------
@@ -884,8 +879,7 @@ def edit_value(
     Example
     -------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> edit_value_inplace(data, 'x', 0, 11)
-    >>> data
+    >>> edit_value(data, 'x', 0, 11)
     {'x': [11, 2, 3], 'y': [6, 7, 8]}
     """
     data = data_dict(data)
@@ -898,7 +892,7 @@ def replace_column_names(
     new_names: Sequence[str]
 ) -> DataDict:
     """
-    Return a new dict same column data but new column names.
+    Return data with same column data but with new column names.
 
     Parameters
     ----------

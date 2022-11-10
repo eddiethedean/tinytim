@@ -8,32 +8,74 @@ from tinytim.types import DataDict, DataMapping, RowDict, RowMapping
 
 
 RowNumDict = Dict[str, Union[int, float]]
+GroupbyValue = Union[Any, tuple]
+Group = Tuple[GroupbyValue, DataDict]
 
 
-def groupbycolumn(data: Mapping, column: Sequence) -> List[tuple]:
-    keys = utils_functions.uniques(column)
-    return [(k, filter_functions.filter_data(data,
-                                             filter_functions.column_filter(column, lambda x: x == k)))
-                for k in keys]
+def groupby(
+    data: DataMapping,
+    by: Union[str, Sequence[str]]
+) -> List[Group]:
+    """
+    Group data by a column or sequence of columns.
 
+    Parameters
+    ----------
+    data : Mapping[str, Sequence]
+    by : str | Sequence[str]
+        column name/s to group by
 
-def groupbyone(data: Mapping, column_name: str) -> List[tuple]:
-    return groupbycolumn(data, data[column_name])
+    Returns
+    -------
+    list[tuple[Any, dict[str, list]]]
 
+    Examples
+    --------
+    >>> data = {'Animal': ['Falcon', 'Falcon', 'Parrot', 'Parrot'],
+                'Color': ['Brown', 'Brown', 'Blue', 'Red'],
+                'Max Speed': [380, 370, 24, 26]}
+    >>> groupby(data, 'Animal')
+    [('Falcon', {'Animal': ['Falcon', 'Falcon'],
+                 'Color': ['Brown', 'Brown'],
+                 'Max Speed': [380, 370]}),
+    ('Parrot', {'Animal': ['Parrot', 'Parrot'],
+                'Color': ['Blue', 'Red'],
+                'Max Speed': [24, 26]})]
 
-def groupbymulti(data: Mapping, column_names: Sequence[str]) -> List[tuple]:
-    return groupbycolumn(data, utils_functions.row_value_tuples(data, column_names))
-
-
-def groupby(data: Mapping, by: Union[str, Sequence[str]]) -> List[tuple]:
+    >>> groupby(data, ['Animal', 'Color'])
+    [(('Falcon', 'Brown'), {'Animal': ['Falcon', 'Falcon'],
+                            'Color': ['Brown', 'Brown'],
+                            'Max Speed': [380, 370]}),
+     (('Parrot', 'Blue'), {'Animal': ['Parrot'],
+                           'Color': ['Blue'],
+                           'Max Speed': [24]}),
+     (('Parrot', 'Red'), {'Animal': ['Parrot'],
+                          'Color': ['Red'],
+                          'Max Speed': [26]})]
+    """
     if isinstance(by, str):
         return groupbyone(data, by)
     else:
         return groupbymulti(data, by)
 
 
+def groupbycolumn(data: Mapping, column: Sequence) -> List[Group]:
+    keys = utils_functions.uniques(column)
+    return [(k, filter_functions.filter_data(data,
+                                             filter_functions.column_filter(column, lambda x: x == k)))
+                for k in keys]
+
+
+def groupbyone(data: Mapping, column_name: str) -> List[Group]:
+    return groupbycolumn(data, data[column_name])
+
+
+def groupbymulti(data: Mapping, column_names: Sequence[str]) -> List[Group]:
+    return groupbycolumn(data, utils_functions.row_value_tuples(data, column_names))
+
+
 def aggregate_groups(
-    groups: Sequence[Tuple[Any, DataMapping]],
+    groups: Sequence[Group],
     func: Callable[[DataMapping], RowMapping]
 ) -> Tuple[List, DataDict]:
     labels = []

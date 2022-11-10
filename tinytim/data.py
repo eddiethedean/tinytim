@@ -3,7 +3,7 @@ from typing import Any, Sized, Tuple
 from tinytim.types import DataDict, DataMapping
 
 
-def column_count(data: Sized) -> int:
+def column_count(data: DataMapping) -> int:
     """
     Return the number of columns in data.
 
