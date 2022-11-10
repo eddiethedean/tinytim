@@ -22,26 +22,84 @@ def dropna(
 
     Parameters
     ----------
-    data : MutableMapping[str, MutableSequence]
-        data mapping of {column name: column values}
-    axis : int | str
-        {0 or 'rows', 1 or 'columns'}
-    how : str
-        {'any', 'all'}
+    data : dict[str, List]
+        data dict of {column name: column values}
+    axis : {0 or 'rows', 1 or 'columns'}, default 0
+        Determine if rows or columns which contain missing values are removed.
+        0, or 'index' : Drop rows which contain missing values.
+        1, or 'columns' : Drop columns which contain missing value.
+    how : {'any', 'all'}, default 'any'
+        Determine if row or column is removed from Table, when we have at least one missing or all missing.
+        'any' : If any missing values are present, drop that row or column.
+        'all' : If all values are missing, drop that row or column.
     thresh : int, optional
         Require that many not missing values. Cannot be combined with how.
     subset : Sequence[str]
         column names to consider when checking for row values
     inplace : bool, default False
         Whether to modify the original data rather than returning new data.
+    na_value : Any, default None
+        value to look for missing values
+    remaining : bool, default False
+        if True, return only remaining indexes/column names
 
     Returns
     -------
     dict[str, list] | None | List[int] | List[str]
         Data with missing values removed
         return None if inplace=True
-        return list[int] of remaining indexes if remaining=True and axis=0
-        return list[str] of remaining column names if remaining=True and axis=1
+        return list[int] of remaining indexes if remaining=True and axis=0 or 'rows'
+        return list[str] of remaining column names if remaining=True and axis=1 or 'columns'
+
+    See Also
+    --------
+    tinytim.fillna.fillna : fill missing values
+    tinytim.isna.isna : mask of True/False if value is missing
+    tinytim.isna.notna : mask of True/False if value not missing
+
+    Examples
+    --------
+    >>> from tinytim.na import dropna
+    >>> data = {"name": ['Alfred', 'Batman', 'Catwoman'],
+                "toy": [None, 'Batmobile', 'Bullwhip'],
+                "born": [None, "1940-04-25", None]}
+
+    Drop the rows where at least one element is missing.
+
+    >>> dropna(data)
+    {'name': ['Batman'], 'toy': ['Batmobile'], 'born': ['1940-04-25']}
+
+    Drop the columns where at least one element is missing.
+
+    >>> dropna(data, axis='columns')
+    {'name': ['Alfred', 'Batman', 'Catwoman']}
+
+    Drop the rows where all elements are missing.
+
+    >>> dropna(data, how='all')
+    {'name': ['Alfred', 'Batman', 'Catwoman'],
+     'toy': [None, 'Batmobile', 'Bullwhip'],
+     'born': [None, '1940-04-25', None]}
+
+    Keep only the rows with at least 2 non-NA values.
+
+    >>> dropna(data, thresh=2)
+    {'name': ['Batman', 'Catwoman'],
+     'toy': ['Batmobile', 'Bullwhip'],
+     'born': ['1940-04-25', None]}
+
+    Define in which columns to look for missing values.
+
+    >>> dropna(data, subset=['name', 'toy'])
+    {'name': ['Batman', 'Catwoman'],
+     'toy': ['Batmobile', 'Bullwhip'],
+     'born': ['1940-04-25', None]}
+
+    Keep the data with valid entries in the same variable.
+
+    >>> dropna(data, inplace=True)
+    >>> data
+    {'name': ['Batman'], 'toy': ['Batmobile'], 'born': ['1940-04-25']}
     """
     if thresh is not None:
         if inplace:
