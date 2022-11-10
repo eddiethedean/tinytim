@@ -264,12 +264,12 @@ def dropna_all(
     axis: Union[int, str] = 0,
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None,
-    remaining_indexes: Optional[bool] = False
+    remaining: Optional[bool] = False
 ) -> Union[DataDict, List[int]]:
     if axis in [1, 'columns']:
         return dropna_columns_all(data, subset, na_value)
     if axis in [0, 'rows']:
-        return dropna_rows_all(data, subset, na_value, remaining_indexes)
+        return dropna_rows_all(data, subset, na_value, remaining)
     else:
         raise ValueError('axis but be 0, 1, "columns", or "rows"')
 
