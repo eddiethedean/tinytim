@@ -37,7 +37,7 @@ def dropna(
 
     Returns
     -------
-    MutableDataMapping | None | List[int]
+    dict[str, list] | None | List[int] | List[str]
         Data with missing values removed
         return None if inplace=True
         return list[int] of remaining indexes if remaining=True and axis=0
