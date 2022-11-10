@@ -190,7 +190,7 @@ def dropna_rows_any_indexes(
     na_value: Optional[Any] = None
 ) -> List[int]:
     remaining_indexes = []
-    for i, row in rows_functions.iterrows(data, reverse=True):
+    for i, row in rows_functions.iterrows(data):
         if not row_any_na(row, subset, na_value):
             remaining_indexes.append(i)
     return remaining_indexes
@@ -334,7 +334,7 @@ def dropna_rows_all_indexes(
     na_value: Optional[Any] = None,
 ) -> List[int]:
     indexes = []
-    for i, row in rows_functions.iterrows(data, reverse=True):
+    for i, row in rows_functions.iterrows(data):
         if not row_all_na(row, subset, na_value):
             indexes.append(i)
     return indexes
@@ -419,7 +419,7 @@ def dropna_rows_thresh_indexes(
     na_value: Optional[Any] = None
 ) -> List[int]:
     indexes = []
-    for i, row in rows_functions.iterrows(data, reverse=True):
+    for i, row in rows_functions.iterrows(data):
         if row_na_thresh(row, thresh, subset, na_value):
             indexes.append(i)
     return indexes
