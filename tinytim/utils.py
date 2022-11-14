@@ -110,9 +110,6 @@ def all_keys(dicts: Sequence[Mapping]) -> List:
     return keys
 
 
-
-
-
 def all_bool(values: Collection) -> bool:
     """
     Return if all items in values are bool or not.
