@@ -50,11 +50,11 @@ def itercolumns(data: DataMapping) -> Generator[Tuple[str, tuple], None, None]:
         
     Example
     -------
-    >>> data = 'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> cols = list(itercolumns(data))
-    >>> cols[0]
+    >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
+    >>> generator = itercolumns(data)
+    >>> next(generator)
     ('x', (1, 2, 3)) 
-    >>> cols[1]
+    >>> next(generator)
     ('y', (6, 7, 8))
     """
     for col in data_functions.column_names(data):
@@ -148,28 +148,272 @@ def operate_on_column(
 
 
 def add_to_column(column: Sequence, values: Union[Sequence, str, Number]) -> list:
+    """
+    Add a value or values to a sequence of column values.
+
+    Parameters
+    ----------
+    column : Sequence
+    values : Sequence | str | Number
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    Add a number to each value in a sequence.
+
+    >>> column = (1, 2, 3, 4)
+    >>> add_to_column(column, 1)
+    [2, 3, 4, 5]
+
+    Add a sequence of numbers to a sequence.
+
+    >>> column = (1, 2, 3, 4)
+    >>> add_to_column(column, (4, 5, 6, 7))
+    [5, 7, 9, 11]
+
+    Concatenate a string to each value in a sequence of strings.
+
+    >>> column = ('a', 'b', 'c', 'd')
+    >>> add_to_column(column, 'A')
+    ['aA', 'bA', 'cA', 'dA']
+
+    Concatenate a string to each value in a sequence of strings.
+
+    >>> column = ('a', 'b', 'c', 'd')
+    >>> add_to_column(column, ('A', 'B', 'C', 'D'))
+
+    See Also
+    --------
+    tinytim.columns.subtract_from_column
+    tinytim.columns.multiply_column
+    tinytim.columns.divide_column
+    """
     return operate_on_column(column, values, lambda x, y : x + y)
 
 
 def subtract_from_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    """
+    Subtract a value or values from a sequence of column values.
+
+    Parameters
+    ----------
+    column : Sequence
+    values : Sequence | str | Number
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    Subtract a number from each value in a sequence of numbers.
+
+    >>> column = (1, 2, 3, 4)
+    >>> subtract_from_column(column, 1)
+    [0, 1, 2, 3]
+
+    Subtract a sequence of numbers from a sequence of numbers.
+
+    >>> column = (1, 2, 3, 4)
+    >>> subtract_from_column(column, (4, 5, 6, 7))
+    [-3, -3, -3, -3]
+
+    See Also
+    --------
+    tinytim.columns.add_to_column
+    tinytim.columns.multiply_column
+    tinytim.columns.divide_column
+    """
     return operate_on_column(column, values, lambda x, y : x - y)
 
 
 def multiply_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    """
+    Multiply a value or values with a sequence of column values.
+
+    Parameters
+    ----------
+    column : Sequence
+    values : Sequence | str | Number
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    Multiply a number with each value in a sequence of numbers.
+
+    >>> column = (1, 2, 3, 4)
+    >>> multiply_column(column, 2)
+    [2, 4, 6, 8]
+
+    Mutiply a sequence of numbers with a sequence of numbers.
+
+    >>> column = (1, 2, 3, 4)
+    >>> multiply_column(column, (4, 5, 6, 7))
+    [4, 10, 18, 28]
+
+    Multiply a sequence of strings with a sequence of numbers.
+    >>> column = ['a', 'b', 'c', 'd']
+    >>> multiply_column(column, 3)
+    ['aaa', 'bbb', 'ccc', 'ddd']
+
+    Multiply a sequence of numbers with a sequence of strings.
+    >>> column = [1, 2, 3, 4]
+    >>> multiply_column(column, ('z', 'q', 'y', 'q'))
+
+    See Also
+    --------
+    tinytim.columns.add_to_column
+    tinytim.columns.subtract_from_column
+    tinytim.columns.divide_column
+    """
     return operate_on_column(column, values, lambda x, y : x * y)
 
 
 def divide_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    """
+    Divide a value or values from a sequence of column values.
+
+    Parameters
+    ----------
+    column : Sequence
+    values : Sequence | str | Number
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    Divide a number from each value in a sequence of numbers.
+
+    >>> column = (1, 2, 3, 4)
+    >>> divide_column(column, 2)
+    [0.5, 1.0, 1.5, 2.0]
+
+    Divide a sequence of numbers from a sequence of numbers.
+
+    >>> column = (1, 2, 3, 4)
+    >>> divide_column(column, (4, 5, 6, 7))
+    [0.25, 0.4, 0.5, 0.5714285714285714]
+
+    See Also
+    --------
+    tinytim.columns.add_to_column
+    tinytim.columns.subtract_from_column
+    tinytim.columns.multiply_column
+    """
     return operate_on_column(column, values, lambda x, y : x / y)
 
 
 def mod_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    """
+    Modulo a value or values from a sequence of column values.
+
+    Parameters
+    ----------
+    column : Sequence
+    values : Sequence | str | Number
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    Modulo a number from each value in a sequence of numbers.
+
+    >>> column = (1, 2, 3, 4)
+    >>> mod_column(column, 2)
+    [1, 0, 1, 0]
+
+    Modulo a sequence of numbers from a sequence of numbers.
+
+    >>> column = (4, 67, 87, 65)
+    >>> mod_column(column, (2, 3, 4, 5))
+    [0, 1, 3, 0]
+
+    See Also
+    --------
+    tinytim.columns.add_to_column
+    tinytim.columns.subtract_from_column
+    tinytim.columns.divide_column
+    """
     return operate_on_column(column, values, lambda x, y : x % y)
 
 
 def exponent_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    """
+    Exponent a value or values with a sequence of column values.
+
+    Parameters
+    ----------
+    column : Sequence
+    values : Sequence | str | Number
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    Exponent a number with each value in a sequence of numbers.
+
+    >>> column = (1, 2, 3, 4)
+    >>> exponent_column(column, 2)
+    [1, 4, 9, 16]
+
+    Exponent a sequence of numbers with a sequence of numbers.
+
+    >>> column = (2, 3, 4, 5)
+    >>> exponent_column(column, (2, 3, 4, 5))
+    [4, 27, 256, 3125]
+
+    See Also
+    --------
+    tinytim.columns.add_to_column
+    tinytim.columns.subtract_from_column
+    tinytim.columns.divide_column
+    """
     return operate_on_column(column, values, lambda x, y : x ** y)
 
 
 def floor_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+    """
+    Floor divide a value or values from a sequence of column values.
+
+    Parameters
+    ----------
+    column : Sequence
+    values : Sequence | str | Number
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    Floor divide a number from each value in a sequence of numbers.
+
+    >>> column = (1, 2, 3, 4)
+    >>> floor_column(column, 2)
+    [0, 1, 1, 2]
+
+    Floor divide a sequence of numbers from a sequence of numbers.
+
+    >>> column = (56, 77, 88, 55)
+    >>> floor_column(column, (5, 6, 7, 8))
+    [11, 12, 12, 6]
+
+    See Also
+    --------
+    tinytim.columns.add_to_column
+    tinytim.columns.subtract_from_column
+    tinytim.columns.divide_column
+    """
     return operate_on_column(column, values, lambda x, y : x // y)
