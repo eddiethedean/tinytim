@@ -4,6 +4,10 @@ import tinytim.data as data_functions
 from tinytim.types import DataDict, DataMapping, data_dict, RowDict, RowMapping, row_dict
 
 
+def is_missing(value, missing_value) -> bool:
+    return value == missing_value or value is missing_value
+
+
 def isnull(data: DataMapping, na_value=None) -> DataDict:
     data = data_dict(data)
     isnull_inplace(data, na_value)
@@ -44,12 +48,12 @@ def column_notnull(column: Sequence, na_value=None) -> list:
 
 def column_isnull_inplace(column: list, na_value=None) -> None:
     for i, item in enumerate(column):
-        column[i] =  item == na_value
+        column[i] =  is_missing(item, na_value)
 
 
 def column_notnull_inplace(column: list, na_value=None) -> None:
     for i, item in enumerate(column):
-        column[i] =  item != na_value
+        column[i] = not is_missing(item, na_value)
 
 
 def row_isnull(row: RowMapping, na_value=None) -> RowDict:
@@ -66,9 +70,9 @@ def row_notnull(row: DataMapping, na_value=None) -> RowDict:
 
 def row_isnull_inplace(row: RowDict, na_value=None) -> None:
     for key, item in row.items():
-        row[key] = item == na_value
+        row[key] = is_missing(item, na_value)
 
 
 def row_notnull_inplace(row: RowDict, na_value=None) -> None:
     for key, item in row.items():
-        row[key] = item != na_value
+        row[key] = not is_missing(item, na_value)

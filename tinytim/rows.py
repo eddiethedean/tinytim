@@ -121,7 +121,7 @@ def itertuples(
     Example
     -------
     >>> data = {'x': [1, 2, 3], 'y': [6, 7, 8]}
-    >>> generator = iterrows(data)
+    >>> generator = itertuples(data)
     >>> next(generator)
     (1, 6)
     >>> next(generator)

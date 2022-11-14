@@ -4,6 +4,7 @@ import tinytim.data as data_functions
 import tinytim.edit as edit_functions
 import tinytim.rows as rows_functions
 import tinytim.filter as filter_functions
+import tinytim.isna as isna_functions
 from tinytim.types import DataMapping, DataDict, RowMapping, data_dict
 
 
@@ -270,7 +271,7 @@ def column_any_na(
     column: Sequence,
     na_value: Optional[Any] = None
 ) -> bool:
-    return any(val == na_value for val in column)
+    return any(isna_functions.is_missing(val, na_value) for val in column)
 
 
 def subset_row_values(
@@ -286,14 +287,14 @@ def row_any_na(
     na_value: Optional[Any] = None
 ) -> bool:
     values = subset_row_values(row, subset)
-    return any(val == na_value for val in values)
+    return any(isna_functions.is_missing(val, na_value) for val in values)
 
 
 def column_all_na(
     column: Sequence,
     na_value: Optional[Any] = None
 ) -> bool:
-    return all(val == na_value for val in column)
+    return all(isna_functions.is_missing(val, na_value) for val in column)
 
 
 def row_all_na(
@@ -302,7 +303,7 @@ def row_all_na(
     na_value: Optional[Any] = None
 ) -> bool:
     values = subset_row_values(row, subset)
-    return all(val == na_value for val in values)
+    return all(isna_functions.is_missing(val, na_value) for val in values)
 
 
 def dropna_all_inplace(
@@ -311,10 +312,12 @@ def dropna_all_inplace(
     subset: Optional[Sequence[str]] = None,
     na_value: Optional[Any] = None
 ) -> None:
-    if axis == 1:
+    if axis in [1, 'columns']:
         dropna_columns_all_inplace(data, subset, na_value)
-    elif axis == 0:
+    elif axis in [0, 'rows']:
         dropna_rows_all_inplace(data, subset, na_value)
+    else:
+        raise ValueError('axis but be 0, 1, "columns", or "rows"')
 
 
 def dropna_all(

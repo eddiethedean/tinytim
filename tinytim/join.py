@@ -15,6 +15,162 @@ Matches = Tuple[MatchIndexes]
 JoinStrategy = Callable[[Sequence, Sequence], Matches]
 
 
+def inner_join(
+    left: DataMapping,
+    right: DataMapping,
+    left_on: str,
+    right_on: Optional[str] = None,
+    select: Optional[Sequence[str]] = None
+) -> DataDict:
+    """
+    Inner Join two data dict on a specified column name(s).
+    If right_on is None, joins both on same column name (left_on).
+    Parameters
+    ----------
+    left : Mapping[str, Sequence]
+        left data mapping of {column name: column values}
+    right : Mapping[str, Sequence]
+        right data mapping of {column name: column values}
+    left_on : str
+        column name to join on in left
+    right_on : str, optional
+        column name to join on in right, join on left_on if None
+    select : list[str], optional
+        column names to return
+        
+    Returns
+    -------
+    DataDict
+        resulting joined data table
+        
+    Example
+    -------
+    >>> left =  {'id': ['a', 'c', 'd', 'f', 'g'], 'x': [33, 44, 55, 66, 77]}
+    >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
+    >>> inner_join(left, right, 'id')
+    {'id': ['a', 'c', 'd'], 'x': [33, 44, 55], 'y': [11, 33, 44]}
+    """
+    return _join(left, right, left_on, right_on, select, _inner_matching_indexes)
+
+
+def full_join(
+    left: DataMapping,
+    right: DataMapping,
+    left_on: str,
+    right_on: Optional[str] = None,
+    select: Optional[Sequence[str]] = None
+) -> DataDict:
+    """
+    Full Join two data dict on a specified column name(s).
+    If right_on is None, joins both on same column name (left_on).
+    Parameters
+    ----------
+    left : Mapping[str, Sequence]
+        left data mapping of {column name: column values}
+    right : Mapping[str, Sequence]
+        right data mapping of {column name: column values}
+    left_on : str
+        column name to join on in left
+    right_on : str, optional
+        column name to join on in right, join on left_on if None
+    select : list[str], optional
+        column names to return
+        
+    Returns
+    -------
+    DataDict
+        resulting joined data table
+        
+    Example
+    -------
+    >>> left = {'id': ['a', 'c', 'd', 'f', 'g'], 'x': [33, 44, 55, 66, 77]}
+    >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
+    >>> full_join(left, right, 'id')
+    {'id': ['a', 'c', 'd', 'f', 'g', 'b'],
+     'x': [33, 44, 55, 66, 77, None],
+     'y': [11, 33, 44, None, None, 22]}
+    """
+    return _join(left, right, left_on, right_on, select, _full_matching_indexes)
+
+
+def left_join(
+    left: DataMapping,
+    right: DataMapping,
+    left_on: str,
+    right_on: Optional[str] = None,
+    select: Optional[Sequence[str]] = None
+) -> DataDict:
+    """
+    Left Join two data dict on a specified column name(s).
+    If right_on is None, joins both on same column name (left_on).
+    
+    Parameters
+    ----------
+    left : Mapping[str, Sequence]
+        left data mapping of {column name: column values}
+    right : Mapping[str, Sequence]
+        right data mapping of {column name: column values}
+    left_on : str
+        column name to join on in left
+    right_on : str, optional
+        column name to join on in right, join on left_on if None
+    select : list[str], optional
+        column names to return
+        
+    Returns
+    -------
+    DataDict
+        resulting joined data table
+        
+    Example
+    -------
+    >>> left = {'id': ['a', 'c', 'd', 'f'], 'x': [33, 44, 55, 66]}
+    >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
+    >>> left_join(left, right, 'id')
+    {'id': ['a', 'c', 'd', 'f'], 'x': [33, 44, 55, 66], 'y': [11, 33, 44, None]}
+    """
+    return _join(left, right, left_on, right_on, select, _left_matching_indexes)
+
+
+def right_join(
+    left: DataMapping,
+    right: DataMapping,
+    left_on: str,
+    right_on: Optional[str] = None,
+    select: Optional[Sequence[str]] = None
+) -> DataDict:
+    """
+    Right Join two data dict on a specified column name(s).
+    If right_on is None, joins both on same column name (left_on).
+    
+    Parameters
+    ----------
+    left : Mapping[str, Sequence]
+        left data mapping of {column name: column values}
+    right : Mapping[str, Sequence]
+        right data mapping of {column name: column values}
+    left_on : str
+        column name to join on in left
+    right_on : str, optional
+        column name to join on in right, join on left_on if None
+    select : list[str], optional
+        column names to return
+        
+    Returns
+    -------
+    DataDict
+        resulting joined data table
+        
+    Example
+    -------
+    >>> left = {'id': ['a', 'c', 'd', 'f'], 'x': [33, 44, 55, 66]}
+    >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
+    >>> right_join(left, right, 'id')
+    {'id': ['a', 'b', 'c', 'd'], 'x': [33, None, 44, 55], 'y': [11, 22, 33, 44]}
+    """
+    return _join(left, right, left_on, right_on, select, _right_matching_indexes)
+    
+
 def locate(
     l: Sequence,
     value: Any
@@ -69,7 +225,7 @@ def _name_matches(matches: Iterable[Tuple[Any, int, int]]) -> Tuple[MatchIndexes
         for value, left_index, right_index in matches)
 
 
-def inner_matching_indexes(
+def _inner_matching_indexes(
     left: Sequence,
     right: Sequence
 ) -> Tuple[MatchIndexes]:
@@ -108,7 +264,7 @@ def inner_matching_indexes(
     return tuple(out)
 
 
-def left_matching_indexes(
+def _left_matching_indexes(
     left: Sequence,
     right: Sequence
 ) -> Tuple[MatchIndexes]:
@@ -150,7 +306,7 @@ def left_matching_indexes(
     return tuple(out)
 
 
-def right_matching_indexes(
+def _right_matching_indexes(
     l1: Sequence,
     l2: Sequence
 ) -> Tuple[MatchIndexes]:
@@ -190,7 +346,7 @@ def right_matching_indexes(
     return tuple(out)
 
 
-def full_matching_indexes(
+def _full_matching_indexes(
     left: Sequence,
     right: Sequence
 ) -> Tuple[MatchIndexes]:
@@ -237,7 +393,7 @@ def full_matching_indexes(
     return tuple(out)
 
 
-def filter_values_by_index_matches(
+def _filter_values_by_index_matches(
     values: Sequence,
     indexes: Sequence[Union[int, None]]
 ) -> list:
@@ -306,7 +462,7 @@ def _check_for_missing_on(
                 _missing_col_error(col, table_name)
 
 
-def tuple_keys(
+def _tuple_keys(
     table: DataMapping,
     column_names: Sequence[str]
 ) -> Tuple[Tuple]:
@@ -336,13 +492,13 @@ def tuple_keys(
     return tuple(zip(*[table[col] for col in column_names]))
 
 
-def join(
+def _join(
     left: DataMapping,
     right: DataMapping,
     left_on: str,
     right_on: Optional[str] = None,
     select: Optional[Sequence[str]] = None,
-    join_strategy: JoinStrategy = full_matching_indexes
+    join_strategy: JoinStrategy = _full_matching_indexes
 ) -> DataDict:
     """
     Join two data mappings on a specified column name(s)
@@ -398,16 +554,16 @@ def join(
     if isinstance(left_on, str):
         indexes = join_strategy(left[left_on], right[right_on])
     else:
-        indexes = join_strategy(tuple_keys(left, left_on), tuple_keys(right, right_on))
+        indexes = join_strategy(_tuple_keys(left, left_on), _tuple_keys(right, right_on))
 
     values = [x.value for x in indexes]
     left_indexes = [x.left_index for x in indexes]
     right_indexes = [x.right_index for x in indexes]
-    out = {col: filter_values_by_index_matches(left[col], left_indexes) for col in left}
+    out = {col: _filter_values_by_index_matches(left[col], left_indexes) for col in left}
     
     for col in right:
         if col not in [left_on, right_on]:
-            out[col] = filter_values_by_index_matches(right[col], right_indexes)
+            out[col] = _filter_values_by_index_matches(right[col], right_indexes)
             
     if isinstance(right_on, str):
         out[right_on] = values
@@ -422,157 +578,3 @@ def join(
     return out
 
 
-def inner_join(
-    left: DataMapping,
-    right: DataMapping,
-    left_on: str,
-    right_on: Optional[str] = None,
-    select: Optional[Sequence[str]] = None
-) -> DataDict:
-    """
-    Inner Join two data dict on a specified column name(s).
-    If right_on is None, joins both on same column name (left_on).
-    Parameters
-    ----------
-    left : Mapping[str, Sequence]
-        left data mapping of {column name: column values}
-    right : Mapping[str, Sequence]
-        right data mapping of {column name: column values}
-    left_on : str
-        column name to join on in left
-    right_on : str, optional
-        column name to join on in right, join on left_on if None
-    select : list[str], optional
-        column names to return
-        
-    Returns
-    -------
-    DataDict
-        resulting joined data table
-        
-    Example
-    -------
-    >>> left =  {'id': ['a', 'c', 'd', 'f', 'g'], 'x': [33, 44, 55, 66, 77]}
-    >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
-    >>> inner_join(left, right, 'id')
-    {'id': ['a', 'c', 'd'], 'x': [33, 44, 55], 'y': [11, 33, 44]}
-    """
-    return join(left, right, left_on, right_on, select, inner_matching_indexes)
-
-
-def full_join(
-    left: DataMapping,
-    right: DataMapping,
-    left_on: str,
-    right_on: Optional[str] = None,
-    select: Optional[Sequence[str]] = None
-) -> DataDict:
-    """
-    Full Join two data dict on a specified column name(s).
-    If right_on is None, joins both on same column name (left_on).
-    Parameters
-    ----------
-    left : Mapping[str, Sequence]
-        left data mapping of {column name: column values}
-    right : Mapping[str, Sequence]
-        right data mapping of {column name: column values}
-    left_on : str
-        column name to join on in left
-    right_on : str, optional
-        column name to join on in right, join on left_on if None
-    select : list[str], optional
-        column names to return
-        
-    Returns
-    -------
-    DataDict
-        resulting joined data table
-        
-    Example
-    -------
-    >>> left = {'id': ['a', 'c', 'd', 'f', 'g'], 'x': [33, 44, 55, 66, 77]}
-    >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
-    >>> full_join(left, right, 'id')
-    {'id': ['a', 'c', 'd', 'f', 'g', 'b'],
-     'x': [33, 44, 55, 66, 77, None],
-     'y': [11, 33, 44, None, None, 22]}
-    """
-    return join(left, right, left_on, right_on, select, full_matching_indexes)
-
-
-def left_join(
-    left: DataMapping,
-    right: DataMapping,
-    left_on: str,
-    right_on: Optional[str] = None,
-    select: Optional[Sequence[str]] = None
-) -> DataDict:
-    """
-    Left Join two data dict on a specified column name(s).
-    If right_on is None, joins both on same column name (left_on).
-    
-    Parameters
-    ----------
-    left : Mapping[str, Sequence]
-        left data mapping of {column name: column values}
-    right : Mapping[str, Sequence]
-        right data mapping of {column name: column values}
-    left_on : str
-        column name to join on in left
-    right_on : str, optional
-        column name to join on in right, join on left_on if None
-    select : list[str], optional
-        column names to return
-        
-    Returns
-    -------
-    DataDict
-        resulting joined data table
-        
-    Example
-    -------
-    >>> left = {'id': ['a', 'c', 'd', 'f'], 'x': [33, 44, 55, 66]}
-    >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
-    >>> left_join(left, right, 'id')
-    {'id': ['a', 'c', 'd', 'f'], 'x': [33, 44, 55, 66], 'y': [11, 33, 44, None]}
-    """
-    return join(left, right, left_on, right_on, select, left_matching_indexes)
-
-
-def right_join(
-    left: DataMapping,
-    right: DataMapping,
-    left_on: str,
-    right_on: Optional[str] = None,
-    select: Optional[Sequence[str]] = None
-) -> DataDict:
-    """
-    Right Join two data dict on a specified column name(s).
-    If right_on is None, joins both on same column name (left_on).
-    
-    Parameters
-    ----------
-    left : Mapping[str, Sequence]
-        left data mapping of {column name: column values}
-    right : Mapping[str, Sequence]
-        right data mapping of {column name: column values}
-    left_on : str
-        column name to join on in left
-    right_on : str, optional
-        column name to join on in right, join on left_on if None
-    select : list[str], optional
-        column names to return
-        
-    Returns
-    -------
-    DataDict
-        resulting joined data table
-        
-    Example
-    -------
-    >>> left = {'id': ['a', 'c', 'd', 'f'], 'x': [33, 44, 55, 66]}
-    >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
-    >>> right_join(left, right, 'id')
-    {'id': ['a', 'b', 'c', 'd'], 'x': [33, None, 44, 55], 'y': [11, 22, 33, 44]}
-    """
-    return join(left, right, left_on, right_on, select, right_matching_indexes)

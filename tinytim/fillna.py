@@ -5,6 +5,7 @@ from hasattrs import has_mapping_attrs
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
 import tinytim.rows as rows_functions
+import tinytim.isna as isna_functions
 from tinytim.types import DataDict, DataMapping, RowDict, RowMapping, data_dict, row_dict
 
 
@@ -26,17 +27,71 @@ def fillna(
         data mapping of {column name: column values}
     value : Any
         value to use to fill missing values
-    method : {'backfill', 'bfill', 'pad', 'ffill', None}
-        method to use for filling holes in reindexed
-        Series.
+    method : {'backfill', 'bfill', 'pad', 'ffill', None}, default None
+        method to use for filling missing values
         pad/ffill: propagate last valid observation
         forward to next valid
         backfill/bfill: use next valid observation to fill gap.
+    axis : {0 or 'index', 1 or 'columns'}
+        Axis along which to fill missing values.
+    inplace : bool, default False
+        If True, fill in-place.
+    limit : int, default None
+        If method is specified, this is the maximum number of
+        consecutive missing values to forward/backward fill.
+    na_value : Any, default None
+        the missing value to look for and fill in
 
     Returns
     -------
     Mapping or None
         Object with missing values filled or None if inplace=True
+
+    See Also
+    --------
+    tinytim.dropna.dropna : drop rows/columns with missing values
+    tinytim.isna.isna : mask of True/False if value is missing
+    tinytim.isna.notna : mask of True/False if value not missing
+
+    Examples
+    --------
+    >>> data = {'A': [None, 3, None, None],
+                'B': [2, 4, None, 3],
+                'C': [None, None, None, None],
+                'D': [0, 1, None, 4]}
+    
+    Replace all missing elements with 0s.
+
+    >>> fillna(data, 0)
+    {'A': [0, 3, 0, 0], 'B': [2, 4, 0, 3], 'C': [0, 0, 0, 0], 'D': [0, 1, 0, 4]}
+
+    We can also propagate non-missing values forward or backward.
+
+    >>> fillna(data, method="ffill")
+    {'A': [None, 3, 3, 3],
+     'B': [2, 4, 4, 3],
+     'C': [None, None, None, None],
+     'D': [0, 1, 1, 4]}
+    
+    Replace all missing elements in column 'A', 'B', 'C', and 'D', with 0, 1, 2, and 3 respectively.
+
+    >>> values = {"A": 0, "B": 1, "C": 2, "D": 3}
+    >>> fillna(data, value=values)
+    {'A': [0, 3, 0, 0], 'B': [2, 4, 1, 3], 'C': [2, 2, 2, 2], 'D': [0, 1, 3, 4]}
+
+    Only replace the first missing element.
+
+    >>> fillna(data, value=values, limit=1)
+    {'A': [0, 3, None, None],
+     'B': [2, 4, 1, 3],
+     'C': [2, None, None, None],
+     'D': [0, 1, 3, 4]}
+
+    Replace all missing elements with 0s in the same variable.
+
+    >>> fillna(data, 0, inplace=True)
+    >>> data
+    {'A': [0, 3, 0, 0], 'B': [2, 4, 0, 3], 'C': [0, 0, 0, 0], 'D': [0, 1, 0, 4]}
     """
     if method is None:
         if inplace:
@@ -473,7 +528,7 @@ def fill_column_with_value_inplace(
         if limit is not None:
             if fill_count >= limit:
                 return
-        if item == na_value:
+        if isna_functions.is_missing(item, na_value):
             column[i] = value
             fill_count += 1
 
@@ -560,7 +615,7 @@ def fill_row_with_value_inplace(
         if limit is not None:
             if fill_count >= limit:
                 return
-        if item == na_value:
+        if isna_functions.is_missing(item, na_value):
             try:
                 fill_value = _get_fill_value(value, key)
             except Continue:
@@ -579,9 +634,9 @@ def backfill_column_inplace(
         if limit is not None:
             if fill_count >= limit:
                 return
-        if item == na_value:
+        if isna_functions.is_missing(item, na_value):
             b = _back(column, i, na_value)
-            if b == na_value:
+            if isna_functions.is_missing(b, na_value):
                 continue
             column[i] = b
             fill_count += 1
@@ -624,9 +679,9 @@ def backfill_row_inplace(
         if limit is not None:
             if fill_count >= limit:
                 return
-        if item == na_value:
+        if isna_functions.is_missing(item, na_value):
             b = _back(list(row.values()), i, na_value)
-            if b == na_value:
+            if isna_functions.is_missing(b, na_value):
                 continue
             row[key] = b
             fill_count += 1
@@ -652,9 +707,9 @@ def forwardfill_column_inplace(
         if limit is not None:
             if fill_count >= limit:
                 return
-        if item == na_value:
+        if isna_functions.is_missing(item, na_value):
             f = _forward(column, i, na_value)
-            if f == na_value:
+            if isna_functions.is_missing(f, na_value):
                 continue
             column[i] = f
             fill_count += 1
@@ -687,9 +742,9 @@ def forwardfill_row_inplace(
         if limit is not None:
             if fill_count >= limit:
                 return
-        if value == na_value:
+        if isna_functions.is_missing(value, na_value):
             f = _forward(list(row.values()), i, na_value)
-            if f == na_value:
+            if isna_functions.is_missing(f, na_value):
                 continue
             row[key] = f
             fill_count += 1

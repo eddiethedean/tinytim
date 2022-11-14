@@ -6,10 +6,10 @@ from typing import Dict, List, Sequence
 import json
 
 import tinytim.rows as rows_functions
-from tinytim.types import DataMapping, DataDict, RowMapping
+from tinytim.types import DataMapping, DataDict, RowMapping, RowDict
 
 
-def data_to_json_list(data: DataMapping) -> List[Dict]:
+def data_to_json_list(data: DataMapping) -> List[RowDict]:
     """
     Convert data table to list of row dicts.
 
@@ -48,7 +48,7 @@ def json_list_to_data(l: Sequence[RowMapping]) -> DataDict:
 
     Example
     -------
-    >>>json = [{'x': 1, 'y': 6}, {'x': 2, 'y': 7}, {'x': 3, 'y': 8}]
+    >>> json = [{'x': 1, 'y': 6}, {'x': 2, 'y': 7}, {'x': 3, 'y': 8}]
     >>> json_list_to_data(json)
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
