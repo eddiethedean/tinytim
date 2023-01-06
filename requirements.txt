@@ -1,0 +1,2 @@
+dictanykey>=0.0.2
+hasattrs>=0.0.2
