@@ -2,6 +2,8 @@ from collections import defaultdict
 from typing import Dict, Generator, Mapping, MutableMapping, Sequence, Tuple
 
 import tinytim.data as data_features
+from tinytim.utils import row_dicts_to_data
+from tinytim.insert import insert_row, insert_row_inplace, insert_rows, insert_rows_inplace
 
 
 def row_dict(
