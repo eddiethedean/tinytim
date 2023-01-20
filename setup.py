@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="tinytim",
-    version="1.10.0",
+    version="1.11.0",
     description="Pure Python data table functions.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -18,10 +18,10 @@ setup(
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.8",
     ],
     packages=find_packages(),
     include_package_data=True,
-    python_requires='>=3.6',
-    install_requires=['dictanykey>=0.0.2', 'hasattrs>=0.0.2']
+    python_requires='>=3.8',
+    install_requires=['dictanykey>=0.0.5', 'hasattrs>=0.0.2']
 )
