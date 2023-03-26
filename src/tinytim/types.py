@@ -1,6 +1,7 @@
-from typing import Any, Dict, Mapping, Sequence
+from typing import Any, Dict, Mapping, Sequence, MutableMapping, MutableSequence
 
 DataMapping = Mapping[str, Sequence]
+MutableDataMapping = MutableMapping[str, MutableSequence]
 RowMapping = Mapping[str, Any]
 DataDict = Dict[str, list]
 RowDict = Dict[str, Any]

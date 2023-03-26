@@ -1,6 +1,7 @@
+import copy
 from typing import Any, Sized, Tuple
 
-from tinytim.types import DataDict, DataMapping
+from tinytim.types import DataDict, DataMapping, MutableDataMapping
 
 
 def column_count(data: DataMapping) -> int:
@@ -23,7 +24,7 @@ def column_count(data: DataMapping) -> int:
     >>> column_count(data)
     2
     """
-    return len(data)
+    return len(data.keys())
 
 
 def first_column_name(data: DataMapping) -> str:
@@ -151,20 +152,20 @@ def column_names(data: DataMapping) -> Tuple[str]:
     return tuple(data)
 
 
-def head(data: DataMapping, n: int = 5) -> DataDict:
+def head(data: MutableDataMapping, n: int = 5) -> MutableDataMapping:
     """
     Return the first n rows of data.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : MutableMapping[str, MutableSequence]
         data mapping of {column name: column values}
     n : int, optional
         number of rows to return from top of data
 
     Returns
     -------
-    dict[str, Sequence]
+    MutableMapping[str, MutableSequence]
         {column name: top n column values}
 
     Example
@@ -173,16 +174,24 @@ def head(data: DataMapping, n: int = 5) -> DataDict:
     >>> head(data, 2)
     {'x': [1, 2], 'y': [6, 7]}
     """
-    return {col: list(values[:n]) for col, values in data.items()}
+    if hasattr(data, 'head'):
+        return data.head(n) # type: ignore
+    data = copy.copy(data)
+    for col, values in data.items():
+        if hasattr(values, 'head'):
+            data[col] = values.head(n) # type: ignore
+        else:
+            data[col] = values[:n]
+    return data
 
 
-def tail(data: DataMapping, n: int = 5) -> DataDict:
+def tail(data: MutableDataMapping, n: int = 5) -> MutableDataMapping:
     """
     Return the last n rows of data.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : MutableMapping[str, MutableSequence]
         data mapping of {column name: column values}
     
     n : int, optional
@@ -190,7 +199,7 @@ def tail(data: DataMapping, n: int = 5) -> DataDict:
 
     Returns
     -------
-    dict
+     MutableMapping[str, MutableSequence]
         {column name: bottom n column values}
 
     Example
@@ -199,7 +208,15 @@ def tail(data: DataMapping, n: int = 5) -> DataDict:
     >>> tail(data, 2)
     {'x': [2, 3], 'y': [7, 8]}
     """
-    return {col: list(values[-n:]) for col, values in data.items()}
+    if hasattr(data, 'tail'):
+        return data.tail(n) # type: ignore
+    data = copy.copy(data)
+    for col, values in data.items():
+        if hasattr(values, 'tail'):
+            data[col] = values.tail(n) # type: ignore
+        else:
+            data[col] = values[-n:]
+    return data
 
 
 def index(data: DataMapping) -> Tuple[int]:
