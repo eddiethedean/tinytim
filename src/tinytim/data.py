@@ -1,5 +1,5 @@
 import copy
-from typing import Any, Sized, Tuple
+from typing import Any, Sequence, Sized, Tuple, TypeVar
 
 from tinytim.types import DataDict, DataMapping, MutableDataMapping
 
@@ -152,20 +152,23 @@ def column_names(data: DataMapping) -> Tuple[str]:
     return tuple(data)
 
 
-def head(data: MutableDataMapping, n: int = 5) -> MutableDataMapping:
+DM = TypeVar('DM', bound='DataMapping')
+
+
+def head(data: DM, n: int = 5) -> DM:
     """
     Return the first n rows of data.
 
     Parameters
     ----------
-    data : MutableMapping[str, MutableSequence]
+    data : Mapping[str, MutableSequence]
         data mapping of {column name: column values}
     n : int, optional
         number of rows to return from top of data
 
     Returns
     -------
-    MutableMapping[str, MutableSequence]
+    apping[str, MutableSequence]
         {column name: top n column values}
 
     Example
@@ -174,18 +177,11 @@ def head(data: MutableDataMapping, n: int = 5) -> MutableDataMapping:
     >>> head(data, 2)
     {'x': [1, 2], 'y': [6, 7]}
     """
-    if hasattr(data, 'head'):
-        return data.head(n) # type: ignore
-    data = copy.copy(data)
-    for col, values in data.items():
-        if hasattr(values, 'head'):
-            data[col] = values.head(n) # type: ignore
-        else:
-            data[col] = values[:n]
-    return data
+    constructor = type(data)
+    return constructor({k: v[:n] for k, v in data.items()}) # type: ignore
 
 
-def tail(data: MutableDataMapping, n: int = 5) -> MutableDataMapping:
+def tail(data: DM, n: int = 5) -> DM:
     """
     Return the last n rows of data.
 
@@ -208,15 +204,8 @@ def tail(data: MutableDataMapping, n: int = 5) -> MutableDataMapping:
     >>> tail(data, 2)
     {'x': [2, 3], 'y': [7, 8]}
     """
-    if hasattr(data, 'tail'):
-        return data.tail(n) # type: ignore
-    data = copy.copy(data)
-    for col, values in data.items():
-        if hasattr(values, 'tail'):
-            data[col] = values.tail(n) # type: ignore
-        else:
-            data[col] = values[-n:]
-    return data
+    constructor = type(data)
+    return constructor({k: v[-n:] for k, v in data.items()}) # type: ignore
 
 
 def index(data: DataMapping) -> Tuple[int]:
@@ -269,7 +258,7 @@ def table_value(data: DataMapping, column_name: str, index: int) -> Any:
     return data[column_name][index]
 
 
-def column_values(data: DataMapping, column_name: str) -> tuple:
+def column_values(data: DataMapping, column_name: str) -> Sequence:
     """
     Return all the values from one column.
     
@@ -291,4 +280,4 @@ def column_values(data: DataMapping, column_name: str) -> tuple:
     >>> column_values(data, 'y')
     [6, 7, 8]
     """
-    return tuple(data[column_name])
+    return data[column_name]
