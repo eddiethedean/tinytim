@@ -1,13 +1,16 @@
 from itertools import repeat
 from numbers import Number
-from typing import Any, Callable, Generator, Iterable, Sequence, Sized, Tuple, Union
+from typing import Any, Callable, Generator, Iterable, Sequence, Sized, Tuple, Union, TypeVar
 
 from dictanykey import DefaultDictAnyKey, DictAnyKey
 import tinytim.data as data_functions
 from tinytim.types import DataMapping, DataDict
 
+TypeVarDataMapping = TypeVar('TypeVarDataMapping', bound='DataMapping')
+TypeVarSequence = TypeVar('TypeVarSequence', bound='Sequence')
 
-def column_dict(data: DataMapping, col: str) -> DataDict:
+
+def column_mapping(data: TypeVarDataMapping, col: str) -> TypeVarDataMapping:
     """
     Return a dict of {col_name, col_values} from data.
         
@@ -31,10 +34,11 @@ def column_dict(data: DataMapping, col: str) -> DataDict:
     >>> column_dict(data, 'y')
     {'y': [6, 7, 8]}
     """
-    return {col: list(data_functions.column_values(data, col))}
+    constructor = type(data)
+    return constructor({col: data_functions.column_values(data, col)}) # type: ignore
 
 
-def itercolumns(data: DataMapping) -> Generator[Tuple[str, tuple], None, None]:
+def itercolumns(data: DataMapping) -> Generator[Tuple[str, Sequence], None, None]:
     """
     Return a generator of tuple column name, column values.
 
@@ -58,7 +62,7 @@ def itercolumns(data: DataMapping) -> Generator[Tuple[str, tuple], None, None]:
     ('y', (6, 7, 8))
     """
     for col in data_functions.column_names(data):
-        yield col, tuple(data_functions.column_values(data, col))
+        yield col, data_functions.column_values(data, col)
 
 
 def value_counts(
@@ -102,10 +106,10 @@ def value_counts(
 
 
 def operate_on_column(
-    column: Sequence,
+    column: TypeVarSequence,
     values: Union[Iterable, str, Number],
     func: Callable[[Any, Any], Any]
-) -> list:
+) -> TypeVarSequence:
     """
     Uses func operator on values in column.
     If values is a sequence, operate on each column value with values.
@@ -135,19 +139,20 @@ def operate_on_column(
     >>> operate_on_columns(column, [2, 3, 4, 5], lamda x, y : x + y)
     [3, 5, 7, 9]
     """
+    constructor = type(column)
     iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
     if isinstance(values, str) or not iterable_and_sized:
-        return [func(x, y) for x, y in zip(column, repeat(values, len(column)))]
+        return constructor(func(x, y) for x, y in zip(column, repeat(values, len(column)))) # type: ignore
     
     if iterable_and_sized and not isinstance(values, Number):
         if len(values) != len(column):  # type: ignore
             raise ValueError('values length must match data rows count.')
-        return [func(x, y) for x, y in zip(column, values)]
+        return constructor(func(x, y) for x, y in zip(column, values)) # type: ignore
     else:
         raise TypeError('values must either be a sequence or number to operate on column')
 
 
-def add_to_column(column: Sequence, values: Union[Sequence, str, Number]) -> list:
+def add_to_column(column: TypeVarSequence, values: Union[Sequence, str, Number]) -> TypeVarSequence:
     """
     Add a value or values to a sequence of column values.
 
@@ -194,7 +199,7 @@ def add_to_column(column: Sequence, values: Union[Sequence, str, Number]) -> lis
     return operate_on_column(column, values, lambda x, y : x + y)
 
 
-def subtract_from_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+def subtract_from_column(column: TypeVarSequence, values: Union[Sequence, Number]) -> TypeVarSequence:
     """
     Subtract a value or values from a sequence of column values.
 
@@ -230,7 +235,7 @@ def subtract_from_column(column: Sequence, values: Union[Sequence, Number]) -> l
     return operate_on_column(column, values, lambda x, y : x - y)
 
 
-def multiply_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+def multiply_column(column: TypeVarSequence, values: Union[Sequence, Number]) -> TypeVarSequence:
     """
     Multiply a value or values with a sequence of column values.
 
@@ -275,7 +280,7 @@ def multiply_column(column: Sequence, values: Union[Sequence, Number]) -> list:
     return operate_on_column(column, values, lambda x, y : x * y)
 
 
-def divide_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+def divide_column(column: TypeVarSequence, values: Union[Sequence, Number]) -> TypeVarSequence:
     """
     Divide a value or values from a sequence of column values.
 
@@ -311,7 +316,7 @@ def divide_column(column: Sequence, values: Union[Sequence, Number]) -> list:
     return operate_on_column(column, values, lambda x, y : x / y)
 
 
-def mod_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+def mod_column(column: TypeVarSequence, values: Union[Sequence, Number]) -> TypeVarSequence:
     """
     Modulo a value or values from a sequence of column values.
 
@@ -347,7 +352,7 @@ def mod_column(column: Sequence, values: Union[Sequence, Number]) -> list:
     return operate_on_column(column, values, lambda x, y : x % y)
 
 
-def exponent_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+def exponent_column(column: TypeVarSequence, values: Union[Sequence, Number]) -> TypeVarSequence:
     """
     Exponent a value or values with a sequence of column values.
 
@@ -383,7 +388,7 @@ def exponent_column(column: Sequence, values: Union[Sequence, Number]) -> list:
     return operate_on_column(column, values, lambda x, y : x ** y)
 
 
-def floor_column(column: Sequence, values: Union[Sequence, Number]) -> list:
+def floor_column(column: TypeVarSequence, values: Union[Sequence, Number]) -> TypeVarSequence:
     """
     Floor divide a value or values from a sequence of column values.
 

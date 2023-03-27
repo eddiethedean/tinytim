@@ -152,10 +152,10 @@ def column_names(data: DataMapping) -> Tuple[str]:
     return tuple(data)
 
 
-DM = TypeVar('DM', bound='DataMapping')
+TypeVarDataMapping = TypeVar('TypeVarDataMapping', bound='DataMapping')
 
 
-def head(data: DM, n: int = 5) -> DM:
+def head(data: TypeVarDataMapping, n: int = 5) -> TypeVarDataMapping:
     """
     Return the first n rows of data.
 
@@ -181,7 +181,7 @@ def head(data: DM, n: int = 5) -> DM:
     return constructor({k: v[:n] for k, v in data.items()}) # type: ignore
 
 
-def tail(data: DM, n: int = 5) -> DM:
+def tail(data: TypeVarDataMapping, n: int = 5) -> TypeVarDataMapping:
     """
     Return the last n rows of data.
 
