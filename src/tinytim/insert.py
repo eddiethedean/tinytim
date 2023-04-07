@@ -1,5 +1,5 @@
 from typing import Iterable
-from tinytim.types import DataDict, DataMapping, data_dict, RowMapping
+from tinytim.custom_types import DataDict, DataMapping, data_dict, RowMapping
 import tinytim.data as data_features
 
 

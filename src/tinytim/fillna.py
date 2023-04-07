@@ -6,7 +6,7 @@ import tinytim.data as data_functions
 import tinytim.edit as edit_functions
 import tinytim.rows as rows_functions
 import tinytim.isna as isna_functions
-from tinytim.types import DataDict, DataMapping, RowDict, RowMapping, data_dict, row_dict
+from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping, data_dict, row_dict
 
 
 def fillna(

@@ -1,7 +1,7 @@
 from typing import Sequence
 
 import tinytim.data as data_functions
-from tinytim.types import DataDict, DataMapping, data_dict, RowDict, RowMapping, row_dict
+from tinytim.custom_types import DataDict, DataMapping, data_dict, RowDict, RowMapping, row_dict
 
 
 def is_missing(value, missing_value) -> bool:

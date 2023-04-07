@@ -4,7 +4,7 @@ from statistics import mean, mode, stdev, pstdev
 import tinytim.filter as filter_functions
 import tinytim.utils as utils_functions
 import tinytim.rows as rows_functions
-from tinytim.types import DataDict, DataMapping, RowDict, RowMapping
+from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping
 
 
 RowDict = Dict[str, Any]

@@ -4,7 +4,7 @@ from typing import Any, Callable, Generator, Iterable, Sequence, Sized, Tuple, U
 
 from dictanykey import DefaultDictAnyKey, DictAnyKey
 import tinytim.data as data_functions
-from tinytim.types import DataMapping, DataDict
+from tinytim.custom_types import DataMapping, DataDict
 
 TypeVarDataMapping = TypeVar('TypeVarDataMapping', bound='DataMapping')
 TypeVarSequence = TypeVar('TypeVarSequence', bound='Sequence')

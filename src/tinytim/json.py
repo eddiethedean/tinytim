@@ -6,7 +6,7 @@ from typing import Dict, List, Sequence
 import json
 
 import tinytim.rows as rows_functions
-from tinytim.types import DataMapping, DataDict, RowMapping, RowDict
+from tinytim.custom_types import DataMapping, DataDict, RowMapping, RowDict
 
 
 def data_to_json_list(data: DataMapping) -> List[RowDict]:

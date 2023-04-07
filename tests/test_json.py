@@ -2,7 +2,7 @@ from typing import List
 import unittest
 
 import tinytim.json as json_functions
-from tinytim.types import RowDict
+from tinytim.custom_types import RowDict
 
 
 DATA = {'x': [1, 2, 3], 'y': [6, 7, 8]}

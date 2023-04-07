@@ -5,7 +5,7 @@ import tinytim.edit as edit_functions
 import tinytim.rows as rows_functions
 import tinytim.filter as filter_functions
 import tinytim.isna as isna_functions
-from tinytim.types import DataMapping, DataDict, RowMapping, data_dict
+from tinytim.custom_types import DataMapping, DataDict, RowMapping, data_dict
 
 
 def dropna(

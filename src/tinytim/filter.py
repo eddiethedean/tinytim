@@ -3,7 +3,7 @@ from typing import Any, Callable, List, Optional, Sequence
 
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
-from tinytim.types import DataMapping, DataDict
+from tinytim.custom_types import DataMapping, DataDict
 
 
 TableFilter = Sequence[bool]

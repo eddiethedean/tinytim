@@ -1,10 +1,10 @@
-import copy
-from typing import Any, Sequence, Sized, Tuple, TypeVar
+from typing import Any, Sequence, Tuple
 
-from tinytim.types import DataDict, DataMapping, MutableDataMapping
+from tinytim.custom_types import DataDict
+from tinytim.interfaces import GetSequence, KeyNames, SequenceItems, SequenceValues, KeyNamesSequenceValues
 
 
-def column_count(data: DataMapping) -> int:
+def column_count(data: KeyNames) -> int:
     """
     Return the number of columns in data.
 
@@ -27,7 +27,7 @@ def column_count(data: DataMapping) -> int:
     return len(data.keys())
 
 
-def first_column_name(data: DataMapping) -> str:
+def first_column_name(data: KeyNames) -> str:
     """
     Return the name of the first column.
     Raises StopIteration if data has zero columns.
@@ -53,10 +53,10 @@ def first_column_name(data: DataMapping) -> str:
     >>> first_column_name(data)
     'x'
     """
-    return next(iter(data))
+    return next(iter(data.keys()))
 
 
-def row_count(data: DataMapping) -> int:
+def row_count(data: SequenceValues) -> int:
     """
     Return the number of rows in data.
     
@@ -76,11 +76,16 @@ def row_count(data: DataMapping) -> int:
     >>> row_count(data)
     3
     """
-    if column_count(data) == 0: return 0
-    return len(data[first_column_name(data)])
+    try:
+        return max(len(v) for v in data.values())
+    except ValueError as e:
+        if str(e) == "max() arg is an empty sequence":
+            return 0
+        else:
+            raise e
 
 
-def shape(data: DataMapping) -> Tuple[int, int]:
+def shape(data: KeyNamesSequenceValues) -> Tuple[int, int]:
     """
     Return data row count, column count tuple.
 
@@ -105,7 +110,7 @@ def shape(data: DataMapping) -> Tuple[int, int]:
     return row_count(data), col_count
 
 
-def size(data: DataMapping) -> int:
+def size(data: KeyNamesSequenceValues) -> int:
     """
     Return data row count multiplied by column count.
         
@@ -129,7 +134,7 @@ def size(data: DataMapping) -> int:
     return rows * columns
 
 
-def column_names(data: DataMapping) -> Tuple[str]:
+def column_names(data: KeyNames) -> Tuple[str]:
     """
     Return data column names.
 
@@ -149,13 +154,10 @@ def column_names(data: DataMapping) -> Tuple[str]:
     >>> column_names(data)
     ('x', 'y')
     """
-    return tuple(data)
+    return tuple(data.keys())
 
 
-TypeVarDataMapping = TypeVar('TypeVarDataMapping', bound='DataMapping')
-
-
-def head(data: TypeVarDataMapping, n: int = 5) -> TypeVarDataMapping:
+def head(data: SequenceItems, n: int = 5) -> DataDict:
     """
     Return the first n rows of data.
 
@@ -177,11 +179,10 @@ def head(data: TypeVarDataMapping, n: int = 5) -> TypeVarDataMapping:
     >>> head(data, 2)
     {'x': [1, 2], 'y': [6, 7]}
     """
-    constructor = type(data)
-    return constructor({k: v[:n] for k, v in data.items()}) # type: ignore
+    return {k: list(v[:n]) for k, v in data.items()}
 
 
-def tail(data: TypeVarDataMapping, n: int = 5) -> TypeVarDataMapping:
+def tail(data: SequenceItems, n: int = 5) -> DataDict:
     """
     Return the last n rows of data.
 
@@ -195,7 +196,7 @@ def tail(data: TypeVarDataMapping, n: int = 5) -> TypeVarDataMapping:
 
     Returns
     -------
-     MutableMapping[str, MutableSequence]
+     dict[str, list]
         {column name: bottom n column values}
 
     Example
@@ -204,11 +205,10 @@ def tail(data: TypeVarDataMapping, n: int = 5) -> TypeVarDataMapping:
     >>> tail(data, 2)
     {'x': [2, 3], 'y': [7, 8]}
     """
-    constructor = type(data)
-    return constructor({k: v[-n:] for k, v in data.items()}) # type: ignore
+    return {k: list(v[-n:]) for k, v in data.items()}
 
 
-def index(data: DataMapping) -> Tuple[int]:
+def index(data: SequenceValues) -> Tuple[int]:
     """
     Return tuple of data column indexes.
 
@@ -231,7 +231,7 @@ def index(data: DataMapping) -> Tuple[int]:
     return tuple(range(row_count(data)))
 
 
-def table_value(data: DataMapping, column_name: str, index: int) -> Any:
+def table_value(data: GetSequence, column_name: str, index: int) -> Any:
     """
     Return one value from column at row index.
 
@@ -258,7 +258,7 @@ def table_value(data: DataMapping, column_name: str, index: int) -> Any:
     return data[column_name][index]
 
 
-def column_values(data: DataMapping, column_name: str) -> Sequence:
+def column_values(data: GetSequence, column_name: str) -> Sequence:
     """
     Return all the values from one column.
     

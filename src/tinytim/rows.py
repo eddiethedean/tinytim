@@ -5,7 +5,7 @@ from typing import Any, Dict, Generator, Optional, Sequence, Tuple
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
 import tinytim.utils as utils_functions
-from tinytim.types import DataDict, DataMapping, RowMapping, RowDict
+from tinytim.custom_types import DataDict, DataMapping, RowMapping, RowDict
 
 
 def row_dict(

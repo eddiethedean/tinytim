@@ -1,7 +1,7 @@
 from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping
 from typing import Optional, Sequence, Tuple
 
-from tinytim.types import DataMapping, RowMapping
+from tinytim.custom_types import DataMapping, RowMapping
 
 
 def uniques(values: Iterable) -> List:

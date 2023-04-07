@@ -2,7 +2,7 @@ from typing import Callable, Mapping, Sequence, Tuple, Any, Union, Optional, Lis
 from itertools import repeat
 from typing import NamedTuple
 
-from tinytim.types import DataDict, DataMapping
+from tinytim.custom_types import DataDict, DataMapping
 
 
 class MatchIndexes(NamedTuple):

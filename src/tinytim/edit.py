@@ -5,7 +5,7 @@ from typing import Any, Iterable, List, Mapping, Sequence, Sized, Union, Callabl
 import tinytim.data as data_functions
 import tinytim.columns as columns_functions
 import tinytim.utils as utils_functions
-from tinytim.types import DataDict, DataMapping, data_dict
+from tinytim.custom_types import DataDict, DataMapping, data_dict
 
 
 def edit_row_items_inplace(

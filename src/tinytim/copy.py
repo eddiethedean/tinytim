@@ -1,7 +1,7 @@
 import copy
 from typing import Sequence, TypeVar
 
-from tinytim.types import DataMapping
+from tinytim.custom_types import DataMapping
 
 TypeVarDataMapping = TypeVar('TypeVarDataMapping', bound='DataMapping')
 TypeVarSequence = TypeVar('TypeVarSequence', bound='Sequence')

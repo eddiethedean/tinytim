@@ -1,0 +1,33 @@
+from typing import Any, Dict, ItemsView, Iterator, KeysView, Mapping, Sequence, Tuple, ValuesView
+from typing_extensions import Protocol, runtime_checkable
+
+
+class GetSequence(Protocol):
+    def __getitem__(self, key: str, /) -> Sequence: ...
+
+class SetSequence(Protocol):
+    def __setitem__(self, key: str, value: Sequence) -> None: ...
+
+class KeyNames(Protocol):
+    def keys(self) -> KeysView[str]: ...
+
+class SequenceItems(Protocol):
+    def items(self) -> ItemsView[str, Sequence]: ...
+
+class SequenceValues(Protocol):
+    def values(self) -> ValuesView[Sequence]: ...
+
+class Clear(Protocol):
+    def clear(self) -> None: ...
+
+class DeleteItem(Protocol):
+    def __delitem__(self, key: str) -> None: ...
+
+class KeyNamesSequenceValues(KeyNames, SequenceValues, Protocol):
+    ...
+
+class DataMapping(GetSequence, KeyNames, SequenceValues, SequenceItems, Protocol):
+    ...
+
+class MutableDataMapping(DataMapping, SetSequence, DeleteItem, Clear, Protocol):
+    ...

@@ -1,7 +1,7 @@
 from hasattrs import has_mapping_attrs
 
 import tinytim.data as data_functions
-from tinytim.types import DataMapping
+from tinytim.custom_types import DataMapping
 
 
 def data_columns_same_len(data: DataMapping) -> bool:
