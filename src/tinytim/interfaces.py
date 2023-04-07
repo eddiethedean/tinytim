@@ -26,6 +26,9 @@ class DeleteItem(Protocol):
 class KeyNamesSequenceValues(KeyNames, SequenceValues, Protocol):
     ...
 
+class KeyNamesGetSequence(KeyNames, GetSequence, Protocol):
+    ...
+
 class DataMapping(GetSequence, KeyNames, SequenceValues, SequenceItems, Protocol):
     ...
 

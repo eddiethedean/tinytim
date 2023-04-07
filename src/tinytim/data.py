@@ -1,4 +1,4 @@
-from typing import Any, Sequence, Tuple
+from typing import Any, Tuple
 
 from tinytim.custom_types import DataDict
 from tinytim.interfaces import GetSequence, KeyNames, SequenceItems, SequenceValues, KeyNamesSequenceValues
@@ -258,7 +258,7 @@ def table_value(data: GetSequence, column_name: str, index: int) -> Any:
     return data[column_name][index]
 
 
-def column_values(data: GetSequence, column_name: str) -> Sequence:
+def column_values(data: GetSequence, column_name: str) -> list:
     """
     Return all the values from one column.
     
@@ -280,4 +280,4 @@ def column_values(data: GetSequence, column_name: str) -> Sequence:
     >>> column_values(data, 'y')
     [6, 7, 8]
     """
-    return data[column_name]
+    return list(data[column_name])
