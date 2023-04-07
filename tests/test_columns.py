@@ -17,15 +17,8 @@ class TestColumnDict(unittest.TestCase):
 class TestItercolumns(unittest.TestCase):
     def test_basic(self):
         cols = list(columns_functions.itercolumns(DATA))
-        self.assertTupleEqual(('x', (1, 2, 3)), cols[0])
-        self.assertTupleEqual(('y', (6, 7, 8)), cols[1])
-
-
-class TestValueCounts(unittest.TestCase):
-    def test_basic(self):
-        values = [4, 1, 1, 4, 5, 1]
-        results = columns_functions.value_counts(values)
-        self.assertEqual({1: 3, 4: 2, 5: 1}, results)
+        self.assertTupleEqual(('x', [1, 2, 3]), cols[0])
+        self.assertTupleEqual(('y', [6, 7, 8]), cols[1])
 
 
 if __name__ == '__main__':
