@@ -1,17 +1,18 @@
 from itertools import repeat
 from numbers import Number
-from typing import Any, Iterable, List, Mapping, Sequence, Sized, Union, Callable
+from typing import Any, Iterable, List, Mapping, MutableSequence, Sequence, Sized, Union, Callable
 
 import tinytim.data as data_functions
-import tinytim.columns as columns_functions
+import tinytim.sequences as sequences_functions
+from tinytim.interfaces import DeleteItem, GetMutableSequence, KeyNames, KeyNamesGetItem, KeyNamesGetMutableSequence, KeyNamesGetMutableSequenceSequenceValues, SequenceItems, SequenceItemsGetMutableSequence
 import tinytim.utils as utils_functions
 from tinytim.custom_types import DataDict, DataMapping, data_dict
 
 
 def edit_row_items_inplace(
-    data: DataDict,
+    data: GetMutableSequence,
     index: int,
-    items: Mapping[str, Any]
+    items: KeyNamesGetItem
 ) -> None:
     """
     Changes row index to mapping items values.
@@ -36,12 +37,12 @@ def edit_row_items_inplace(
     >>> data
     {'x': [11, 2, 3], 'y': [66, 7, 8]}
     """
-    for col in items:
+    for col in items.keys():
         data[col][index] = items[col]
 
 
 def edit_row_values_inplace(
-    data: DataDict,
+    data: KeyNamesGetMutableSequence,
     index: int,
     values: Sequence
 ) -> None:
@@ -75,7 +76,7 @@ def edit_row_values_inplace(
 
 
 def edit_column_inplace(
-    data: DataDict,
+    data: KeyNamesGetMutableSequenceSequenceValues,
     column_name: str,
     values: Union[Sequence, str]
 ) -> None:
@@ -106,21 +107,23 @@ def edit_column_inplace(
     """
     iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
     if isinstance(values, str) or not iterable_and_sized:
-        if column_name in data:
+        if column_name in data.keys():
             utils_functions.set_values_to_one(data[column_name], values)
         else:
-            data[column_name] = list(repeat(values, data_functions.row_count(data)))
+            for i in range(data_functions.row_count(data)):
+                data[column_name][i] = values
         return
     if len(values) != data_functions.row_count(data):
         raise ValueError('values length must match data rows count.')
-    if column_name in data:
+    if column_name in data.keys():
         utils_functions.set_values_to_many(data[column_name], values)
     else:
-        data[column_name] = list(values)
+        for i, value in enumerate(values):
+            data[column_name][i] = value
 
 
 def operator_column_inplace(
-    data: DataDict,
+    data: GetMutableSequence,
     column_name: str,
     values: Union[Sequence, str, Number],
     func: Callable[[Any, Any], Any]
@@ -146,12 +149,12 @@ def operator_column_inplace(
     -------
     None
     """
-    new_values = columns_functions.operate_on_column(data[column_name], values, func)
+    new_values = sequences_functions.operate_on_sequence(data[column_name], values, func)
     utils_functions.set_values_to_many(data[column_name], new_values)
 
 
 def add_to_column_inplace(
-    data: DataDict,
+    data: GetMutableSequence,
     column_name: str,
     values: Union[Sequence, str, Number]
 ) -> None:
@@ -190,7 +193,7 @@ def add_to_column_inplace(
 
 
 def subtract_from_column_inplace(
-    data: DataDict,
+    data: GetMutableSequence,
     column_name: str,
     values: Union[Sequence, Number]
 ) -> None:
@@ -229,7 +232,7 @@ def subtract_from_column_inplace(
 
 
 def divide_column_inplace(
-    data: DataDict,
+    data: GetMutableSequence,
     column_name: str,
     values: Union[Sequence, Number]
 ) -> None:
@@ -273,7 +276,7 @@ def divide_column_inplace(
 
 
 def drop_row_inplace(
-    data: DataDict,
+    data: KeyNamesGetMutableSequence,
     index: int
 ) -> None:
     """
@@ -301,7 +304,10 @@ def drop_row_inplace(
         data[col].pop(index)
 
 
-def drop_label_inplace(labels: Union[None, List], index: int) -> None:
+def drop_label_inplace(
+    labels: Union[None, MutableSequence],
+    index: int
+) -> None:
     """
     If labels exists, drop item at index.
 
@@ -333,7 +339,7 @@ def drop_label_inplace(labels: Union[None, List], index: int) -> None:
 
 
 def drop_column_inplace(
-    data: DataDict,
+    data: DeleteItem,
     column_name: str
 ) -> None:
     """
@@ -361,7 +367,7 @@ def drop_column_inplace(
 
 
 def edit_value_inplace(
-    data: DataDict,
+    data: GetMutableSequence,
     column_name: str,
     index: int,
     value: Any
@@ -395,9 +401,9 @@ def edit_value_inplace(
 
 
 def edit_row_items(
-    data: DataMapping,
+    data: SequenceItemsGetMutableSequence,
     index: int,
-    items: Mapping[str, Any]
+    items: KeyNamesGetItem
 ) -> DataDict:
     """
     Return data with row values at index changed to mapping items values.
@@ -423,13 +429,13 @@ def edit_row_items(
     >>> data
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    data = data_dict(data)
     edit_row_items_inplace(data, index, items)
+    data = data_dict(data)
     return data
 
 
 def edit_row_values(
-    data: DataMapping,
+    data: SequenceItemsGetMutableSequence,
     index: int,
     values: Sequence
 ) -> DataDict:
@@ -466,7 +472,7 @@ def edit_row_values(
 
 
 def edit_column(
-    data: DataMapping,
+    data: SequenceItemsGetMutableSequence,
     column_name: str,
     values: Union[Sequence, str]
 ) -> DataDict:
@@ -517,7 +523,7 @@ def edit_column(
 
 
 def operator_column(
-    data: DataMapping,
+    data: SequenceItems,
     column_name: str,
     values: Union[Sequence, str, Number],
     func: Callable[[Any, Any], Any]
@@ -557,13 +563,13 @@ def operator_column(
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
     data = data_dict(data)
-    new_values = columns_functions.operate_on_column(data[column_name], values, func)
+    new_values = sequences_functions.operate_on_sequence(data[column_name], values, func)
     utils_functions.set_values_to_many(data[column_name], new_values)
     return data
 
 
 def add_to_column(
-    data: DataMapping,
+    data: SequenceItems,
     column_name: str,
     values: Union[Sequence, str, Number]
 ) -> DataDict:
@@ -600,7 +606,7 @@ def add_to_column(
 
 
 def subtract_from_column(
-    data: DataMapping,
+    data: SequenceItems,
     column_name: str,
     values: Union[Sequence, Number]
 ) -> DataDict:
@@ -639,7 +645,7 @@ def subtract_from_column(
 
 
 def multiply_column_inplace(
-    data: DataDict,
+    data: GetMutableSequence,
     column_name: str,
     values: Union[Sequence, Number]
 ) -> None:
@@ -678,7 +684,7 @@ def multiply_column_inplace(
 
 
 def multiply_column(
-    data: DataMapping,
+    data: SequenceItems,
     column_name: str,
     values: Union[Sequence, Number]
 ) -> DataDict:
@@ -716,7 +722,7 @@ def multiply_column(
 
 
 def divide_column(
-    data: DataMapping,
+    data: SequenceItems,
     column_name: str,
     values: Union[Sequence, Number]
 ) -> DataDict:

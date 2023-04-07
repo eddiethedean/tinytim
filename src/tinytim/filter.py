@@ -6,14 +6,14 @@ import tinytim.edit as edit_functions
 from tinytim.custom_types import DataMapping, DataDict
 
 
-TableFilter = Sequence[bool]
+BoolSequence = Sequence[bool]
 
 
 def column_filter(column: Sequence, func: Callable[[Any], bool]) -> List[bool]:
     return [func(item) for item in column]
 
 
-def indexes_from_filter(f: TableFilter) -> List[int]:
+def indexes_from_filter(f: BoolSequence) -> List[int]:
     return [i for i, b in enumerate(f) if b]
 
 
@@ -33,7 +33,7 @@ def filter_by_indexes_inplace(data: DataDict, indexes: Sequence[int]) -> None:
         data[col] = filter_list_by_indexes(values, indexes)
 
 
-def filter_data(data: DataMapping, f: TableFilter) -> DataDict:
+def filter_data(data: DataMapping, f: BoolSequence) -> DataDict:
     indexes = indexes_from_filter(f)
     return filter_by_indexes(data, indexes)
 

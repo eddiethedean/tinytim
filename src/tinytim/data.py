@@ -1,4 +1,4 @@
-from typing import Any, Tuple
+from typing import Any, List, Tuple
 
 from tinytim.custom_types import DataDict
 from tinytim.interfaces import GetSequence, KeyNames, SequenceItems, SequenceValues, KeyNamesSequenceValues
@@ -134,7 +134,7 @@ def size(data: KeyNamesSequenceValues) -> int:
     return rows * columns
 
 
-def column_names(data: KeyNames) -> Tuple[str]:
+def column_names(data: KeyNames) -> List[str]:
     """
     Return data column names.
 
@@ -154,7 +154,7 @@ def column_names(data: KeyNames) -> Tuple[str]:
     >>> column_names(data)
     ('x', 'y')
     """
-    return tuple(data.keys())
+    return list(data.keys())
 
 
 def head(data: SequenceItems, n: int = 5) -> DataDict:

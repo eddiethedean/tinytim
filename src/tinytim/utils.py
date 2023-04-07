@@ -1,4 +1,4 @@
-from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping
+from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping, MutableSequence
 from typing import Optional, Sequence, Tuple
 
 from tinytim.custom_types import DataMapping, RowMapping
@@ -274,13 +274,13 @@ def nunique(data: DataMapping) -> Dict[str, int]:
     return {col: len(uniques(values)) for col, values in data.items()}
 
 
-def set_values_to_many(s: list, values: Sequence) -> None:
+def set_values_to_many(s: MutableSequence, values: Sequence) -> None:
     if len(s) != len(values):
         raise AttributeError('s and values must be same len')
     for i, value in enumerate(values):
         s[i] = value
 
 
-def set_values_to_one(s: list, value: Any) -> None:
+def set_values_to_one(s: MutableSequence, value: Any) -> None:
     for i in range(len(s)):
         s[i] = value
