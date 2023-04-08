@@ -39,7 +39,7 @@ class TestFirstColumnName(unittest.TestCase):
 class TestColumnNames(unittest.TestCase):
     def test_basic(self):
         result = data_functions.column_names(DATA)
-        self.assertEqual(result, ('x', 'y'))
+        self.assertEqual(result, ['x', 'y'])
 
 
 class TestHead(unittest.TestCase):

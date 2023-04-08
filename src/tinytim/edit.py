@@ -429,8 +429,8 @@ def edit_row_items(
     >>> data
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    edit_row_items_inplace(data, index, items)
     data = data_dict(data)
+    edit_row_items_inplace(data, index, items)
     return data
 
 
