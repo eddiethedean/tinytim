@@ -1,12 +1,20 @@
 from itertools import repeat
 from numbers import Number
-from typing import Any, Iterable, List, Mapping, MutableSequence, Sequence, Sized, Union, Callable
+from typing import Any, Callable, Iterable, List, MutableSequence, Sequence, Sized, Union
 
 import tinytim.data as data_functions
 import tinytim.sequences as sequences_functions
-from tinytim.interfaces import DeleteItem, GetMutableSequence, KeyNames, KeyNamesGetItem, KeyNamesGetMutableSequence, KeyNamesGetMutableSequenceSequenceValues, SequenceItems, SequenceItemsGetMutableSequence
 import tinytim.utils as utils_functions
 from tinytim.custom_types import DataDict, DataMapping, data_dict
+from tinytim.interfaces import (
+    DeleteItem,
+    GetMutableSequence,
+    KeyNamesGetItem,
+    KeyNamesGetMutableSequence,
+    KeyNamesGetMutableSequenceSequenceValues,
+    SequenceItems,
+    SequenceItemsGetMutableSequence,
+)
 
 
 def edit_row_items_inplace(
@@ -37,14 +45,14 @@ def edit_row_items_inplace(
     >>> data
     {'x': [11, 2, 3], 'y': [66, 7, 8]}
     """
-    for col in items.keys():
+    for col in items:
         data[col][index] = items[col]
 
 
 def edit_row_values_inplace(
     data: KeyNamesGetMutableSequence,
     index: int,
-    values: Sequence
+    values: Sequence[Any]
 ) -> None:
     """
     Changed row index to values.
@@ -55,7 +63,8 @@ def edit_row_values_inplace(
         data mapping of {column name: column values}
     index : int
         index of row to edit
-    values : Sequence
+    values : Sequence[Any]
+
         new values to replace in data row
 
     Returns
@@ -78,7 +87,7 @@ def edit_row_values_inplace(
 def edit_column_inplace(
     data: KeyNamesGetMutableSequenceSequenceValues,
     column_name: str,
-    values: Union[Sequence, str]
+    values: Union[Sequence[Any], str]
 ) -> None:
     """
     Edit values in named column.
@@ -91,7 +100,8 @@ def edit_column_inplace(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         new values to replace in data column
 
     Returns
@@ -107,7 +117,7 @@ def edit_column_inplace(
     """
     iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
     if isinstance(values, str) or not iterable_and_sized:
-        if column_name in data.keys():
+        if column_name in data:
             utils_functions.set_values_to_one(data[column_name], values)
         else:
             for i in range(data_functions.row_count(data)):
@@ -115,7 +125,7 @@ def edit_column_inplace(
         return
     if len(values) != data_functions.row_count(data):
         raise ValueError('values length must match data rows count.')
-    if column_name in data.keys():
+    if column_name in data:
         utils_functions.set_values_to_many(data[column_name], values)
     else:
         for i, value in enumerate(values):
@@ -125,14 +135,14 @@ def edit_column_inplace(
 def operator_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence, str, Number],
+    values: Union[Sequence[Any], str, Number],
     func: Callable[[Any, Any], Any]
 ) -> None:
     """
     Uses func operator on values from existing named column.
-    If values is a Sequence, operate each value from each existing value.
+    If values is a Sequence[Any], operate each value from each existing value.
     Must be same len as column.
-    If not a Sequence, operate value from all existing values.
+    If not a Sequence[Any], operate value from all existing values.
 
     Parameters
     ----------
@@ -140,7 +150,8 @@ def operator_column_inplace(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to subtract from data column
     func : Callable[[Any, Any], Any]
         operator function to use to use values on existing column values
@@ -156,13 +167,13 @@ def operator_column_inplace(
 def add_to_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence, str, Number]
+    values: Union[Sequence[Any], str, Number]
 ) -> None:
     """
     Add values to existing named column.
-    If values is a Sequence, add each value to each existing value.
+    If values is a Sequence[Any], add each value to each existing value.
     Must be same len as column.
-    If not a Sequence, adds value to all existing values.
+    If not a Sequence[Any], adds value to all existing values.
 
     Parameters
     ----------
@@ -170,7 +181,8 @@ def add_to_column_inplace(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to add to data column
 
     Returns
@@ -195,13 +207,13 @@ def add_to_column_inplace(
 def subtract_from_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence, Number]
+    values: Union[Sequence[Any], Number]
 ) -> None:
     """
     Subtract values from existing named column.
-    If values is a Sequence, subtract each value from each existing value.
+    If values is a Sequence[Any], subtract each value from each existing value.
     Must be same len as column.
-    If not a Sequence, subtracts value from all existing values.
+    If not a Sequence[Any], subtracts value from all existing values.
 
     Parameters
     ----------
@@ -209,7 +221,8 @@ def subtract_from_column_inplace(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to subtract from data column
 
     Returns
@@ -234,13 +247,13 @@ def subtract_from_column_inplace(
 def divide_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence, Number]
+    values: Union[Sequence[Any], Number]
 ) -> None:
     """
     Divide values from existing named column.
-    If values is a Sequence, Divide each value from each existing value.
+    If values is a Sequence[Any], Divide each value from each existing value.
     Must be same len as column.
-    If not a Sequence, divide value from all existing values.
+    If not a Sequence[Any], divide value from all existing values.
 
     Parameters
     ----------
@@ -248,7 +261,8 @@ def divide_column_inplace(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to divide from data column
 
     Returns
@@ -305,7 +319,7 @@ def drop_row_inplace(
 
 
 def drop_label_inplace(
-    labels: Union[None, MutableSequence],
+    labels: Union[None, MutableSequence[Any]],
     index: int
 ) -> None:
     """
@@ -313,7 +327,7 @@ def drop_label_inplace(
 
     Parameters
     ----------
-    labels : list, optional
+    labels : List[Any], optional
         list of values used as labels
     index : int
         index of value to remove from labels list
@@ -410,7 +424,7 @@ def edit_row_items(
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
     index : int
         index of row to edit
@@ -437,18 +451,19 @@ def edit_row_items(
 def edit_row_values(
     data: SequenceItemsGetMutableSequence,
     index: int,
-    values: Sequence
+    values: Sequence[Any]
 ) -> DataDict:
     """
     Return data with row values at index changed to sequence of values.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
     index : int
         index of row to edit
-    values : Sequence
+    values : Sequence[Any]
+
         new values to replace in data row
 
     Returns
@@ -474,7 +489,7 @@ def edit_row_values(
 def edit_column(
     data: SequenceItemsGetMutableSequence,
     column_name: str,
-    values: Union[Sequence, str]
+    values: Union[Sequence[Any], str]
 ) -> DataDict:
     """
     Return data with values changed in named column.
@@ -487,7 +502,8 @@ def edit_column(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         new values to replace in data column
 
     Returns
@@ -525,14 +541,14 @@ def edit_column(
 def operator_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence, str, Number],
+    values: Union[Sequence[Any], str, Number],
     func: Callable[[Any, Any], Any]
 ) -> DataDict:
     """
     Return data with func operator used on values from named column.
-    If values is a Sequence, operate each value from each existing value.
+    If values is a Sequence[Any], operate each value from each existing value.
     Must be same len as column.
-    If not a Sequence, operate value from all existing values.
+    If not a Sequence[Any], operate value from all existing values.
 
     Parameters
     ----------
@@ -540,7 +556,8 @@ def operator_column(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to subtract from data column
     func : Callable[[Any, Any], Any]
         operator function to use to use values on existing column values
@@ -571,13 +588,13 @@ def operator_column(
 def add_to_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence, str, Number]
+    values: Union[Sequence[Any], str, Number]
 ) -> DataDict:
     """
     Return data with values added to named column values.
-    If values is a Sequence, add each value to each existing value.
+    If values is a Sequence[Any], add each value to each existing value.
     Must be same len as column.
-    If not a Sequence, adds value to all existing values.
+    If not a Sequence[Any], adds value to all existing values.
 
     Parameters
     ----------
@@ -585,7 +602,8 @@ def add_to_column(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to add to data column
 
     Returns
@@ -608,13 +626,13 @@ def add_to_column(
 def subtract_from_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence, Number]
+    values: Union[Sequence[Any], Number]
 ) -> DataDict:
     """
     Return data with values subtracted from named column values.
-    If values is a Sequence, subtract each value from each existing value.
+    If values is a Sequence[Any], subtract each value from each existing value.
     Must be same len as column.
-    If not a Sequence, subtracts value from all existing values.
+    If not a Sequence[Any], subtracts value from all existing values.
 
     Parameters
     ----------
@@ -622,7 +640,8 @@ def subtract_from_column(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to subtract from data column
 
     Returns
@@ -647,13 +666,13 @@ def subtract_from_column(
 def multiply_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence, Number]
+    values: Union[Sequence[Any], Number]
 ) -> None:
     """
     Multiply values with existing named column.
-    If values is a Sequence, multiply each value with each existing value.
+    If values is a Sequence[Any], multiply each value with each existing value.
     Must be same len as column.
-    If not a Sequence, multiply value with all existing values.
+    If not a Sequence[Any], multiply value with all existing values.
 
     Parameters
     ----------
@@ -661,7 +680,8 @@ def multiply_column_inplace(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to multiply with data column
 
     Returns
@@ -686,13 +706,13 @@ def multiply_column_inplace(
 def multiply_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence, Number]
+    values: Union[Sequence[Any], Number]
 ) -> DataDict:
     """
     Return data with values multiplied with named column values.
-    If values is a Sequence, multiply each value with each existing value.
+    If values is a Sequence[Any], multiply each value with each existing value.
     Must be same len as column.
-    If not a Sequence, multiply value with all existing values.
+    If not a Sequence[Any], multiply value with all existing values.
 
     Parameters
     ----------
@@ -700,7 +720,8 @@ def multiply_column(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to multiply with data column
 
     Returns
@@ -724,13 +745,13 @@ def multiply_column(
 def divide_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence, Number]
+    values: Union[Sequence[Any], Number]
 ) -> DataDict:
     """
     Return data with named column divided by values.
-    If values is a Sequence, Divide each value from each existing value.
+    If values is a Sequence[Any], Divide each value from each existing value.
     Must be same len as column.
-    If not a Sequence, divide value from all existing values.
+    If not a Sequence[Any], divide value from all existing values.
 
     Parameters
     ----------
@@ -738,7 +759,8 @@ def divide_column(
         data mapping of {column name: column values}
     column_name : str
         column name to edit in data
-    values : Sequence
+    values : Sequence[Any]
+
         values to divide from data column
 
     Returns
@@ -794,15 +816,15 @@ def drop_row(
 
 
 def drop_label(
-    labels: Union[None, Sequence],
+    labels: Union[None, Sequence[Any]],
     index: int
-) -> Union[None, List]:
+) -> Union[None, List[Any]]:
     """
     If labels exists, drop item at index.
 
     Parameters
     ----------
-    labels : list, optional
+    labels : List[Any], optional
         list of values used as labels
     index : int
         index of value to remove from labels list

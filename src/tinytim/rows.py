@@ -1,23 +1,23 @@
 from collections import defaultdict
 from itertools import zip_longest
-from typing import Any, Dict, Generator, Optional, Sequence, Tuple
+from typing import Any, Dict, Generator, Iterable, Optional, Sequence, Tuple
 
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
 import tinytim.utils as utils_functions
-from tinytim.custom_types import DataDict, DataMapping, RowMapping, RowDict
+from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping
 
 
 def row_dict(
     data: DataMapping,
     index: int
-) -> RowDict: 
+) -> RowDict:
     """
     Return one row from data at index.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
     index : int
         row index
@@ -40,13 +40,13 @@ def row_dict(
 def row_values(
     data: DataMapping,
     index: int
-) -> tuple:
+) -> Tuple[Any, ...]:
     """
     Return a tuple of the values at row index.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
     index : int
         row index
@@ -74,7 +74,7 @@ def iterrows(
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -97,20 +97,20 @@ def iterrows(
     StopIteration
     """
     indexes = data_functions.index(data)
-    indexes = reversed(indexes) if reverse else indexes
-    for i in indexes:
+    indexes_iter: Iterable[int] = reversed(indexes) if reverse else indexes
+    for i in indexes_iter:
         yield i, row_dict(data, i)
 
 
 def itertuples(
     data: DataMapping
-) -> Generator[tuple, None, None]:
+) -> Generator[Tuple[Any, ...], None, None]:
     """
     Return a generator of tuple row values.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -138,13 +138,13 @@ def itertuples(
 
 def itervalues(
     data: DataMapping
-) -> Generator[tuple, None, None]:
+) -> Generator[Tuple[Any, ...], None, None]:
     """
     Return a generator of tuple row values.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -171,13 +171,13 @@ def itervalues(
 
 def values(
     data: DataMapping
-) -> Tuple[tuple]:
+) -> Tuple[Tuple[Any, ...], ...]:
     """
     Return tuple of tuple row values.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -198,13 +198,13 @@ def row_value_counts(
     data: DataMapping,
     sort=True,
     ascending=True
-) -> Dict[tuple, int]:
+) -> Dict[Tuple[Any, ...], int]:
     """
     Count up the unique rows.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
     sort : bool, optional
         sort the results by count
@@ -222,9 +222,9 @@ def row_value_counts(
     >>> row_value_counts(data)
     {(3, 3): 2, (1, 6): 1, (2, 7): 1}
     """
-    d = defaultdict(int)
+    d: Dict[Tuple[Any, ...], int] = {}
     for row in itertuples(data):
-        d[row] += 1
+        d[row] = d.get(row, 0) + 1
     if sort:
         return dict(sorted(d.items(),
                            key=lambda item: item[1],
@@ -236,12 +236,12 @@ def row_value_counts(
 def records(d: DataMapping) -> Generator[RowDict, None, None]:
     """
     Yield each record (row) in d.
-    
+
     Parameters
     ----------
-    d : Mapping[str, Sequence]
+    d : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
-    
+
     Example
     -------
     >>> d = {'x': [1, 2, 3, 4], 'y': [55, 66, 77, 88]}
@@ -257,27 +257,27 @@ def records(d: DataMapping) -> Generator[RowDict, None, None]:
     """
     for _, record in iterrows(d):
         yield record
-    
+
 
 def records_equal(d1: DataMapping, d2: DataMapping) -> bool:
     """
     Compare d1 and d2 records (rows) to see if they are equal.
     Order of records or columns does not matter.
-    
+
     Parameters
     ----------
-    d1 : Mapping[str, Sequence]
+    d1 : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
-    d2 : Mapping[str, Sequence]
+    d2 : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
-    
+
     Examples
     --------
     >>> d1 = {'x': [1, 2, 3, 4], 'y': [55, 66, 77, 88]}
     >>> d2 = {'x': [2, 1, 4, 3], 'y': [66, 55, 88, 77]}
     >>> records_equal(d1, d2)
     True
-    
+
     >>> d1 = {'x': [1, 2, 3, 4], 'y': [55, 66, 77, 88]}
     >>> d2 = {'x': [2, 1, 4, 3], 'y': [55, 77, 88, 66]}
     >>> records_equal(d1, d2)
@@ -285,18 +285,18 @@ def records_equal(d1: DataMapping, d2: DataMapping) -> bool:
     """
     if set(data_functions.column_names(d1)) != set(data_functions.column_names(d2)):
         return False
-    
+
     if data_functions.row_count(d1) != data_functions.row_count(d2):
         return False
-    
-    d2_rows = [row for row in records(d2)]
-    
+
+    d2_rows = list(records(d2))
+
     for row in records(d1):
         if row in d2_rows:
             d2_rows.remove(row)
         else:
             return False
-    
+
     return True
 
 
@@ -339,13 +339,13 @@ def row_dicts_to_data(
             else:
                 data[col].append(missing_value)
     if columns:
-        data = edit_functions.replace_column_names(dict(data), columns)
+        data = edit_functions.replace_column_names(dict(data), columns)  # type: ignore[assignment]
         return {col: list(values) for col, values in data.items()}
-    return dict(data)
-    
+    return dict(data)  # type: ignore[arg-type]
+
 
 def row_values_to_data(
-    rows: Sequence[Sequence],
+    rows: Sequence[Sequence[Any]],
     column_names: Sequence[str],
     missing_value: Optional[Any] = None
 ) -> DataDict:
@@ -353,7 +353,7 @@ def row_values_to_data(
     Convert sequence of row values: [col1_value, col2_value, col3_value]
     and column names: [col1_name, col2_name, col3_name]
     to data dict: {column_name: column_values}
-    
+
     Examples
     --------
     >>> rows = [[1, 20], [2, 21], [3, 22]]
@@ -372,4 +372,4 @@ def row_values_to_data(
             raise ValueError('row values cannot be longer than column names.')
         for col, val in zip_longest(column_names, row, fillvalue=missing_value):
             data[col].append(val)
-    return dict(data)
+    return dict(data)  # type: ignore[arg-type]

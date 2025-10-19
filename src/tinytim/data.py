@@ -1,7 +1,7 @@
 from typing import Any, List, Tuple
 
 from tinytim.custom_types import DataDict
-from tinytim.interfaces import GetSequence, KeyNames, SequenceItems, SequenceValues, KeyNamesSequenceValues
+from tinytim.interfaces import GetSequence, KeyNames, KeyNamesSequenceValues, SequenceItems, SequenceValues
 
 
 def column_count(data: KeyNames) -> int:
@@ -10,7 +10,7 @@ def column_count(data: KeyNames) -> int:
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -34,7 +34,7 @@ def first_column_name(data: KeyNames) -> str:
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -59,10 +59,10 @@ def first_column_name(data: KeyNames) -> str:
 def row_count(data: SequenceValues) -> int:
     """
     Return the number of rows in data.
-    
+
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -91,7 +91,7 @@ def shape(data: KeyNamesSequenceValues) -> Tuple[int, int]:
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -106,17 +106,18 @@ def shape(data: KeyNamesSequenceValues) -> Tuple[int, int]:
     (3, 2)
     """
     col_count = column_count(data)
-    if col_count == 0: return 0, 0
+    if col_count == 0:
+        return 0, 0
     return row_count(data), col_count
 
 
 def size(data: KeyNamesSequenceValues) -> int:
     """
     Return data row count multiplied by column count.
-        
+
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -140,7 +141,7 @@ def column_names(data: KeyNames) -> List[str]:
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -190,7 +191,7 @@ def tail(data: SequenceItems, n: int = 5) -> DataDict:
     ----------
     data : MutableMapping[str, MutableSequence]
         data mapping of {column name: column values}
-    
+
     n : int, optional
         number of rows to return from bottom of data
 
@@ -208,13 +209,13 @@ def tail(data: SequenceItems, n: int = 5) -> DataDict:
     return {k: list(v[-n:]) for k, v in data.items()}
 
 
-def index(data: SequenceValues) -> Tuple[int]:
+def index(data: SequenceValues) -> Tuple[int, ...]:
     """
     Return tuple of data column indexes.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -237,7 +238,7 @@ def table_value(data: GetSequence, column_name: str, index: int) -> Any:
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
     column_name : str
         name of column
@@ -258,13 +259,13 @@ def table_value(data: GetSequence, column_name: str, index: int) -> Any:
     return data[column_name][index]
 
 
-def column_values(data: GetSequence, column_name: str) -> list:
+def column_values(data: GetSequence, column_name: str) -> List[Any]:
     """
     Return all the values from one column.
-    
+
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
     column_name : str
         name of column

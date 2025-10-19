@@ -1,14 +1,12 @@
-from typing import Any, Callable, Dict, List, Mapping, Sequence, Tuple, Union
-from statistics import mean, mode, stdev, pstdev
+from statistics import mean, mode, pstdev, stdev
+from typing import Any, Callable, List, Mapping, Sequence, Tuple, Union
 
 import tinytim.filter as filter_functions
-import tinytim.utils as utils_functions
 import tinytim.rows as rows_functions
+import tinytim.utils as utils_functions
 from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping
 
-
-RowDict = Dict[str, Any]
-GroupbyValue = Union[Any, tuple]
+GroupbyValue = Union[Any, Tuple[Any, ...]]
 Group = Tuple[GroupbyValue, DataDict]
 
 
@@ -21,7 +19,7 @@ def groupby(
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
     by : str | Sequence[str]
         column name/s to group by
 
@@ -64,25 +62,29 @@ def groupby(
         return groupbymulti(data, by)
 
 
-def groupbycolumn(data: Mapping, column: Sequence) -> List[Group]:
+def groupbycolumn(data: Mapping[Any, Any], column: Sequence[Any]) -> List[Group]:
     keys = utils_functions.uniques(column)
+
+    def make_filter(key: Any) -> Callable[[Any], bool]:
+        return lambda x: x == key
+
     return [(k, filter_functions.filter_data(data,
-                                             filter_functions.column_filter(column, lambda x: x == k)))
+                                             filter_functions.column_filter(column, make_filter(k))))
                 for k in keys]
 
 
-def groupbyone(data: Mapping, column_name: str) -> List[Group]:
+def groupbyone(data: Mapping[Any, Any], column_name: str) -> List[Group]:
     return groupbycolumn(data, data[column_name])
 
 
-def groupbymulti(data: Mapping, column_names: Sequence[str]) -> List[Group]:
+def groupbymulti(data: Mapping[Any, Any], column_names: Sequence[str]) -> List[Group]:
     return groupbycolumn(data, utils_functions.row_value_tuples(data, column_names))
 
 
 def aggregate_groups(
     groups: Sequence[Group],
     func: Callable[[DataMapping], RowMapping]
-) -> Tuple[List, DataDict]:
+) -> Tuple[List[Any], DataDict]:
     labels = []
     rows = []
     for key, data in groups:
@@ -93,7 +95,7 @@ def aggregate_groups(
     return labels, rows_functions.row_dicts_to_data(rows)
 
 
-def sum_groups(groups: List[Group]) -> Tuple[List, DataDict]:
+def sum_groups(groups: List[Group]) -> Tuple[List[Any], DataDict]:
     """
     Sum groups together
 
@@ -119,7 +121,7 @@ def sum_groups(groups: List[Group]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, sum_data)
 
 
-def count_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+def count_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     """
     Get count of each group
 
@@ -146,7 +148,7 @@ def count_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, count_data)
 
 
-def mean_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+def mean_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     """
     Mean groups together
 
@@ -172,7 +174,7 @@ def mean_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, mean_data)
 
 
-def min_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+def min_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     """
     Get min values for each group
 
@@ -201,7 +203,7 @@ def min_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, min_data)
 
 
-def max_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+def max_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     """
     Get max values for each group
 
@@ -230,7 +232,7 @@ def max_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, max_data)
 
 
-def mode_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+def mode_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     """
     Get mode of each group
 
@@ -259,7 +261,7 @@ def mode_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, mode_data)
 
 
-def stdev_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+def stdev_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     """
     Get Standard Deviation of each group
 
@@ -285,7 +287,7 @@ def stdev_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, stdev_data)
 
 
-def pstdev_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+def pstdev_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     """
     Get standard deviation from an entire population of each group
 
@@ -311,7 +313,7 @@ def pstdev_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, pstdev_data)
 
 
-def nunique_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
+def nunique_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     """
     Count how many unique values are in each group
 
@@ -338,9 +340,9 @@ def nunique_groups(groups: List[tuple]) -> Tuple[List, DataDict]:
     return aggregate_groups(groups, nunique_data)
 
 
-def aggregate_data(data: Mapping, func: Callable) -> RowDict:
+def aggregate_data(data: Mapping[Any, Any], func: Callable[..., Any]) -> RowDict:
     out = {}
-    for column_name in data.keys():
+    for column_name in data:
         try:
             col_sum = func(data[column_name])
         except TypeError:
@@ -349,13 +351,13 @@ def aggregate_data(data: Mapping, func: Callable) -> RowDict:
     return out
 
 
-def sum_data(data: Mapping) -> RowDict:
+def sum_data(data: Mapping[Any, Any]) -> RowDict:
     """
     Sum each column in data mapping if able
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
 
     Returns
     -------
@@ -373,13 +375,13 @@ def sum_data(data: Mapping) -> RowDict:
     return aggregate_data(data, sum)
 
 
-def count_data(data: Mapping) -> RowDict:
+def count_data(data: Mapping[Any, Any]) -> RowDict:
     """
     Count each column in data mapping if able
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
 
     Returns
     -------
@@ -397,13 +399,13 @@ def count_data(data: Mapping) -> RowDict:
     return aggregate_data(data, len)
 
 
-def mean_data(data: Mapping) -> RowDict:
+def mean_data(data: Mapping[Any, Any]) -> RowDict:
     """
     Calculate mean of each column in data mapping if able
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
 
     Returns
     -------
@@ -421,13 +423,13 @@ def mean_data(data: Mapping) -> RowDict:
     return aggregate_data(data, mean)
 
 
-def min_data(data: Mapping) -> RowDict:
+def min_data(data: Mapping[Any, Any]) -> RowDict:
     """
     Calculate min value of each column in data mapping if able
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
 
     Returns
     -------
@@ -445,13 +447,13 @@ def min_data(data: Mapping) -> RowDict:
     return aggregate_data(data, min)
 
 
-def max_data(data: Mapping) -> RowDict:
+def max_data(data: Mapping[Any, Any]) -> RowDict:
     """
     Calculate max value of each column in data mapping if able
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
 
     Returns
     -------
@@ -469,13 +471,13 @@ def max_data(data: Mapping) -> RowDict:
     return aggregate_data(data, max)
 
 
-def mode_data(data: Mapping) -> RowDict:
+def mode_data(data: Mapping[Any, Any]) -> RowDict:
     """
     Calculate mode of each column in data mapping if able
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
 
     Returns
     -------
@@ -493,13 +495,13 @@ def mode_data(data: Mapping) -> RowDict:
     return aggregate_data(data, mode)
 
 
-def stdev_data(data: Mapping) -> RowDict:
+def stdev_data(data: Mapping[Any, Any]) -> RowDict:
     """
     Calculate standard deviation of each column in data mapping if able
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
 
     Returns
     -------
@@ -517,13 +519,13 @@ def stdev_data(data: Mapping) -> RowDict:
     return aggregate_data(data, stdev)
 
 
-def pstdev_data(data: Mapping) -> RowDict:
+def pstdev_data(data: Mapping[Any, Any]) -> RowDict:
     """
     Calculate population standard deviation of each column in data mapping if able
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
 
     Returns
     -------
@@ -541,13 +543,13 @@ def pstdev_data(data: Mapping) -> RowDict:
     return aggregate_data(data, pstdev)
 
 
-def nunique_data(data: Mapping) -> RowDict:
+def nunique_data(data: Mapping[Any, Any]) -> RowDict:
     """
     Calculate count of unique values for each column in data mapping if able
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
 
     Returns
     -------

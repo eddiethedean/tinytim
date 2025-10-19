@@ -2,11 +2,11 @@
 Module used for converting data format to json and json to data format.
 """
 
-from typing import Dict, List, Sequence
 import json
+from typing import Any, Dict, List, Sequence
 
 import tinytim.rows as rows_functions
-from tinytim.custom_types import DataMapping, DataDict, RowMapping, RowDict
+from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping
 
 
 def data_to_json_list(data: DataMapping) -> List[RowDict]:
@@ -15,7 +15,7 @@ def data_to_json_list(data: DataMapping) -> List[RowDict]:
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -32,13 +32,13 @@ def data_to_json_list(data: DataMapping) -> List[RowDict]:
     return [row for _, row in rows_functions.iterrows(data)]
 
 
-def json_list_to_data(l: Sequence[RowMapping]) -> DataDict:
+def json_list_to_data(row_list: Sequence[RowMapping]) -> DataDict:
     """
     Convert list of row dicts to data table format.
 
     Parameters
     ----------
-    l : list[dict]
+    row_list : list[dict]
         list of row dicts
 
     Returns
@@ -52,7 +52,7 @@ def json_list_to_data(l: Sequence[RowMapping]) -> DataDict:
     >>> json_list_to_data(json)
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    return rows_functions.row_dicts_to_data(l)
+    return rows_functions.row_dicts_to_data(row_list)
 
 
 def data_to_json(data: DataMapping) -> str:
@@ -61,7 +61,7 @@ def data_to_json(data: DataMapping) -> str:
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -75,8 +75,8 @@ def data_to_json(data: DataMapping) -> str:
     >>> data_to_json(data)
     '[{"x": 1, "y": 6}, {"x": 2, "y": 7}, {"x": 3, "y": 8}]'
     """
-    l: List[Dict] = data_to_json_list(data)
-    return json.dumps(l)
+    json_list: List[Dict[str, Any]] = data_to_json_list(data)
+    return json.dumps(json_list)
 
 
 def json_to_data(j: str) -> DataDict:
@@ -90,7 +90,7 @@ def json_to_data(j: str) -> DataDict:
 
     Returns
     -------
-    Mapping[str, Sequence]
+    Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Example
@@ -99,5 +99,5 @@ def json_to_data(j: str) -> DataDict:
     >>> json_to_data(j)
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    l = json.loads(j)
-    return json_list_to_data(l)
+    parsed = json.loads(j)
+    return json_list_to_data(parsed)

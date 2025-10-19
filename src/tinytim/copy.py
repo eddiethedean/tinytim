@@ -1,10 +1,10 @@
 import copy
-from typing import Sequence, TypeVar
+from typing import Any, Sequence, TypeVar
 
 from tinytim.custom_types import DataMapping
 
 TypeVarDataMapping = TypeVar('TypeVarDataMapping', bound='DataMapping')
-TypeVarSequence = TypeVar('TypeVarSequence', bound='Sequence')
+TypeVarSequence = TypeVar('TypeVarSequence', bound='Sequence[Any]')
 
 
 def copy_table(data: TypeVarDataMapping) -> TypeVarDataMapping:

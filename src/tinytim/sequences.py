@@ -1,12 +1,13 @@
+from itertools import repeat
 from numbers import Number
-from typing import Any, Callable, Iterable, Sequence, Sized, Union
+from typing import Any, Callable, Iterable, List, Sequence, Sized, Union
 
 
 def operate_on_sequence(
-    column: Sequence,
-    values: Union[Iterable, str, Number],
+    column: Sequence[Any],
+    values: Union[Iterable[Any], str, Number],
     func: Callable[[Any, Any], Any]
-) -> list:
+) -> List[Any]:
     """
     Uses func operator on values in column.
     If values is a sequence, operate on each column value with values.
@@ -38,20 +39,20 @@ def operate_on_sequence(
     """
     iterable_and_sized = isinstance(values, Iterable) and isinstance(values, Sized)
     if isinstance(values, str) or not iterable_and_sized:
-        return list(func(x, y) for x, y in zip(column, repeat(values, len(column)))) # type: ignore
-    
+        return [func(x, y) for x, y in zip(column, repeat(values, len(column)))] # type: ignore
+
     if iterable_and_sized and not isinstance(values, Number):
         if len(values) != len(column):  # type: ignore
             raise ValueError('values length must match data rows count.')
-        return list(func(x, y) for x, y in zip(column, values))
+        return [func(x, y) for x, y in zip(column, values)]
     else:
         raise TypeError('values must either be a sequence or number to operate on column')
 
 
 def add_to_sequence(
-    column: Sequence,
-    values: Union[Sequence, str, Number]
-) -> list:
+    column: Sequence[Any],
+    values: Union[Sequence[Any], str, Number]
+) -> List[Any]:
     """
     Add a value or values to a sequence of column values.
 
@@ -99,9 +100,9 @@ def add_to_sequence(
 
 
 def subtract_from_sequence(
-    column: Sequence,
-    values: Union[Sequence, Number]
-) -> list:
+    column: Sequence[Any],
+    values: Union[Sequence[Any], Number]
+) -> List[Any]:
     """
     Subtract a value or values from a sequence of column values.
 
@@ -138,9 +139,9 @@ def subtract_from_sequence(
 
 
 def multiply_sequence(
-    column: Sequence,
-    values: Union[Sequence, Number]
-) -> list:
+    column: Sequence[Any],
+    values: Union[Sequence[Any], Number]
+) -> List[Any]:
     """
     Multiply a value or values with a sequence of column values.
 
@@ -186,9 +187,9 @@ def multiply_sequence(
 
 
 def divide_sequence(
-    column: Sequence,
-    values: Union[Sequence, Number]
-) -> list:
+    column: Sequence[Any],
+    values: Union[Sequence[Any], Number]
+) -> List[Any]:
     """
     Divide a value or values from a sequence of column values.
 
@@ -225,9 +226,9 @@ def divide_sequence(
 
 
 def mod_sequence(
-    column: Sequence,
-    values: Union[Sequence, Number]
-) -> list:
+    column: Sequence[Any],
+    values: Union[Sequence[Any], Number]
+) -> List[Any]:
     """
     Modulo a value or values from a sequence of column values.
 
@@ -264,9 +265,9 @@ def mod_sequence(
 
 
 def exponent_sequence(
-    column: Sequence,
-    values: Union[Sequence, Number]
-) -> list:
+    column: Sequence[Any],
+    values: Union[Sequence[Any], Number]
+) -> List[Any]:
     """
     Exponent a value or values with a sequence of column values.
 
@@ -303,9 +304,9 @@ def exponent_sequence(
 
 
 def floor_sequence(
-    column: Sequence,
-    values: Union[Sequence, Number]
-) -> list:
+    column: Sequence[Any],
+    values: Union[Sequence[Any], Number]
+) -> List[Any]:
     """
     Floor divide a value or values from a sequence of column values.
 

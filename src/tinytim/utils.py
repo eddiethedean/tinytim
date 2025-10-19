@@ -1,10 +1,9 @@
-from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping, MutableSequence
-from typing import Optional, Sequence, Tuple
+from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping, MutableSequence, Optional, Sequence, Tuple
 
 from tinytim.custom_types import DataMapping, RowMapping
 
 
-def uniques(values: Iterable) -> List:
+def uniques(values: Iterable[Any]) -> List[Any]:
     """
     Return a list of the unique items in values.
 
@@ -31,7 +30,7 @@ def uniques(values: Iterable) -> List:
     return out
 
 
-def nuniques(values: Sequence) -> int:
+def nuniques(values: Sequence[Any]) -> int:
     """
     Count up number of unique items in values.
 
@@ -57,13 +56,13 @@ def nuniques(values: Sequence) -> int:
 def row_value_tuples(
     data: DataMapping,
     column_names: Sequence[str]
-) -> Tuple[tuple]:
+) -> Tuple[Tuple[Any, ...], ...]:
     """
     Return row value tuples for only columns in column_names.
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
     column_names : Sequence[str]
         sequence of column names
@@ -82,7 +81,7 @@ def row_value_tuples(
     return tuple(zip(*[data[col] for col in column_names]))
 
 
-def all_keys(dicts: Sequence[Mapping]) -> List:
+def all_keys(dicts: Sequence[Mapping[Any, Any]]) -> List[Any]:
     """
     Return all the unique keys from a collection of dicts.
 
@@ -110,7 +109,7 @@ def all_keys(dicts: Sequence[Mapping]) -> List:
     return keys
 
 
-def all_bool(values: Collection) -> bool:
+def all_bool(values: Collection[Any]) -> bool:
     """
     Return if all items in values are bool or not.
 
@@ -130,7 +129,7 @@ def all_bool(values: Collection) -> bool:
     >>> values = [1, True, False, True]
     >>> all_bool(values)
     False
-    
+
     >>> values = [True, True, False, True]
     >>> all_bool(values)
     True
@@ -216,14 +215,14 @@ def slice_to_range(s: slice, stop: Optional[int] = None) -> range:
 
     if stop is None:
         raise ValueError('stop cannot be None in range')
-    
+
     return range(start, stop, step)
 
 
 def combine_names_rows(
     column_names: Sequence[str],
-    rows: Sequence[Sequence]
-) -> Dict[str, List]:
+    rows: Sequence[Sequence[Any]]
+) -> Dict[str, List[Any]]:
     """
     Convert a sequence of column names and a sequence of row values
     into dict[column_name: values] format.
@@ -257,7 +256,7 @@ def nunique(data: DataMapping) -> Dict[str, int]:
 
     Parameters
     ----------
-    data : Mapping[str, Sequence]
+    data : Mapping[str, Sequence[Any]]
         data mapping of {column name: column values}
 
     Returns
@@ -274,13 +273,13 @@ def nunique(data: DataMapping) -> Dict[str, int]:
     return {col: len(uniques(values)) for col, values in data.items()}
 
 
-def set_values_to_many(s: MutableSequence, values: Sequence) -> None:
+def set_values_to_many(s: MutableSequence[Any], values: Sequence[Any]) -> None:
     if len(s) != len(values):
         raise AttributeError('s and values must be same len')
     for i, value in enumerate(values):
         s[i] = value
 
 
-def set_values_to_one(s: MutableSequence, value: Any) -> None:
+def set_values_to_one(s: MutableSequence[Any], value: Any) -> None:
     for i in range(len(s)):
         s[i] = value

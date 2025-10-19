@@ -1,11 +1,11 @@
-from typing import Any, Optional, Sequence, Union
+from typing import Any, List, Optional, Sequence, Union
 
 from hasattrs import has_mapping_attrs
 
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
-import tinytim.rows as rows_functions
 import tinytim.isna as isna_functions
+import tinytim.rows as rows_functions
 from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping, data_dict, row_dict
 
 
@@ -59,7 +59,7 @@ def fillna(
                 'B': [2, 4, None, 3],
                 'C': [None, None, None, None],
                 'D': [0, 1, None, 4]}
-    
+
     Replace all missing elements with 0s.
 
     >>> fillna(data, 0)
@@ -72,7 +72,7 @@ def fillna(
      'B': [2, 4, 4, 3],
      'C': [None, None, None, None],
      'D': [0, 1, 1, 4]}
-    
+
     Replace all missing elements in column 'A', 'B', 'C', and 'D', with 0, 1, 2, and 3 respectively.
 
     >>> values = {"A": 0, "B": 1, "C": 2, "D": 3}
@@ -112,6 +112,7 @@ def fillna(
             forwardfill_inplace(data, axis, limit, na_value)
         else:
             return forwardfill(data, axis, limit, na_value)
+    return None
 
 
 def fill_with_value_inplace(
@@ -265,7 +266,7 @@ def fill_columns_with_value_inplace(
     for col in columns:
         try:
             fill_value = _get_fill_value(value, col)
-        except Continue:
+        except ContinueError:
             continue
         fill_column_with_value_inplace(data[col], fill_value, limit, na_value)
 
@@ -331,10 +332,10 @@ def backfill_columns(
 
 
 def backfill_column(
-    column: Sequence,
+    column: Sequence[Any],
     limit: Optional[int] = None,
     na_value: Optional[Any] = None
-) -> list:
+) -> List[Any]:
     column = list(column)
     backfill_column_inplace(column, limit, na_value)
     return column
@@ -439,25 +440,25 @@ def forwardfill_rows(
     return data
 
 
-class Continue(Exception):
+class ContinueError(Exception):
     pass
 
 
 def _get_fill_value(value, column):
     if has_mapping_attrs(value):
         if column not in value:
-            raise Continue()
+            raise ContinueError()
         return value[column]
     else:
         return value
 
 
 def fill_column_with_value(
-    column: Sequence,
+    column: Sequence[Any],
     value: Optional[Any] = None,
     limit: Optional[int] = None,
     na_value: Optional[Any] = None
-) -> list:
+) -> List[Any]:
     """
     Fill missing values in column with given value.
 
@@ -471,7 +472,7 @@ def fill_column_with_value(
         max number of values to fill, fill all if None
     na_value : Any, default None
         value to replace, use np.nan for pandas DataFrame
-    
+
     Returns
     -------
     MutableSequence
@@ -490,7 +491,7 @@ def fill_column_with_value(
 
 
 def fill_column_with_value_inplace(
-    column: list,
+    column: List[Any],
     value: Optional[Any] = None,
     limit: Optional[int] = None,
     na_value: Optional[Any] = None
@@ -511,7 +512,7 @@ def fill_column_with_value_inplace(
         max number of values to fill, fill all if None
     na_value : Any, default None
         value to replace, use np.nan for pandas DataFrame
-    
+
     Returns
     -------
     MutableSequence | None
@@ -525,9 +526,8 @@ def fill_column_with_value_inplace(
     """
     fill_count = 0
     for i, item in enumerate(column):
-        if limit is not None:
-            if fill_count >= limit:
-                return
+        if limit is not None and fill_count >= limit:
+            return
         if isna_functions.is_missing(item, na_value):
             column[i] = value
             fill_count += 1
@@ -555,7 +555,7 @@ def fill_row_with_value(
         max number of values to fill, fill all if None
     na_value : Any, default None
         value to replace, use np.nan for pandas DataFrame
-    
+
     Returns
     -------
     MutableMapping | None
@@ -592,7 +592,7 @@ def fill_row_with_value_inplace(
         max number of values to fill, fill all if None
     na_value : Any, default None
         value to replace, use np.nan for pandas DataFrame
-    
+
     Returns
     -------
     None
@@ -612,28 +612,26 @@ def fill_row_with_value_inplace(
     """
     fill_count = 0
     for key, item in row.items():
-        if limit is not None:
-            if fill_count >= limit:
-                return
+        if limit is not None and fill_count >= limit:
+            return
         if isna_functions.is_missing(item, na_value):
             try:
                 fill_value = _get_fill_value(value, key)
-            except Continue:
+            except ContinueError:
                 continue
             row[key] = fill_value
             fill_count += 1
 
 
 def backfill_column_inplace(
-    column: list,
+    column: List[Any],
     limit: Optional[int] = None,
     na_value: Optional[Any] = None
 ) -> None:
     fill_count = 0
     for i, item in reversed(list(enumerate(column))):
-        if limit is not None:
-            if fill_count >= limit:
-                return
+        if limit is not None and fill_count >= limit:
+            return
         if isna_functions.is_missing(item, na_value):
             b = _back(column, i, na_value)
             if isna_functions.is_missing(b, na_value):
@@ -642,7 +640,7 @@ def backfill_column_inplace(
             fill_count += 1
 
 
-def _back(values: Sequence, index: int, na_value=None) -> Any:
+def _back(values: Sequence[Any], index: int, na_value=None) -> Any:
     """Return the next value after index."""
     if index >= len(values) - 1:
         return na_value
@@ -676,9 +674,8 @@ def backfill_row_inplace(
 ) -> None:
     fill_count = 0
     for i, (key, item) in reversed(list(enumerate(row.items()))):
-        if limit is not None:
-            if fill_count >= limit:
-                return
+        if limit is not None and fill_count >= limit:
+            return
         if isna_functions.is_missing(item, na_value):
             b = _back(list(row.values()), i, na_value)
             if isna_functions.is_missing(b, na_value):
@@ -698,15 +695,14 @@ def backfill_row(
 
 
 def forwardfill_column_inplace(
-    column: list,
+    column: List[Any],
     limit: Optional[int] = None,
     na_value: Optional[Any] = None
 ) -> None:
     fill_count = 0
     for i, item in enumerate(column):
-        if limit is not None:
-            if fill_count >= limit:
-                return
+        if limit is not None and fill_count >= limit:
+            return
         if isna_functions.is_missing(item, na_value):
             f = _forward(column, i, na_value)
             if isna_functions.is_missing(f, na_value):
@@ -716,16 +712,16 @@ def forwardfill_column_inplace(
 
 
 def forwardfill_column(
-    column: Sequence,
+    column: Sequence[Any],
     limit: Optional[int] = None,
     na_value: Optional[Any] = None
-) -> list:
+) -> List[Any]:
     column = list(column)
     forwardfill_column_inplace(column, limit, na_value)
     return column
 
 
-def _forward(values: Sequence, index: int, na_value=None) -> Any:
+def _forward(values: Sequence[Any], index: int, na_value=None) -> Any:
     """Return the previoud value before index."""
     if index < 1:
         return na_value
@@ -739,9 +735,8 @@ def forwardfill_row_inplace(
 ) -> None:
     fill_count = 0
     for i, (key, value) in enumerate(row.items()):
-        if limit is not None:
-            if fill_count >= limit:
-                return
+        if limit is not None and fill_count >= limit:
+            return
         if isna_functions.is_missing(value, na_value):
             f = _forward(list(row.values()), i, na_value)
             if isna_functions.is_missing(f, na_value):

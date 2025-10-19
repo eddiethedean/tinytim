@@ -1,6 +1,7 @@
 from typing import Iterable
-from tinytim.custom_types import DataDict, DataMapping, data_dict, RowMapping
+
 import tinytim.data as data_features
+from tinytim.custom_types import DataDict, DataMapping, RowMapping, data_dict
 
 
 def insert_row(
@@ -36,5 +37,5 @@ def insert_rows_inplace(
     column_names = data_features.column_names(data)
     for row in rows:
         for column in column_names:
-            value = missing_value if column not in row else row[column]
+            value = row.get(column, missing_value)
             data[column].append(value)

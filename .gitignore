@@ -1,16 +1,15 @@
+# Project specific
 creds.py
 notebooks/
 
-tinytim.egg-info/
-tinytim/__pycache__/
-dist/
-build/
+# IDE
 .vscode/
-.ipynb_checkpoints/
-__pycache__/
-tests/__pycache__/
+.idea/
+*.swp
+*.swo
+*~
 
- Byte-compiled / optimized / DLL files
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -139,3 +138,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ruff
+.ruff_cache/
+
+# pytest
+.pytest_cache/
+
+# Pyright
+.pyright/

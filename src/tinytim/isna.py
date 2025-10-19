@@ -1,7 +1,7 @@
-from typing import Sequence
+from typing import Any, List, Sequence
 
 import tinytim.data as data_functions
-from tinytim.custom_types import DataDict, DataMapping, data_dict, RowDict, RowMapping, row_dict
+from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping, data_dict, row_dict
 
 
 def is_missing(value, missing_value) -> bool:
@@ -34,24 +34,24 @@ def notnull_inplace(data: DataDict, na_value=None) -> None:
         column_notnull_inplace(data[col], na_value)
 
 
-def column_isnull(column: Sequence, na_value=None) -> list:
+def column_isnull(column: Sequence[Any], na_value=None) -> List[Any]:
     column = list(column)
     column_isnull_inplace(column, na_value)
     return column
 
 
-def column_notnull(column: Sequence, na_value=None) -> list:
+def column_notnull(column: Sequence[Any], na_value=None) -> List[Any]:
     column = list(column)
     column_notnull_inplace(column, na_value)
     return column
 
 
-def column_isnull_inplace(column: list, na_value=None) -> None:
+def column_isnull_inplace(column: List[Any], na_value=None) -> None:
     for i, item in enumerate(column):
         column[i] =  is_missing(item, na_value)
 
 
-def column_notnull_inplace(column: list, na_value=None) -> None:
+def column_notnull_inplace(column: List[Any], na_value=None) -> None:
     for i, item in enumerate(column):
         column[i] = not is_missing(item, na_value)
 

@@ -2,10 +2,10 @@ from typing import Any, List, Optional, Sequence, Union
 
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
-import tinytim.rows as rows_functions
 import tinytim.filter as filter_functions
 import tinytim.isna as isna_functions
-from tinytim.custom_types import DataMapping, DataDict, RowMapping, data_dict
+import tinytim.rows as rows_functions
+from tinytim.custom_types import DataDict, DataMapping, RowMapping, data_dict
 
 
 def dropna(
@@ -23,7 +23,7 @@ def dropna(
 
     Parameters
     ----------
-    data : dict[str, List]
+    data : dict[str, List[Any]]
         data dict of {column name: column values}
     axis : {0 or 'rows', 1 or 'columns'}, default 0
         Determine if rows or columns which contain missing values are removed.
@@ -117,6 +117,7 @@ def dropna(
             dropna_all_inplace(data, axis, subset, na_value)
         else:
             return dropna_all(data, axis, subset, na_value, remaining)
+    return None
 
 
 def dropna_any_inplace(
@@ -241,7 +242,7 @@ def dropna_rows_any_inplace(
 ) -> None:
     remaining_indexes = dropna_rows_any_indexes(data, subset, na_value)
     filter_functions.filter_by_indexes_inplace(data, remaining_indexes)
-    
+
 
 def dropna_rows_any_indexes(
     data: DataMapping,
@@ -268,7 +269,7 @@ def dropna_rows_any(
 
 
 def column_any_na(
-    column: Sequence,
+    column: Sequence[Any],
     na_value: Optional[Any] = None
 ) -> bool:
     return any(isna_functions.is_missing(val, na_value) for val in column)
@@ -277,7 +278,7 @@ def column_any_na(
 def subset_row_values(
     row: RowMapping,
     subset: Optional[Sequence[str]] = None
-) -> list:
+) -> List[Any]:
     return list(row.values()) if subset is None else [val for key, val in row.items() if key in subset]
 
 
@@ -291,7 +292,7 @@ def row_any_na(
 
 
 def column_all_na(
-    column: Sequence,
+    column: Sequence[Any],
     na_value: Optional[Any] = None
 ) -> bool:
     return all(isna_functions.is_missing(val, na_value) for val in column)
@@ -487,19 +488,19 @@ def dropna_rows_thresh_indexes(
 
 
 def column_na_thresh(
-    column: Sequence,
+    column: Sequence[Any],
     thresh: int,
     na_value: Optional[Any] = None
 ) -> bool:
-    return sum(val != na_value for val in column) >= thresh
+    return bool(sum(val != na_value for val in column) >= thresh)
 
 
 def row_na_thresh(
     row: RowMapping,
     thresh: int,
     subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] =None
+    na_value: Optional[Any] = None
 ) -> bool:
     items = row.values() if subset is None else [val for key, val in row.items() if key in subset]
-    return sum(val != na_value for val in items) >= thresh
+    return bool(sum(val != na_value for val in items) >= thresh)
 

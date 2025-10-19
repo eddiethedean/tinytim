@@ -1,6 +1,5 @@
-from typing import Callable, Mapping, Sequence, Tuple, Any, Union, Optional, List, Iterable
 from itertools import repeat
-from typing import NamedTuple
+from typing import Any, Callable, Iterable, List, Mapping, NamedTuple, Optional, Sequence, Tuple, Union
 
 from tinytim.custom_types import DataDict, DataMapping
 
@@ -11,8 +10,8 @@ class MatchIndexes(NamedTuple):
     right_index: Optional[int] = None
 
 
-Matches = Tuple[MatchIndexes]
-JoinStrategy = Callable[[Sequence, Sequence], Matches]
+Matches = Tuple[MatchIndexes, ...]
+JoinStrategy = Callable[[Sequence[Any], Sequence[Any]], Matches]
 
 
 def inner_join(
@@ -27,9 +26,9 @@ def inner_join(
     If right_on is None, joins both on same column name (left_on).
     Parameters
     ----------
-    left : Mapping[str, Sequence]
+    left : Mapping[str, Sequence[Any]]
         left data mapping of {column name: column values}
-    right : Mapping[str, Sequence]
+    right : Mapping[str, Sequence[Any]]
         right data mapping of {column name: column values}
     left_on : str
         column name to join on in left
@@ -37,12 +36,12 @@ def inner_join(
         column name to join on in right, join on left_on if None
     select : list[str], optional
         column names to return
-        
+
     Returns
     -------
     DataDict
         resulting joined data table
-        
+
     Example
     -------
     >>> left =  {'id': ['a', 'c', 'd', 'f', 'g'], 'x': [33, 44, 55, 66, 77]}
@@ -65,9 +64,9 @@ def full_join(
     If right_on is None, joins both on same column name (left_on).
     Parameters
     ----------
-    left : Mapping[str, Sequence]
+    left : Mapping[str, Sequence[Any]]
         left data mapping of {column name: column values}
-    right : Mapping[str, Sequence]
+    right : Mapping[str, Sequence[Any]]
         right data mapping of {column name: column values}
     left_on : str
         column name to join on in left
@@ -75,12 +74,12 @@ def full_join(
         column name to join on in right, join on left_on if None
     select : list[str], optional
         column names to return
-        
+
     Returns
     -------
     DataDict
         resulting joined data table
-        
+
     Example
     -------
     >>> left = {'id': ['a', 'c', 'd', 'f', 'g'], 'x': [33, 44, 55, 66, 77]}
@@ -103,12 +102,12 @@ def left_join(
     """
     Left Join two data dict on a specified column name(s).
     If right_on is None, joins both on same column name (left_on).
-    
+
     Parameters
     ----------
-    left : Mapping[str, Sequence]
+    left : Mapping[str, Sequence[Any]]
         left data mapping of {column name: column values}
-    right : Mapping[str, Sequence]
+    right : Mapping[str, Sequence[Any]]
         right data mapping of {column name: column values}
     left_on : str
         column name to join on in left
@@ -116,12 +115,12 @@ def left_join(
         column name to join on in right, join on left_on if None
     select : list[str], optional
         column names to return
-        
+
     Returns
     -------
     DataDict
         resulting joined data table
-        
+
     Example
     -------
     >>> left = {'id': ['a', 'c', 'd', 'f'], 'x': [33, 44, 55, 66]}
@@ -142,12 +141,12 @@ def right_join(
     """
     Right Join two data dict on a specified column name(s).
     If right_on is None, joins both on same column name (left_on).
-    
+
     Parameters
     ----------
-    left : Mapping[str, Sequence]
+    left : Mapping[str, Sequence[Any]]
         left data mapping of {column name: column values}
-    right : Mapping[str, Sequence]
+    right : Mapping[str, Sequence[Any]]
         right data mapping of {column name: column values}
     left_on : str
         column name to join on in left
@@ -155,12 +154,12 @@ def right_join(
         column name to join on in right, join on left_on if None
     select : list[str], optional
         column names to return
-        
+
     Returns
     -------
     DataDict
         resulting joined data table
-        
+
     Example
     -------
     >>> left = {'id': ['a', 'c', 'd', 'f'], 'x': [33, 44, 55, 66]}
@@ -169,50 +168,50 @@ def right_join(
     {'id': ['a', 'b', 'c', 'd'], 'x': [33, None, 44, 55], 'y': [11, 22, 33, 44]}
     """
     return _join(left, right, left_on, right_on, select, _right_matching_indexes)
-    
+
 
 def locate(
-    l: Sequence,
+    seq: Sequence[Any],
     value: Any
 ) -> List[int]:
     """
     Return list of all index of each matching item in list.
-    
+
     Parameters
     ----------
-    l : Sequence
+    seq : Sequence
         sequence of values to check for matches
     value : Any
-        value to check if equals any values in l
-        
+        value to check if equals any values in seq
+
     Returns
     -------
     List[int]
-        index numbers of items in l that equal value
-        
+        index numbers of items in seq that equal value
+
     Example
     -------
-    >>> l = [1, 2, 1, 2, 4, 5, 1]
-    >>> locate(l, 1)
+    >>> seq = [1, 2, 1, 2, 4, 5, 1]
+    >>> locate(seq, 1)
     [0, 2, 6]
     """
-    return [i for i, x in enumerate(l) if x == value]
+    return [i for i, x in enumerate(seq) if x == value]
 
 
-def _name_matches(matches: Iterable[Tuple[Any, int, int]]) -> Tuple[MatchIndexes]:
+def _name_matches(matches: Iterable[Tuple[Any, int, int]]) -> Tuple[MatchIndexes, ...]:
     """
     Convert tuples into MatchIndexes namedtuples.
-    
+
     Parameters
     ----------
     matches : Iterable[Tuple[Any, int, int]]
         iterable of matches tuples[value, left_index, right_index]
-        
+
     Returns
     -------
     Tuple[MatchIndexes]
         tuple of MatchIndexes namedtuples[Any, Optional[int], Optional[int]]
-        
+
     Example
     -------
     >>> matches = [('a', 1, 1), ('b', 2, None), ('c', None, 3)]
@@ -226,25 +225,25 @@ def _name_matches(matches: Iterable[Tuple[Any, int, int]]) -> Tuple[MatchIndexes
 
 
 def _inner_matching_indexes(
-    left: Sequence,
-    right: Sequence
-) -> Tuple[MatchIndexes]:
+    left: Sequence[Any],
+    right: Sequence[Any]
+) -> Tuple[MatchIndexes, ...]:
     """
     Find matching item value indexes in two lists.
     Returns tuple of tuples: namedtuple[value, left_index, right_index]
-    
+
     Parameters
     ----------
     left : Sequence
         first sequence of values
     right : Sequence
         second sequence of values
-        
+
     Returns
     -------
     Tuple[MatchIndexes]
         tuple of namedtuple[value, left_index, right_index]
-    
+
     Example
     -------
     >>> l1 = ['a', 'c', 'd', 'f', 'a']
@@ -256,7 +255,7 @@ def _inner_matching_indexes(
      MatchIndexes(value='d', left_index=2, right_index=3),
      MatchIndexes(value='a', left_index=4, right_index=0))
     """
-    out = []
+    out: List[MatchIndexes] = []
     for i, value in enumerate(left):
         right_i = locate(right, value)
         count = len(right_i)
@@ -265,23 +264,23 @@ def _inner_matching_indexes(
 
 
 def _left_matching_indexes(
-    left: Sequence,
-    right: Sequence
-) -> Tuple[MatchIndexes]:
+    left: Sequence[Any],
+    right: Sequence[Any]
+) -> Tuple[MatchIndexes, ...]:
     """
     Find matching item value indexes in two sequences.
     Returns tuple of tuple[value, left_index, right_index].
     Also, provide (value, left_index, None) pairs for unmatched values in left.
-    
+
     Parameters
     ----------
     left : Sequence
     right : Sequence
-    
+
     Returns
     -------
     Tuple[namedtuple[value, left_index, right_index]]
-    
+
     Example
     -------
     >>> l1 = ['a', 'c', 'd', 'f', 'a', 'g']
@@ -295,7 +294,7 @@ def _left_matching_indexes(
      MatchIndexes(value='a', left_index=4, right_index=0),
      MatchIndexes(value='g', left_index=5, right_index=None))
     """
-    out = []
+    out: List[MatchIndexes] = []
     for i, value in enumerate(left):
         right_i = locate(right, value)
         if right_i:
@@ -307,22 +306,22 @@ def _left_matching_indexes(
 
 
 def _right_matching_indexes(
-    l1: Sequence,
-    l2: Sequence
-) -> Tuple[MatchIndexes]:
+    l1: Sequence[Any],
+    l2: Sequence[Any]
+) -> Tuple[MatchIndexes, ...]:
     """
     Find matching item value indexes in two lists.
     Also, provide (value, None, right_index) pairs for unmatched values in right.
-    
+
     Parameters
     ----------
     left : Sequence
     right : Sequence
-    
+
     Returns
     -------
     Tuple[namedtuple[value, left_index, right_index]]
-    
+
     Example
     -------
     >>> l1 = ['a', 'c', 'd', 'f', 'a', 'g']
@@ -335,7 +334,7 @@ def _right_matching_indexes(
      MatchIndexes(value='d', left_index=2, right_index=3),
      MatchIndexes(value='c', left_index=1, right_index=4))
     """
-    out = []
+    out: List[MatchIndexes] = []
     for i, value in enumerate(l2):
         l1_i = locate(l1, value)
         if l1_i:
@@ -347,23 +346,23 @@ def _right_matching_indexes(
 
 
 def _full_matching_indexes(
-    left: Sequence,
-    right: Sequence
-) -> Tuple[MatchIndexes]:
+    left: Sequence[Any],
+    right: Sequence[Any]
+) -> Tuple[MatchIndexes, ...]:
     """
     Find matching item value indexes in two lists.
     Also, provide (value, left_index, None) pairs for unmatched values in left.
     Also, provide (value, None, right_index) pairs for unmatched values in right.
-    
+
     Parameters
     ----------
     left : Sequence
     right : Sequence
-    
+
     Returns
     -------
     Tuple[namedtuple[value, left_index, right_index]]
-    
+
     Example
     -------
     >>> l1 = ['a', 'c', 'd', 'f', 'a', 'g']
@@ -378,15 +377,15 @@ def _full_matching_indexes(
      MatchIndexes(value='g', left_index=5, right_index=None),
      MatchIndexes(value='b', left_index=None, right_index=1))
     """
-    out = []
+    out: List[MatchIndexes] = []
     for i, value in enumerate(left):
         right_i = locate(right, value)
         if right_i:
             count = len(right_i)
             out.extend(_name_matches(zip(repeat(value, count), repeat(i, count), right_i)))
         else:
-            out.append(MatchIndexes(value, left_index=i))    
-    found_rights = set(x.right_index for x in out)
+            out.append(MatchIndexes(value, left_index=i))
+    found_rights = {x.right_index for x in out}
     unfound_rights = [MatchIndexes(value, right_index=i) for i, value in enumerate(right)
                           if i not in found_rights]
     out.extend(unfound_rights)
@@ -394,25 +393,25 @@ def _full_matching_indexes(
 
 
 def _filter_values_by_index_matches(
-    values: Sequence,
+    values: Sequence[Any],
     indexes: Sequence[Union[int, None]]
-) -> list:
+) -> List[Any]:
     """
     Filter a sequence by indexes.
     Returns a list of matched index values and Nones for Nones in indexes.
-    
+
     Parameters
     ----------
     values : Sequence
         sequence of values
     indexes : Sequence[Union[int, None]]
          sequence of indexes or Nones
-         
+
     Returns
     -------
     list
         list of values or Nones at given indexes
-    
+
     Example
     -------
     >>> values = ['x', 'y', 'z']
@@ -443,13 +442,12 @@ def _check_on_types(left_on, right_on) -> None:
     right_is_str = isinstance(right_on, str)
     if not ((right_is_str and left_is_str) or (right_is_str_sequence and left_is_str_sequence)):
         raise error
-    if left_is_str_sequence and right_is_str_sequence:
-        if len(left_on) != len(right_on):
-            raise ValueError('left_on sequence must be same len as right_on sequence')
+    if left_is_str_sequence and right_is_str_sequence and len(left_on) != len(right_on):
+        raise ValueError('left_on sequence must be same len as right_on sequence')
 
 
 def _check_for_missing_on(
-    table: Mapping[str, Sequence],
+    table: Mapping[str, Sequence[Any]],
     on_name: Union[str, Sequence[str]],
     table_name: str
 ) -> None:
@@ -465,22 +463,22 @@ def _check_for_missing_on(
 def _tuple_keys(
     table: DataMapping,
     column_names: Sequence[str]
-) -> Tuple[Tuple]:
+) -> Tuple[Tuple[Any, ...], ...]:
     """
     Return tuple row values for just column_names.
-    
+
     Parameters
     ----------
     table : DataMapping
         data mapping of {column name: column values}
     column_names : Sequence[str]
         column names to include in row values tuples
-        
+
     Returns
     -------
     tuple[tuple]
         row values tuples
-        
+
     Example
     -------
     >>> table = {'id': [1, 2, 3, 4],
@@ -505,12 +503,12 @@ def _join(
     using a join strategy (inner, left, right or full).
     Default join strategy is full outer join if no
     join_strategy is passed.
-    
+
     Parameters
     ----------
-    left : Mapping[str, Sequence]
+    left : Mapping[str, Sequence[Any]]
         left data mapping of {column name: column values}
-    right : Mapping[str, Sequence]
+    right : Mapping[str, Sequence[Any]]
         right data mapping of {column name: column values}
     left_on : str
         column name to join on in left
@@ -518,27 +516,27 @@ def _join(
         column name to join on in right, join on left_on if None
     select : list[str], optional
         column names to return
-    join_strategy : Callable[[Sequence, Sequence], Matches]
-    
+    join_strategy : Callable[[Sequence, Sequence[Any]], Matches]
+
     Returns
     -------
     DataDict
         resulting joined data table
-    
+
     Examples
     --------
     >>> left = {'id': ['a', 'c', 'd', 'f', 'g'], 'x': [33, 44, 55, 66, 77]}
     >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
     >>> join(left, right, 'id', join_strategy=inner_matching_indexes)
     {'id': ['a', 'c', 'd'], 'x': [33, 44, 55], 'y': [11, 33, 44]}
-    
+
     >>> left = {'id': ['a', 'c', 'd', 'f', 'g'], 'x': [33, 44, 55, 66, 77]}
     >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
     >>> join(left, right, 'id', join_strategy=left_matching_indexes)
     {'id': ['a', 'c', 'd', 'f', 'g'],
      'x': [33, 44, 55, 66, 77],
      'y': [11, 33, 44, None, None]}
-    
+
     >>> left = {'id': ['a', 'c', 'd', 'f', 'g'], 'x': [33, 44, 55, 66, 77]}
     >>> right = {'id': ['a', 'b', 'c', 'd'], 'y': [11, 22, 33, 44]}
     >>> join(left, right, 'id')
@@ -550,26 +548,26 @@ def _join(
     _check_on_types(left_on, right_on)
     _check_for_missing_on(left, left_on, 'left')
     _check_for_missing_on(right, right_on, 'right')
-    
+
     if isinstance(left_on, str):
         indexes = join_strategy(left[left_on], right[right_on])
     else:
-        indexes = join_strategy(_tuple_keys(left, left_on), _tuple_keys(right, right_on))
+        indexes = join_strategy(_tuple_keys(left, left_on), _tuple_keys(right, right_on))  # type: ignore[unreachable]
 
     values = [x.value for x in indexes]
     left_indexes = [x.left_index for x in indexes]
     right_indexes = [x.right_index for x in indexes]
     out = {col: _filter_values_by_index_matches(left[col], left_indexes) for col in left}
-    
+
     for col in right:
         if col not in [left_on, right_on]:
             out[col] = _filter_values_by_index_matches(right[col], right_indexes)
-            
+
     if isinstance(right_on, str):
         out[right_on] = values
         out[left_on] = values
     else:
-        for i, col in enumerate(right_on):
+        for i, col in enumerate(right_on):  # type: ignore[unreachable]
             out[col] = [x[i] for x in values]
         for i, col in enumerate(left_on):
             out[col] = [x[i] for x in values]

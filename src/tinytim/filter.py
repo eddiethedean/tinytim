@@ -3,13 +3,12 @@ from typing import Any, Callable, List, Optional, Sequence
 
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
-from tinytim.custom_types import DataMapping, DataDict
-
+from tinytim.custom_types import DataDict, DataMapping
 
 BoolSequence = Sequence[bool]
 
 
-def column_filter(column: Sequence, func: Callable[[Any], bool]) -> List[bool]:
+def column_filter(column: Sequence[Any], func: Callable[[Any], bool]) -> List[bool]:
     return [func(item) for item in column]
 
 
@@ -17,7 +16,7 @@ def indexes_from_filter(f: BoolSequence) -> List[int]:
     return [i for i, b in enumerate(f) if b]
 
 
-def filter_list_by_indexes(values: Sequence, indexes: Sequence[int]) -> List:
+def filter_list_by_indexes(values: Sequence[Any], indexes: Sequence[int]) -> List[Any]:
     """Return only values in indexes."""
     return [values[i] for i in indexes]
 
@@ -78,12 +77,12 @@ def filter_by_column_le(data: DataMapping, column_name: str, value) -> DataDict:
     return filter_by_column_func(data, column_name, lambda x: x <= value)
 
 
-def filter_by_column_isin(data: DataMapping, column_name: str, values: Sequence) -> DataDict:
+def filter_by_column_isin(data: DataMapping, column_name: str, values: Sequence[Any]) -> DataDict:
     """Return only rows of data where named column is in values."""
     return filter_by_column_func(data, column_name, lambda x: x in values)
 
 
-def filter_by_column_notin(data: DataMapping, column_name: str, values: Sequence) -> DataDict:
+def filter_by_column_notin(data: DataMapping, column_name: str, values: Sequence[Any]) -> DataDict:
     """Return only rows of data where named column is not in values."""
     return filter_by_column_func(data, column_name, lambda x: x not in values)
 
