@@ -1,19 +1,20 @@
+from collections.abc import Callable, Mapping, Sequence
 from statistics import mean, mode, pstdev, stdev
-from typing import Any, Callable, List, Mapping, Sequence, Tuple, Union
+from typing import Any
 
 import tinytim.filter as filter_functions
 import tinytim.rows as rows_functions
 import tinytim.utils as utils_functions
 from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping
 
-GroupbyValue = Union[Any, Tuple[Any, ...]]
-Group = Tuple[GroupbyValue, DataDict]
+GroupbyValue = Any | tuple[Any, ...]
+Group = tuple[GroupbyValue, DataDict]
 
 
 def groupby(
     data: DataMapping,
-    by: Union[str, Sequence[str]]
-) -> List[Group]:
+    by: str | Sequence[str]
+) -> list[Group]:
     """
     Group data by a column or sequence of columns.
 
@@ -62,7 +63,7 @@ def groupby(
         return groupbymulti(data, by)
 
 
-def groupbycolumn(data: Mapping[Any, Any], column: Sequence[Any]) -> List[Group]:
+def groupbycolumn(data: Mapping[Any, Any], column: Sequence[Any]) -> list[Group]:
     keys = utils_functions.uniques(column)
 
     def make_filter(key: Any) -> Callable[[Any], bool]:
@@ -73,18 +74,18 @@ def groupbycolumn(data: Mapping[Any, Any], column: Sequence[Any]) -> List[Group]
                 for k in keys]
 
 
-def groupbyone(data: Mapping[Any, Any], column_name: str) -> List[Group]:
+def groupbyone(data: Mapping[Any, Any], column_name: str) -> list[Group]:
     return groupbycolumn(data, data[column_name])
 
 
-def groupbymulti(data: Mapping[Any, Any], column_names: Sequence[str]) -> List[Group]:
+def groupbymulti(data: Mapping[Any, Any], column_names: Sequence[str]) -> list[Group]:
     return groupbycolumn(data, utils_functions.row_value_tuples(data, column_names))
 
 
 def aggregate_groups(
     groups: Sequence[Group],
     func: Callable[[DataMapping], RowMapping]
-) -> Tuple[List[Any], DataDict]:
+) -> tuple[list[Any], DataDict]:
     labels = []
     rows = []
     for key, data in groups:
@@ -95,7 +96,7 @@ def aggregate_groups(
     return labels, rows_functions.row_dicts_to_data(rows)
 
 
-def sum_groups(groups: List[Group]) -> Tuple[List[Any], DataDict]:
+def sum_groups(groups: list[Group]) -> tuple[list[Any], DataDict]:
     """
     Sum groups together
 
@@ -121,7 +122,7 @@ def sum_groups(groups: List[Group]) -> Tuple[List[Any], DataDict]:
     return aggregate_groups(groups, sum_data)
 
 
-def count_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
+def count_groups(groups: list[tuple[Any, ...]]) -> tuple[list[Any], DataDict]:
     """
     Get count of each group
 
@@ -148,7 +149,7 @@ def count_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     return aggregate_groups(groups, count_data)
 
 
-def mean_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
+def mean_groups(groups: list[tuple[Any, ...]]) -> tuple[list[Any], DataDict]:
     """
     Mean groups together
 
@@ -174,7 +175,7 @@ def mean_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     return aggregate_groups(groups, mean_data)
 
 
-def min_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
+def min_groups(groups: list[tuple[Any, ...]]) -> tuple[list[Any], DataDict]:
     """
     Get min values for each group
 
@@ -203,7 +204,7 @@ def min_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     return aggregate_groups(groups, min_data)
 
 
-def max_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
+def max_groups(groups: list[tuple[Any, ...]]) -> tuple[list[Any], DataDict]:
     """
     Get max values for each group
 
@@ -232,7 +233,7 @@ def max_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     return aggregate_groups(groups, max_data)
 
 
-def mode_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
+def mode_groups(groups: list[tuple[Any, ...]]) -> tuple[list[Any], DataDict]:
     """
     Get mode of each group
 
@@ -261,7 +262,7 @@ def mode_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     return aggregate_groups(groups, mode_data)
 
 
-def stdev_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
+def stdev_groups(groups: list[tuple[Any, ...]]) -> tuple[list[Any], DataDict]:
     """
     Get Standard Deviation of each group
 
@@ -287,7 +288,7 @@ def stdev_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     return aggregate_groups(groups, stdev_data)
 
 
-def pstdev_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
+def pstdev_groups(groups: list[tuple[Any, ...]]) -> tuple[list[Any], DataDict]:
     """
     Get standard deviation from an entire population of each group
 
@@ -313,7 +314,7 @@ def pstdev_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
     return aggregate_groups(groups, pstdev_data)
 
 
-def nunique_groups(groups: List[Tuple[Any, ...]]) -> Tuple[List[Any], DataDict]:
+def nunique_groups(groups: list[tuple[Any, ...]]) -> tuple[list[Any], DataDict]:
     """
     Count how many unique values are in each group
 

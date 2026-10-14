@@ -1,0 +1,35 @@
+name: Checks
+description: Run TinyTim's tests, lint, and type checks
+
+inputs:
+  python-version:
+    description: Python version to use for the checks
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v7
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: pip
+        cache-dependency-path: pyproject.toml
+
+    - name: Install project and development dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -e ".[dev]"
+
+    - name: Run lint checks
+      shell: bash
+      run: ruff check src tests
+
+    - name: Run type checks
+      shell: bash
+      run: mypy src
+
+    - name: Run tests
+      shell: bash
+      run: pytest --cov-report=xml

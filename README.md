@@ -3,19 +3,19 @@
 A pure Python package for processing tabular data stored in dictionaries.
 
 [![PyPI Latest Release](https://img.shields.io/pypi/v/tinytim.svg)](https://pypi.org/project/tinytim/)
-![Tests](https://github.com/eddiethedean/tinytim/actions/workflows/tests.yml/badge.svg)
+[![Checks](https://github.com/eddiethedean/tinytim/actions/workflows/commit.yml/badge.svg)](https://github.com/eddiethedean/tinytim/actions/workflows/commit.yml)
 [![Python Version](https://img.shields.io/pypi/pyversions/tinytim.svg)](https://pypi.org/project/tinytim/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Description
 
-TinyTim is a lightweight alternative to Pandas for processing tabular data. It's perfect for when you want to work with structured data but don't want to install Pandas and its many dependencies. TinyTim has **zero dependencies** outside of Python's standard library.
+TinyTim provides small, pure-Python tools for working with tabular data when a full dataframe library is more than a project needs. It has **no runtime dependencies** beyond the Python standard library.
 
-Data is stored in a simple dictionary format: `{column_name: column_values}`, making it easy to understand and work with.
+Tables are mappings of column names to sequences of values, such as `{"name": ["Ada", "Lin"], "score": [95, 88]}`. Keep every column the same length; use `tinytim.validate.valid_table_mapping` to check a table. Functions without an `_inplace` suffix return new table data, while their `_inplace` counterparts modify the input.
 
 ## Features
 
-- **Zero dependencies** - Pure Python implementation
+- **No runtime dependencies** - Uses only the Python standard library
 - **Lightweight** - Minimal footprint, fast installation
 - **Familiar API** - Intuitive functions for data manipulation
 - **Type hints** - Full type annotations for better IDE support
@@ -29,7 +29,11 @@ pip install tinytim
 
 ## Requirements
 
-- Python >= 3.8
+- Python >= 3.11
+
+## Documentation
+
+The [Sphinx user guide](src/tinytim/docs/index.rst) covers common operations, and the [API reference](src/tinytim/docs/modules.rst) documents the public modules. Runnable notebooks are available in the [examples](examples/) directory.
 
 ## Quick Start
 
@@ -142,7 +146,17 @@ fillna(data, 0)
 data2 = {'x': [None, 2, None, 4], 'y': [10, None, None, 40]}
 fillna(data2, method='ffill')
 # {'x': [None, 2, 2, 4], 'y': [10, 10, 10, 40]}
+
+# Limit each forward-filled gap to one value
+fillna({'x': [1, None, None, 4, None]}, method='ffill', limit=1)
+# {'x': [1, 1, None, 4, 4]}
+
+# Get indexes of rows retained by dropna
+dropna(data, remaining=True)
+# [0]
 ```
+
+`dropna(..., axis='columns', remaining=True)` returns the names of the retained columns. Missing values default to `None`; pass `na_value` to use another sentinel.
 
 ### Grouping and Aggregation
 
@@ -177,6 +191,18 @@ result = inner_join(left, right, 'id')
 # Left join keeps all rows from left table
 result = left_join(left, right, 'id')
 # {'id': [1, 2, 3], 'value': ['a', 'b', 'c'], 'score': [None, 10, 20]}
+
+# Same-named non-key columns receive suffixes
+left = {'id': [1, 2], 'value': ['a', 'b']}
+right = {'id': [2, 3], 'value': ['c', 'd']}
+result = inner_join(left, right, 'id')
+# {'id': [2], 'value_x': ['b'], 'value_y': ['c']}
+
+# Join on multiple columns and choose custom suffixes
+left = {'account': [10, 10], 'year': [2025, 2026], 'amount': [100, 120]}
+right = {'account': [10, 10], 'year': [2025, 2026], 'amount': [95, 125]}
+result = inner_join(left, right, ['account', 'year'], suffixes=('_left', '_right'))
+# The result contains amount_left and amount_right.
 ```
 
 ## More Examples
@@ -203,6 +229,10 @@ result = drop_row(data, 0)
 # Drop a column
 result = drop_column(data, 'city')
 # {'name': ['Alice', 'Bob', 'Charlie'], 'age': [25, 30, 35]}
+
+# Add a column to a table in place
+from tinytim.edit import edit_column_inplace
+edit_column_inplace(data, 'active', [True, False, True])
 ```
 
 ### Inserting Data
@@ -278,7 +308,7 @@ git clone https://github.com/eddiethedean/tinytim.git
 cd tinytim
 
 # Install development dependencies
-pip install -e ".[dev]"
+pip install -e ".[dev,docs]"
 
 # Or use the requirements file
 pip install -r requirements_dev.txt
@@ -291,7 +321,7 @@ pip install -r requirements_dev.txt
 pytest
 
 # Run tests with coverage
-pytest --cov=tinytim
+pytest --cov-report=xml
 
 # Run tests across multiple Python versions
 tox
@@ -308,6 +338,9 @@ ruff format src tests
 
 # Type check with mypy
 mypy src
+
+# Build the Sphinx documentation
+python -m sphinx -b html src/tinytim/docs build/docs
 ```
 
 ### Pre-commit Hooks
@@ -328,13 +361,20 @@ See the [examples](https://github.com/eddiethedean/tinytim/tree/main/examples) d
 - [data.ipynb](https://github.com/eddiethedean/tinytim/blob/main/examples/data.ipynb) - Basic data operations
 - [rows.ipynb](https://github.com/eddiethedean/tinytim/blob/main/examples/rows.ipynb) - Working with rows
 - [columns.ipynb](https://github.com/eddiethedean/tinytim/blob/main/examples/columns.ipynb) - Working with columns
+- [edit.ipynb](https://github.com/eddiethedean/tinytim/blob/main/examples/edit.ipynb) - Editing data
 - [join.ipynb](https://github.com/eddiethedean/tinytim/blob/main/examples/join.ipynb) - Joining datasets
 - [group.ipynb](https://github.com/eddiethedean/tinytim/blob/main/examples/group.ipynb) - Grouping and aggregation
+- [dropna.ipynb](https://github.com/eddiethedean/tinytim/blob/main/examples/dropna.ipynb) - Dropping missing values
 - [fillna.ipynb](https://github.com/eddiethedean/tinytim/blob/main/examples/fillna.ipynb) - Handling missing values
+- [json.ipynb](https://github.com/eddiethedean/tinytim/blob/main/examples/json.ipynb) - Reading and writing JSON
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for development, CI, and release instructions.
+
+## Releasing
+
+Push a `vX.Y.Z` tag matching the package version to run the release workflow. It checks the code, builds the source and wheel distributions, and publishes them to PyPI using Trusted Publishing. Configure the PyPI publisher as described in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Author
 

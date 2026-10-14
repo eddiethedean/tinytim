@@ -1,1 +1,1 @@
-hasattrs>=0.0.2
+# TinyTim has no runtime dependencies.

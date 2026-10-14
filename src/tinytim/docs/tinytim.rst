@@ -1,93 +1,100 @@
-tinytim package
-===============
+Package reference
+=================
 
-Submodules
-----------
-
-tinytim.columns module
-----------------------
-
-.. automodule:: tinytim.columns
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-tinytim.copy module
--------------------
-
-.. automodule:: tinytim.copy
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-tinytim.data module
--------------------
+Core data operations
+--------------------
 
 .. automodule:: tinytim.data
    :members:
-   :undoc-members:
    :show-inheritance:
 
-tinytim.edit module
--------------------
-
-.. automodule:: tinytim.edit
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-tinytim.filter module
----------------------
-
-.. automodule:: tinytim.filter
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-tinytim.group module
---------------------
-
-.. automodule:: tinytim.group
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-tinytim.json module
--------------------
-
-.. automodule:: tinytim.json
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-tinytim.rows module
--------------------
+Rows and columns
+----------------
 
 .. automodule:: tinytim.rows
    :members:
-   :undoc-members:
    :show-inheritance:
 
-tinytim.utils module
---------------------
+.. automodule:: tinytim.columns
+   :members:
+   :show-inheritance:
+
+Editing and filtering
+---------------------
+
+.. automodule:: tinytim.edit
+   :members:
+   :show-inheritance:
+
+.. automodule:: tinytim.filter
+   :members:
+   :show-inheritance:
+
+Grouping and joins
+------------------
+
+.. automodule:: tinytim.group
+   :members:
+   :show-inheritance:
+
+.. automodule:: tinytim.join
+   :members:
+   :show-inheritance:
+
+Missing values
+--------------
+
+.. automodule:: tinytim.na
+   :members:
+   :imported-members:
+   :show-inheritance:
+
+.. automodule:: tinytim.dropna
+   :members:
+   :show-inheritance:
+
+.. automodule:: tinytim.fillna
+   :members:
+   :show-inheritance:
+
+.. automodule:: tinytim.isna
+   :members:
+   :show-inheritance:
+
+Conversion and utilities
+------------------------
+
+.. automodule:: tinytim.json
+   :members:
+   :show-inheritance:
+
+.. automodule:: tinytim.insert
+   :members:
+   :show-inheritance:
+
+.. automodule:: tinytim.copy
+   :members:
+   :show-inheritance:
+
+.. automodule:: tinytim.sequences
+   :members:
+   :show-inheritance:
 
 .. automodule:: tinytim.utils
    :members:
-   :undoc-members:
    :show-inheritance:
-
-tinytim.validate module
------------------------
 
 .. automodule:: tinytim.validate
    :members:
-   :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
+Types and interfaces
+--------------------
 
-.. automodule:: tinytim
+.. automodule:: tinytim.custom_types
    :members:
-   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: tinytim.interfaces
+   :members:
    :show-inheritance:

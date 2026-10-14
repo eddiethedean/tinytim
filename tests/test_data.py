@@ -115,7 +115,7 @@ def test_head_with_zero():
 
 def test_tail_with_zero():
     result = data_functions.tail(DATA, 0)
-    assert result == DATA  # n=0 for tail returns all data
+    assert result == {'x': [], 'y': []}  # n=0 returns empty columns
 
 
 def test_head_with_one():

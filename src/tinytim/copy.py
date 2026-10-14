@@ -1,5 +1,6 @@
 import copy
-from typing import Any, Sequence, TypeVar
+from collections.abc import Sequence
+from typing import Any, TypeVar
 
 from tinytim.custom_types import DataMapping
 
@@ -50,8 +51,7 @@ def deepcopy_table(data: TypeVarDataMapping) -> TypeVarDataMapping:
     >>> deepcopy_table(data)
     {'x': [1, 2, 3], 'y': [6, 7, 8]}
     """
-    constructor = type(data)
-    return constructor({col: copy.deepcopy(values) for col, values in data.items()}) # type: ignore
+    return copy.deepcopy(data)
 
 
 def copy_sequence(values: TypeVarSequence) -> TypeVarSequence:

@@ -6,14 +6,14 @@
 
 # -- Path setup --------------------------------------------------------------
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-import os
+# Add the source tree to the import path so autodoc works from any directory.
 import sys
+import tomllib
+from pathlib import Path
 
-sys.path.insert(0, os.path.abspath('..'))
+repository_dir = Path(__file__).resolve().parents[3]
+source_dir = repository_dir / 'src'
+sys.path.insert(0, str(source_dir))
 
 
 # -- Project information -----------------------------------------------------
@@ -21,6 +21,9 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'TinyTim'
 copyright = '2022, Odos Matthews'
 author = 'Odos Matthews'
+project_metadata = tomllib.loads((repository_dir / 'pyproject.toml').read_text(encoding='utf-8'))
+release = project_metadata['project']['version']
+version = '.'.join(release.split('.')[:2])
 
 
 # -- General configuration ---------------------------------------------------
@@ -36,7 +39,7 @@ extensions = [
 ]
 
 # Napoleon settings
-""" napoleon_google_docstring = True
+napoleon_google_docstring = True
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
@@ -49,10 +52,7 @@ napoleon_use_param = True
 napoleon_use_rtype = True
 napoleon_preprocess_types = False
 napoleon_type_aliases = None
-napoleon_attr_annotations = True """
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+napoleon_attr_annotations = True
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -62,12 +62,5 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
+# The theme to use for HTML and HTML Help pages.
 html_theme = 'furo'
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']

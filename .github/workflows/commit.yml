@@ -1,0 +1,38 @@
+name: Commit CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: commit-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Checks (Python ${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.11", "3.12", "3.13", "3.14", "3.15"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Run checks
+        uses: ./.github/actions/checks
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Upload coverage report
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.15'
+        uses: codecov/codecov-action@v7
+        with:
+          fail_ci_if_error: false

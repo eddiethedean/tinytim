@@ -1,6 +1,7 @@
 """Description: Functions for operating on columns of data."""
 
-from typing import Any, Generator, List, Tuple
+from collections.abc import Generator
+from typing import Any
 
 import tinytim.data as data_functions
 from tinytim.custom_types import DataDict
@@ -53,7 +54,7 @@ def column_mapping(data: GetSequence, col: str) -> DataDict:
     return {col: data_functions.column_values(data, col)}
 
 
-def itercolumns(data: KeyNamesGetSequence) -> Generator[Tuple[str, List[Any]], None, None]:
+def itercolumns(data: KeyNamesGetSequence) -> Generator[tuple[str, list[Any]], None, None]:
     """
     Return a generator of tuple column name, column values.
 

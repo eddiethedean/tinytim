@@ -1,9 +1,10 @@
-from typing import Any, Collection, Dict, Generator, Iterable, List, Mapping, MutableSequence, Optional, Sequence, Tuple
+from collections.abc import Collection, Generator, Iterable, Mapping, MutableSequence, Sequence
+from typing import Any
 
 from tinytim.custom_types import DataMapping, RowMapping
 
 
-def uniques(values: Iterable[Any]) -> List[Any]:
+def uniques(values: Iterable[Any]) -> list[Any]:
     """
     Return a list of the unique items in values.
 
@@ -56,7 +57,7 @@ def nuniques(values: Sequence[Any]) -> int:
 def row_value_tuples(
     data: DataMapping,
     column_names: Sequence[str]
-) -> Tuple[Tuple[Any, ...], ...]:
+) -> tuple[tuple[Any, ...], ...]:
     """
     Return row value tuples for only columns in column_names.
 
@@ -78,10 +79,10 @@ def row_value_tuples(
     >>> row_value_tuples(data, ['x', 'z'])
     ((1, 9), (2, 10), (3, 11))
     """
-    return tuple(zip(*[data[col] for col in column_names]))
+    return tuple(zip(*[data[col] for col in column_names], strict=True))
 
 
-def all_keys(dicts: Sequence[Mapping[Any, Any]]) -> List[Any]:
+def all_keys(dicts: Sequence[Mapping[Any, Any]]) -> list[Any]:
     """
     Return all the unique keys from a collection of dicts.
 
@@ -137,6 +138,14 @@ def all_bool(values: Collection[Any]) -> bool:
     return all(isinstance(item, bool) for item in values)
 
 
+def has_mapping_attrs(obj: Any) -> bool:
+    """Return whether an object provides the core mapping protocol."""
+    return all(
+        hasattr(obj, attribute)
+        for attribute in ("__getitem__", "__iter__", "__len__", "keys", "items", "values")
+    )
+
+
 def row_values_generator(row: RowMapping) -> Generator[Any, None, None]:
     """
     Return a generator that yields values from a row dict.
@@ -169,7 +178,7 @@ def row_values_generator(row: RowMapping) -> Generator[Any, None, None]:
         yield row[key]
 
 
-def slice_to_range(s: slice, stop: Optional[int] = None) -> range:
+def slice_to_range(s: slice, stop: int | None = None) -> range:
     """
     Convert an int:int:int slice object to a range object.
     Needs stop if s.stop is None since range is not allowed to have stop=None.
@@ -222,7 +231,7 @@ def slice_to_range(s: slice, stop: Optional[int] = None) -> range:
 def combine_names_rows(
     column_names: Sequence[str],
     rows: Sequence[Sequence[Any]]
-) -> Dict[str, List[Any]]:
+) -> dict[str, list[Any]]:
     """
     Convert a sequence of column names and a sequence of row values
     into dict[column_name: values] format.
@@ -246,10 +255,10 @@ def combine_names_rows(
     >>> combine_names_rows(column_names, rows)
     {'x': [1, 4, 8], 'y': [2, 5, 10]}
     """
-    return dict(zip(column_names, map(list, zip(*rows))))
+    return dict(zip(column_names, map(list, zip(*rows, strict=True)), strict=False))
 
 
-def nunique(data: DataMapping) -> Dict[str, int]:
+def nunique(data: DataMapping) -> dict[str, int]:
     """
     Count number of distinct values in each column.
     Return dict with count of distinct values.

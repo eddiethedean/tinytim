@@ -3,13 +3,14 @@ Module used for converting data format to json and json to data format.
 """
 
 import json
-from typing import Any, Dict, List, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 import tinytim.rows as rows_functions
 from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping
 
 
-def data_to_json_list(data: DataMapping) -> List[RowDict]:
+def data_to_json_list(data: DataMapping) -> list[RowDict]:
     """
     Convert data table to list of row dicts.
 
@@ -75,7 +76,7 @@ def data_to_json(data: DataMapping) -> str:
     >>> data_to_json(data)
     '[{"x": 1, "y": 6}, {"x": 2, "y": 7}, {"x": 3, "y": 8}]'
     """
-    json_list: List[Dict[str, Any]] = data_to_json_list(data)
+    json_list: list[dict[str, Any]] = data_to_json_list(data)
     return json.dumps(json_list)
 
 

@@ -1,6 +1,5 @@
-from typing import Any, ItemsView, Iterator, KeysView, MutableSequence, Sequence, ValuesView
-
-from typing_extensions import Protocol
+from collections.abc import ItemsView, Iterator, KeysView, MutableSequence, Sequence, ValuesView
+from typing import Any, Protocol
 
 
 class GetSequence(Protocol):
@@ -52,4 +51,11 @@ class KeyNamesGetMutableSequenceSequenceValues(KeyNamesGetMutableSequence, Seque
     def __contains__(self, key: str) -> bool: ...
 
 class SequenceItemsGetMutableSequence(SequenceItems, GetMutableSequence, Protocol):
+    ...
+
+class KeyNamesGetMutableSequenceSequenceValuesSetSequence(
+    KeyNamesGetMutableSequenceSequenceValues,
+    SetSequence,
+    Protocol,
+):
     ...

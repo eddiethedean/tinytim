@@ -1,12 +1,13 @@
-from typing import Any, Dict, List, Mapping, MutableMapping, MutableSequence, Sequence
+from collections.abc import Mapping, MutableMapping, MutableSequence, Sequence
+from typing import Any
 
 from tinytim.interfaces import SequenceItems
 
 DataMapping = Mapping[str, Sequence[Any]]
 MutableDataMapping = MutableMapping[str, MutableSequence[Any]]
 RowMapping = Mapping[str, Any]
-DataDict = Dict[str, List[Any]]
-RowDict = Dict[str, Any]
+DataDict = dict[str, list[Any]]
+RowDict = dict[str, Any]
 
 
 def data_dict(m: SequenceItems) -> DataDict:

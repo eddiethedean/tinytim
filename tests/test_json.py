@@ -1,4 +1,3 @@
-from typing import List
 
 import tinytim.json as json_functions
 from tinytim.custom_types import RowDict
@@ -29,7 +28,7 @@ def test_data_to_json_list():
 
 
 def test_json_list_to_data():
-    json: List[RowDict] = JSON_LIST
+    json: list[RowDict] = JSON_LIST
     result = json_functions.json_list_to_data(json)
     expected = DATA
     assert result == expected

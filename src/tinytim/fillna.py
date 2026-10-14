@@ -1,23 +1,23 @@
-from typing import Any, List, Optional, Sequence, Union
-
-from hasattrs import has_mapping_attrs
+from collections.abc import Sequence
+from typing import Any
 
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
 import tinytim.isna as isna_functions
 import tinytim.rows as rows_functions
 from tinytim.custom_types import DataDict, DataMapping, RowDict, RowMapping, data_dict, row_dict
+from tinytim.utils import has_mapping_attrs
 
 
 def fillna(
     data: DataDict,
-    value: Optional[Any] = None,
-    method: Optional[str] = None,
-    axis: Optional[Union[int, str]] = 0,
+    value: Any | None = None,
+    method: str | None = None,
+    axis: int | str | None = 0,
     inplace: bool = False,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
-) -> Union[DataDict, None]:
+    limit: int | None = None,
+    na_value: Any | None = None
+) -> DataDict | None:
     """
     Fill missing values using the specified method.
 
@@ -118,9 +118,9 @@ def fillna(
 def fill_with_value_inplace(
     data: DataDict,
     value: Any,
-    axis: Optional[Union[int, str]] = 0,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    axis: int | str | None = 0,
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Fill data columns with given value.
@@ -143,9 +143,9 @@ def fill_with_value_inplace(
 def fill_with_value(
     data: DataMapping,
     value: Any,
-    axis: Optional[Union[int, str]] = 0,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    axis: int | str | None = 0,
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> DataDict:
     """
     Fill data columns with given value.
@@ -166,9 +166,9 @@ def fill_with_value(
 
 def backfill_inplace(
     data: DataDict,
-    axis: Optional[Union[int, str]] = 0,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    axis: int | str | None = 0,
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Parameters
@@ -176,17 +176,17 @@ def backfill_inplace(
     data : MutableMapping[str, MutableSequence]
         data mapping of {column name: column values}
     """
-    if axis in [0, 'row']:
+    if axis in [0, 'row', 'rows']:
         backfill_columns_inplace(data, limit, na_value)
-    elif axis in [1, 'column']:
+    elif axis in [1, 'column', 'columns']:
         backfill_rows_inplace(data, limit, na_value)
 
 
 def backfill(
     data: DataMapping,
-    axis: Optional[Union[int, str]] = 0,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    axis: int | str | None = 0,
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> DataDict:
     """
     Parameters
@@ -205,9 +205,9 @@ def backfill(
 
 def forwardfill_inplace(
     data: DataDict,
-    axis: Optional[Union[int, str]] = 0,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    axis: int | str | None = 0,
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Parameters
@@ -227,9 +227,9 @@ def forwardfill_inplace(
 
 def forwardfill(
     data: DataMapping,
-    axis: Optional[Union[int, str]] = 0,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    axis: int | str | None = 0,
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> DataDict:
     """
     Parameters
@@ -249,8 +249,8 @@ def forwardfill(
 def fill_columns_with_value_inplace(
     data: DataDict,
     value: Any,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Parameters
@@ -274,8 +274,8 @@ def fill_columns_with_value_inplace(
 def fill_rows_with_value_inplace(
     data: DataDict,
     value: Any,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Parameters
@@ -294,8 +294,8 @@ def fill_rows_with_value_inplace(
 
 def backfill_columns_inplace(
     data: DataDict,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Parameters
@@ -313,8 +313,8 @@ def backfill_columns_inplace(
 
 def backfill_columns(
     data: DataMapping,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> DataDict:
     """
     Parameters
@@ -333,9 +333,9 @@ def backfill_columns(
 
 def backfill_column(
     column: Sequence[Any],
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
-) -> List[Any]:
+    limit: int | None = None,
+    na_value: Any | None = None
+) -> list[Any]:
     column = list(column)
     backfill_column_inplace(column, limit, na_value)
     return column
@@ -343,8 +343,8 @@ def backfill_column(
 
 def backfill_rows_inplace(
     data: DataDict,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Parameters
@@ -363,8 +363,8 @@ def backfill_rows_inplace(
 
 def forwardfill_columns_inplace(
     data: DataDict,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Parameters
@@ -382,8 +382,8 @@ def forwardfill_columns_inplace(
 
 def forwardfill_columns(
     data: DataMapping,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> DataDict:
     """
     Parameters
@@ -402,8 +402,8 @@ def forwardfill_columns(
 
 def forwardfill_rows_inplace(
     data: DataDict,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Parameters
@@ -422,8 +422,8 @@ def forwardfill_rows_inplace(
 
 def forwardfill_rows(
     data: DataMapping,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> DataDict:
     """
     Parameters
@@ -455,10 +455,10 @@ def _get_fill_value(value, column):
 
 def fill_column_with_value(
     column: Sequence[Any],
-    value: Optional[Any] = None,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
-) -> List[Any]:
+    value: Any | None = None,
+    limit: int | None = None,
+    na_value: Any | None = None
+) -> list[Any]:
     """
     Fill missing values in column with given value.
 
@@ -491,10 +491,10 @@ def fill_column_with_value(
 
 
 def fill_column_with_value_inplace(
-    column: List[Any],
-    value: Optional[Any] = None,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    column: list[Any],
+    value: Any | None = None,
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Fill missing values in column with given value.
@@ -535,9 +535,9 @@ def fill_column_with_value_inplace(
 
 def fill_row_with_value(
     row: RowMapping,
-    value: Optional[Any] = None,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    value: Any | None = None,
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> RowDict:
     """
     Fill missing values in row with given value.
@@ -576,8 +576,8 @@ def fill_row_with_value(
 def fill_row_with_value_inplace(
     row: RowDict,
     value: Any,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     """
     Fill missing values in row with given value.
@@ -624,18 +624,19 @@ def fill_row_with_value_inplace(
 
 
 def backfill_column_inplace(
-    column: List[Any],
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    column: list[Any],
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     fill_count = 0
     for i, item in reversed(list(enumerate(column))):
+        if not isna_functions.is_missing(item, na_value):
+            fill_count = 0
+            continue
         if limit is not None and fill_count >= limit:
-            return
-        if isna_functions.is_missing(item, na_value):
-            b = _back(column, i, na_value)
-            if isna_functions.is_missing(b, na_value):
-                continue
+            continue
+        b = _back(column, i, na_value)
+        if not isna_functions.is_missing(b, na_value):
             column[i] = b
             fill_count += 1
 
@@ -649,8 +650,8 @@ def _back(values: Sequence[Any], index: int, na_value=None) -> Any:
 
 def backfill_rows(
     data: DataMapping,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> DataDict:
     """
     Parameters
@@ -669,25 +670,26 @@ def backfill_rows(
 
 def backfill_row_inplace(
     row: RowDict,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     fill_count = 0
     for i, (key, item) in reversed(list(enumerate(row.items()))):
+        if not isna_functions.is_missing(item, na_value):
+            fill_count = 0
+            continue
         if limit is not None and fill_count >= limit:
-            return
-        if isna_functions.is_missing(item, na_value):
-            b = _back(list(row.values()), i, na_value)
-            if isna_functions.is_missing(b, na_value):
-                continue
+            continue
+        b = _back(list(row.values()), i, na_value)
+        if not isna_functions.is_missing(b, na_value):
             row[key] = b
             fill_count += 1
 
 
 def backfill_row(
     row: RowMapping,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> RowDict:
     row = row_dict(row)
     backfill_row_inplace(row, limit, na_value)
@@ -695,27 +697,28 @@ def backfill_row(
 
 
 def forwardfill_column_inplace(
-    column: List[Any],
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    column: list[Any],
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     fill_count = 0
     for i, item in enumerate(column):
+        if not isna_functions.is_missing(item, na_value):
+            fill_count = 0
+            continue
         if limit is not None and fill_count >= limit:
-            return
-        if isna_functions.is_missing(item, na_value):
-            f = _forward(column, i, na_value)
-            if isna_functions.is_missing(f, na_value):
-                continue
+            continue
+        f = _forward(column, i, na_value)
+        if not isna_functions.is_missing(f, na_value):
             column[i] = f
             fill_count += 1
 
 
 def forwardfill_column(
     column: Sequence[Any],
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
-) -> List[Any]:
+    limit: int | None = None,
+    na_value: Any | None = None
+) -> list[Any]:
     column = list(column)
     forwardfill_column_inplace(column, limit, na_value)
     return column
@@ -730,25 +733,26 @@ def _forward(values: Sequence[Any], index: int, na_value=None) -> Any:
 
 def forwardfill_row_inplace(
     row: RowDict,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> None:
     fill_count = 0
     for i, (key, value) in enumerate(row.items()):
+        if not isna_functions.is_missing(value, na_value):
+            fill_count = 0
+            continue
         if limit is not None and fill_count >= limit:
-            return
-        if isna_functions.is_missing(value, na_value):
-            f = _forward(list(row.values()), i, na_value)
-            if isna_functions.is_missing(f, na_value):
-                continue
+            continue
+        f = _forward(list(row.values()), i, na_value)
+        if not isna_functions.is_missing(f, na_value):
             row[key] = f
             fill_count += 1
 
 
 def forwardfill_row(
     row: RowMapping,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> RowDict:
     row = row_dict(row)
     forwardfill_row_inplace(row, limit, na_value)
@@ -758,8 +762,8 @@ def forwardfill_row(
 def fill_columns_with_value(
     data: DataMapping,
     value: Any,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> DataDict:
     """
     Parameters
@@ -779,8 +783,8 @@ def fill_columns_with_value(
 def fill_rows_with_value(
     data: DataMapping,
     value: Any,
-    limit: Optional[int] = None,
-    na_value: Optional[Any] = None
+    limit: int | None = None,
+    na_value: Any | None = None
 ) -> DataDict:
     """
     Parameters

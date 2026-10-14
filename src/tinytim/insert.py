@@ -1,4 +1,4 @@
-from typing import Iterable
+from collections.abc import Iterable
 
 import tinytim.data as data_features
 from tinytim.custom_types import DataDict, DataMapping, RowMapping, data_dict

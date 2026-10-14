@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple
+from typing import Any
 
 from tinytim.custom_types import DataDict
 from tinytim.interfaces import GetSequence, KeyNames, KeyNamesSequenceValues, SequenceItems, SequenceValues
@@ -76,16 +76,10 @@ def row_count(data: SequenceValues) -> int:
     >>> row_count(data)
     3
     """
-    try:
-        return max(len(v) for v in data.values())
-    except ValueError as e:
-        if str(e) == "max() arg is an empty sequence":
-            return 0
-        else:
-            raise e
+    return max((len(v) for v in data.values()), default=0)
 
 
-def shape(data: KeyNamesSequenceValues) -> Tuple[int, int]:
+def shape(data: KeyNamesSequenceValues) -> tuple[int, int]:
     """
     Return data row count, column count tuple.
 
@@ -135,7 +129,7 @@ def size(data: KeyNamesSequenceValues) -> int:
     return rows * columns
 
 
-def column_names(data: KeyNames) -> List[str]:
+def column_names(data: KeyNames) -> list[str]:
     """
     Return data column names.
 
@@ -206,10 +200,10 @@ def tail(data: SequenceItems, n: int = 5) -> DataDict:
     >>> tail(data, 2)
     {'x': [2, 3], 'y': [7, 8]}
     """
-    return {k: list(v[-n:]) for k, v in data.items()}
+    return {k: list(v[-n:]) if n else [] for k, v in data.items()}
 
 
-def index(data: SequenceValues) -> Tuple[int, ...]:
+def index(data: SequenceValues) -> tuple[int, ...]:
     """
     Return tuple of data column indexes.
 
@@ -259,7 +253,7 @@ def table_value(data: GetSequence, column_name: str, index: int) -> Any:
     return data[column_name][index]
 
 
-def column_values(data: GetSequence, column_name: str) -> List[Any]:
+def column_values(data: GetSequence, column_name: str) -> list[Any]:
     """
     Return all the values from one column.
 

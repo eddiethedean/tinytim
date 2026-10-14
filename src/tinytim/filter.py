@@ -1,5 +1,6 @@
 import random
-from typing import Any, Callable, List, Optional, Sequence
+from collections.abc import Callable, Sequence
+from typing import Any
 
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
@@ -8,15 +9,15 @@ from tinytim.custom_types import DataDict, DataMapping
 BoolSequence = Sequence[bool]
 
 
-def column_filter(column: Sequence[Any], func: Callable[[Any], bool]) -> List[bool]:
+def column_filter(column: Sequence[Any], func: Callable[[Any], bool]) -> list[bool]:
     return [func(item) for item in column]
 
 
-def indexes_from_filter(f: BoolSequence) -> List[int]:
+def indexes_from_filter(f: BoolSequence) -> list[int]:
     return [i for i, b in enumerate(f) if b]
 
 
-def filter_list_by_indexes(values: Sequence[Any], indexes: Sequence[int]) -> List[Any]:
+def filter_list_by_indexes(values: Sequence[Any], indexes: Sequence[int]) -> list[Any]:
     """Return only values in indexes."""
     return [values[i] for i in indexes]
 
@@ -87,11 +88,10 @@ def filter_by_column_notin(data: DataMapping, column_name: str, values: Sequence
     return filter_by_column_func(data, column_name, lambda x: x not in values)
 
 
-def sample(data: DataMapping, n: int, random_state: Optional[int] = None) -> DataDict:
+def sample(data: DataMapping, n: int, random_state: int | None = None) -> DataDict:
     """return random sample of n rows"""
-    if random_state is not None:
-        random.seed(random_state)
-    indexes = random.sample(range(data_functions.row_count(data)), n)
+    rng = random if random_state is None else random.Random(random_state)
+    indexes = rng.sample(range(data_functions.row_count(data)), n)
     return filter_by_indexes(data, indexes)
 
 
@@ -110,8 +110,7 @@ only_columns = filter_by_columns
 only_columns_inplace = filter_by_columns_inplace
 
 
-def sample_indexes(data: DataMapping, n: int, random_state: Optional[int] = None) -> List[int]:
+def sample_indexes(data: DataMapping, n: int, random_state: int | None = None) -> list[int]:
     """return random sample of n indexes"""
-    if random_state is not None:
-        random.seed(random_state)
-    return random.sample(range(data_functions.row_count(data)), n)
+    rng = random if random_state is None else random.Random(random_state)
+    return rng.sample(range(data_functions.row_count(data)), n)

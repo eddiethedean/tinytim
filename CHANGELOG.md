@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0] - 2026-10-14
+
+### Fixed
+- Handle empty tables consistently across Python versions and return an empty result for `tail(data, 0)`
+- Preserve same-named columns in joins with configurable suffixes and validate missing join columns
+- Apply forward and backward fill limits separately to each consecutive gap and accept plural axis names
+- Create new columns in the in-place edit API
+- Honor `remaining=True` for all `dropna` modes and use the configured missing-value check for thresholds
+- Preserve mapping types and shared references in deep copies; keep seeded sampling from changing global random state
+
+### Changed
+- Require Python 3.11 or newer and test Python 3.11 through 3.15
+- Remove runtime dependencies and use the standard library for protocol checks and typing
+- Update package version to 1.13.0 and use current SPDX license metadata
+
 ## [1.12.0] - 2025-10-18
 
 ### Changed

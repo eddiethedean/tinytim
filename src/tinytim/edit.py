@@ -1,6 +1,7 @@
+from collections.abc import Callable, Iterable, MutableSequence, Sequence, Sized
 from itertools import repeat
 from numbers import Number
-from typing import Any, Callable, Iterable, List, MutableSequence, Sequence, Sized, Union
+from typing import Any
 
 import tinytim.data as data_functions
 import tinytim.sequences as sequences_functions
@@ -11,7 +12,7 @@ from tinytim.interfaces import (
     GetMutableSequence,
     KeyNamesGetItem,
     KeyNamesGetMutableSequence,
-    KeyNamesGetMutableSequenceSequenceValues,
+    KeyNamesGetMutableSequenceSequenceValuesSetSequence,
     SequenceItems,
     SequenceItemsGetMutableSequence,
 )
@@ -80,14 +81,14 @@ def edit_row_values_inplace(
     """
     if len(values) != data_functions.column_count(data):
         raise AttributeError('values length must match columns length.')
-    for col, value in zip(data_functions.column_names(data), values):
+    for col, value in zip(data_functions.column_names(data), values, strict=True):
         data[col][index] = value
 
 
 def edit_column_inplace(
-    data: KeyNamesGetMutableSequenceSequenceValues,
+    data: KeyNamesGetMutableSequenceSequenceValuesSetSequence,
     column_name: str,
-    values: Union[Sequence[Any], str]
+    values: Sequence[Any] | str
 ) -> None:
     """
     Edit values in named column.
@@ -120,22 +121,20 @@ def edit_column_inplace(
         if column_name in data:
             utils_functions.set_values_to_one(data[column_name], values)
         else:
-            for i in range(data_functions.row_count(data)):
-                data[column_name][i] = values
+            data[column_name] = list(repeat(values, data_functions.row_count(data)))
         return
     if len(values) != data_functions.row_count(data):
         raise ValueError('values length must match data rows count.')
     if column_name in data:
         utils_functions.set_values_to_many(data[column_name], values)
     else:
-        for i, value in enumerate(values):
-            data[column_name][i] = value
+        data[column_name] = list(values)
 
 
 def operator_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence[Any], str, Number],
+    values: Sequence[Any] | str | Number,
     func: Callable[[Any, Any], Any]
 ) -> None:
     """
@@ -167,7 +166,7 @@ def operator_column_inplace(
 def add_to_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence[Any], str, Number]
+    values: Sequence[Any] | str | Number
 ) -> None:
     """
     Add values to existing named column.
@@ -207,7 +206,7 @@ def add_to_column_inplace(
 def subtract_from_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence[Any], Number]
+    values: Sequence[Any] | Number
 ) -> None:
     """
     Subtract values from existing named column.
@@ -247,7 +246,7 @@ def subtract_from_column_inplace(
 def divide_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence[Any], Number]
+    values: Sequence[Any] | Number
 ) -> None:
     """
     Divide values from existing named column.
@@ -319,7 +318,7 @@ def drop_row_inplace(
 
 
 def drop_label_inplace(
-    labels: Union[None, MutableSequence[Any]],
+    labels: None | MutableSequence[Any],
     index: int
 ) -> None:
     """
@@ -481,7 +480,7 @@ def edit_row_values(
     data = data_dict(data)
     if len(values) != data_functions.column_count(data):
         raise AttributeError('values length must match columns length.')
-    for col, value in zip(data_functions.column_names(data), values):
+    for col, value in zip(data_functions.column_names(data), values, strict=True):
         data[col][index] = value
     return data
 
@@ -489,7 +488,7 @@ def edit_row_values(
 def edit_column(
     data: SequenceItemsGetMutableSequence,
     column_name: str,
-    values: Union[Sequence[Any], str]
+    values: Sequence[Any] | str
 ) -> DataDict:
     """
     Return data with values changed in named column.
@@ -541,7 +540,7 @@ def edit_column(
 def operator_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence[Any], str, Number],
+    values: Sequence[Any] | str | Number,
     func: Callable[[Any, Any], Any]
 ) -> DataDict:
     """
@@ -588,7 +587,7 @@ def operator_column(
 def add_to_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence[Any], str, Number]
+    values: Sequence[Any] | str | Number
 ) -> DataDict:
     """
     Return data with values added to named column values.
@@ -626,7 +625,7 @@ def add_to_column(
 def subtract_from_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence[Any], Number]
+    values: Sequence[Any] | Number
 ) -> DataDict:
     """
     Return data with values subtracted from named column values.
@@ -666,7 +665,7 @@ def subtract_from_column(
 def multiply_column_inplace(
     data: GetMutableSequence,
     column_name: str,
-    values: Union[Sequence[Any], Number]
+    values: Sequence[Any] | Number
 ) -> None:
     """
     Multiply values with existing named column.
@@ -706,7 +705,7 @@ def multiply_column_inplace(
 def multiply_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence[Any], Number]
+    values: Sequence[Any] | Number
 ) -> DataDict:
     """
     Return data with values multiplied with named column values.
@@ -745,7 +744,7 @@ def multiply_column(
 def divide_column(
     data: SequenceItems,
     column_name: str,
-    values: Union[Sequence[Any], Number]
+    values: Sequence[Any] | Number
 ) -> DataDict:
     """
     Return data with named column divided by values.
@@ -816,9 +815,9 @@ def drop_row(
 
 
 def drop_label(
-    labels: Union[None, Sequence[Any]],
+    labels: None | Sequence[Any],
     index: int
-) -> Union[None, List[Any]]:
+) -> None | list[Any]:
     """
     If labels exists, drop item at index.
 
@@ -945,4 +944,7 @@ def replace_column_names(
     old_names = data_functions.column_names(data)
     if len(new_names) != len(old_names):
         raise ValueError('new_names must be same size as data column_count.')
-    return {new_name: list(data[old_name]) for new_name, old_name in zip(new_names, old_names)}
+    return {
+        new_name: list(data[old_name])
+        for new_name, old_name in zip(new_names, old_names, strict=True)
+    }

@@ -1,5 +1,4 @@
 import pytest
-from hasattrs import has_mapping_attrs
 
 import tinytim.utils as utils_functions
 
@@ -34,13 +33,13 @@ def test_all_bool_bools():
 
 def test_has_mapping_attrs_dict():
     obj = {}
-    result = has_mapping_attrs(obj)
+    result = utils_functions.has_mapping_attrs(obj)
     assert result
 
 
 def test_has_mapping_attrs_list():
     obj = []
-    result = has_mapping_attrs(obj)
+    result = utils_functions.has_mapping_attrs(obj)
     assert not result
 
 

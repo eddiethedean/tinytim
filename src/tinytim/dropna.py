@@ -1,4 +1,5 @@
-from typing import Any, List, Optional, Sequence, Union
+from collections.abc import Sequence
+from typing import Any
 
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
@@ -10,14 +11,14 @@ from tinytim.custom_types import DataDict, DataMapping, RowMapping, data_dict
 
 def dropna(
     data: DataDict,
-    axis: Union[int, str] = 0,
+    axis: int | str = 0,
     how: str = 'any',
-    thresh: Optional[int] = None,
-    subset: Optional[Sequence[str]] = None,
+    thresh: int | None = None,
+    subset: Sequence[str] | None = None,
     inplace: bool = False,
-    na_value: Optional[Any] = None,
-    remaining: Optional[bool] = False
-) -> Union[DataDict, None, List[int], List[str]]:
+    na_value: Any | None = None,
+    remaining: bool | None = False
+) -> DataDict | None | list[int] | list[str]:
     """
     Remove missing values.
 
@@ -122,9 +123,9 @@ def dropna(
 
 def dropna_any_inplace(
     data: DataDict,
-    axis: Union[int, str] = 0,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    axis: int | str = 0,
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> None:
     if axis in [1, 'columns']:
         dropna_columns_any_inplace(data, subset, na_value)
@@ -136,11 +137,11 @@ def dropna_any_inplace(
 
 def dropna_any(
     data: DataMapping,
-    axis: Union[int, str] = 0,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
-    remaining: Optional[bool] = False
-) -> Union[DataDict, List[int], List[str]]:
+    axis: int | str = 0,
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+    remaining: bool | None = False
+) -> DataDict | list[int] | list[str]:
     if axis in [1, 'columns']:
         return dropna_columns_any(data, subset, na_value, remaining)
     elif axis in [0, 'rows']:
@@ -152,9 +153,9 @@ def dropna_any(
 def dropna_thresh_inplace(
     data: DataDict,
     thresh: int,
-    axis: Union[int, str] = 0,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    axis: int | str = 0,
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> None:
     if axis in [1, 'columns']:
         dropna_columns_thresh_inplace(data, thresh, subset, na_value)
@@ -167,11 +168,11 @@ def dropna_thresh_inplace(
 def dropna_thresh(
     data: DataMapping,
     thresh: int,
-    axis: Union[int, str] = 0,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
-    remaining: Optional[bool] = False
-) -> Union[DataDict, List[int], List[str]]:
+    axis: int | str = 0,
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+    remaining: bool | None = False
+) -> DataDict | list[int] | list[str]:
     if axis in [1, 'columns']:
         return dropna_columns_thresh(data, thresh, subset, na_value, remaining)
     elif axis in [0, 'rows']:
@@ -182,8 +183,8 @@ def dropna_thresh(
 
 def dropna_columns_any_inplace(
     data: DataDict,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> None:
     columns = dropna_columns_any_names(data, subset, na_value)
     filter_functions.filter_by_columns_inplace(data, columns)
@@ -192,7 +193,7 @@ def dropna_columns_any_inplace(
 def dropna_column_any_inplace(
     data: DataDict,
     column_name: str,
-    na_value: Optional[Any] = None
+    na_value: Any | None = None
 ) -> None:
     if column_any_na(data[column_name], na_value):
         edit_functions.drop_column_inplace(data, column_name)
@@ -200,9 +201,9 @@ def dropna_column_any_inplace(
 
 def dropna_columns_any_names(
     data: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
-) -> List[str]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
+) -> list[str]:
     columns = []
     for col in data_functions.column_names(data):
         if subset is not None and col not in subset:
@@ -216,7 +217,7 @@ def dropna_columns_any_names(
 def dropna_column_any(
     data: DataMapping,
     column_name: str,
-    na_value: Optional[Any] = None
+    na_value: Any | None = None
 ) -> DataDict:
     data = data_dict(data)
     dropna_column_any_inplace(data, column_name, na_value)
@@ -225,10 +226,10 @@ def dropna_column_any(
 
 def dropna_columns_any(
     data: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
-    remaining_names: Optional[bool] = False
-) -> Union[DataDict, List[str]]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+    remaining_names: bool | None = False
+) -> DataDict | list[str]:
     columns = dropna_columns_any_names(data, subset, na_value)
     if remaining_names:
         return columns
@@ -237,8 +238,8 @@ def dropna_columns_any(
 
 def dropna_rows_any_inplace(
     data: DataDict,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> None:
     remaining_indexes = dropna_rows_any_indexes(data, subset, na_value)
     filter_functions.filter_by_indexes_inplace(data, remaining_indexes)
@@ -246,9 +247,9 @@ def dropna_rows_any_inplace(
 
 def dropna_rows_any_indexes(
     data: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
-) -> List[int]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
+) -> list[int]:
     remaining_indexes = []
     for i, row in rows_functions.iterrows(data):
         if not row_any_na(row, subset, na_value):
@@ -258,10 +259,10 @@ def dropna_rows_any_indexes(
 
 def dropna_rows_any(
     data: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
-    remaining_indexes: Optional[bool] = False
-) -> Union[DataDict, List[int]]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+    remaining_indexes: bool | None = False
+) -> DataDict | list[int]:
     indexes = dropna_rows_any_indexes(data, subset, na_value)
     if remaining_indexes:
         return indexes
@@ -270,22 +271,22 @@ def dropna_rows_any(
 
 def column_any_na(
     column: Sequence[Any],
-    na_value: Optional[Any] = None
+    na_value: Any | None = None
 ) -> bool:
     return any(isna_functions.is_missing(val, na_value) for val in column)
 
 
 def subset_row_values(
     row: RowMapping,
-    subset: Optional[Sequence[str]] = None
-) -> List[Any]:
+    subset: Sequence[str] | None = None
+) -> list[Any]:
     return list(row.values()) if subset is None else [val for key, val in row.items() if key in subset]
 
 
 def row_any_na(
     row: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> bool:
     values = subset_row_values(row, subset)
     return any(isna_functions.is_missing(val, na_value) for val in values)
@@ -293,15 +294,15 @@ def row_any_na(
 
 def column_all_na(
     column: Sequence[Any],
-    na_value: Optional[Any] = None
+    na_value: Any | None = None
 ) -> bool:
     return all(isna_functions.is_missing(val, na_value) for val in column)
 
 
 def row_all_na(
     row: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> bool:
     values = subset_row_values(row, subset)
     return all(isna_functions.is_missing(val, na_value) for val in values)
@@ -309,9 +310,9 @@ def row_all_na(
 
 def dropna_all_inplace(
     data: DataDict,
-    axis: Union[int, str] = 0,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    axis: int | str = 0,
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> None:
     if axis in [1, 'columns']:
         dropna_columns_all_inplace(data, subset, na_value)
@@ -323,13 +324,13 @@ def dropna_all_inplace(
 
 def dropna_all(
     data: DataDict,
-    axis: Union[int, str] = 0,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
-    remaining: Optional[bool] = False
-) -> Union[DataDict, List[int]]:
+    axis: int | str = 0,
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+    remaining: bool | None = False
+) -> DataDict | list[int] | list[str]:
     if axis in [1, 'columns']:
-        return dropna_columns_all(data, subset, na_value)
+        return dropna_columns_all(data, subset, na_value, remaining)
     if axis in [0, 'rows']:
         return dropna_rows_all(data, subset, na_value, remaining)
     else:
@@ -338,8 +339,8 @@ def dropna_all(
 
 def dropna_columns_all_inplace(
     data: DataDict,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> None:
     columns = dropna_columns_all_names(data, subset, na_value)
     filter_functions.filter_by_columns_inplace(data, columns)
@@ -347,18 +348,21 @@ def dropna_columns_all_inplace(
 
 def dropna_columns_all(
     data: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
-) -> DataDict:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+    remaining_names: bool | None = False
+) -> DataDict | list[str]:
     columns = dropna_columns_all_names(data, subset, na_value)
+    if remaining_names:
+        return columns
     return filter_functions.filter_by_columns(data, columns)
 
 
 def dropna_columns_all_names(
     data: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
-) -> List[str]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
+) -> list[str]:
     columns = []
     for col in data_functions.column_names(data):
         if subset is not None and col not in subset:
@@ -371,8 +375,8 @@ def dropna_columns_all_names(
 
 def dropna_rows_all_inplace(
     data: DataDict,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> None:
     indexes = dropna_rows_all_indexes(data, subset, na_value)
     filter_functions.filter_by_indexes_inplace(data, indexes)
@@ -380,10 +384,10 @@ def dropna_rows_all_inplace(
 
 def dropna_rows_all(
     data: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
-    remaining_indexes: Optional[bool] = False
-) -> Union[DataDict, List[int]]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+    remaining_indexes: bool | None = False
+) -> DataDict | list[int]:
     indexes = dropna_rows_all_indexes(data, subset, na_value)
     if remaining_indexes:
         return indexes
@@ -392,9 +396,9 @@ def dropna_rows_all(
 
 def dropna_rows_all_indexes(
     data: DataMapping,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
-) -> List[int]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+) -> list[int]:
     indexes = []
     for i, row in rows_functions.iterrows(data):
         if not row_all_na(row, subset, na_value):
@@ -405,8 +409,8 @@ def dropna_rows_all_indexes(
 def dropna_columns_thresh_inplace(
     data: DataDict,
     thresh: int,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> None:
     columns = dropna_columns_thresh_names(data, thresh, subset, na_value)
     filter_functions.filter_by_columns_inplace(data, columns)
@@ -415,10 +419,10 @@ def dropna_columns_thresh_inplace(
 def dropna_columns_thresh(
     data: DataMapping,
     thresh: int,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
-    remaining_names: Optional[bool] = False
-) -> Union[DataDict, List[str]]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+    remaining_names: bool | None = False
+) -> DataDict | list[str]:
     columns = dropna_columns_thresh_names(data, thresh, subset, na_value)
     if remaining_names:
         return columns
@@ -428,9 +432,9 @@ def dropna_columns_thresh(
 def dropna_columns_thresh_names(
     data: DataMapping,
     thresh: int,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
-) -> List[str]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
+) -> list[str]:
     columns = []
     for col in data_functions.column_names(data):
         if subset is not None and col not in subset:
@@ -445,7 +449,7 @@ def dropna_column_thresh_inplace(
     data: DataDict,
     column_name: str,
     thresh: int,
-    na_value: Optional[Any] = None
+    na_value: Any | None = None
 ) -> None:
     if not column_na_thresh(data[column_name], thresh, na_value):
         edit_functions.drop_column_inplace(data, column_name)
@@ -454,8 +458,8 @@ def dropna_column_thresh_inplace(
 def dropna_rows_thresh_inplace(
     data: DataDict,
     thresh: int,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
 ) -> None:
     indexes = dropna_rows_thresh_indexes(data, thresh, subset, na_value)
     filter_functions.filter_by_indexes_inplace(data, indexes)
@@ -464,10 +468,10 @@ def dropna_rows_thresh_inplace(
 def dropna_rows_thresh(
     data: DataMapping,
     thresh: int,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None,
-    remaining_indexes: Optional[bool] = False
-) -> Union[DataDict, List[int]]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None,
+    remaining_indexes: bool | None = False
+) -> DataDict | list[int]:
     indexes = dropna_rows_thresh_indexes(data, thresh, subset, na_value)
     if remaining_indexes:
         return indexes
@@ -477,9 +481,9 @@ def dropna_rows_thresh(
 def dropna_rows_thresh_indexes(
     data: DataMapping,
     thresh: int,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
-) -> List[int]:
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
+) -> list[int]:
     indexes = []
     for i, row in rows_functions.iterrows(data):
         if row_na_thresh(row, thresh, subset, na_value):
@@ -490,17 +494,17 @@ def dropna_rows_thresh_indexes(
 def column_na_thresh(
     column: Sequence[Any],
     thresh: int,
-    na_value: Optional[Any] = None
+    na_value: Any | None = None
 ) -> bool:
-    return bool(sum(val != na_value for val in column) >= thresh)
+    return sum(not isna_functions.is_missing(val, na_value) for val in column) >= thresh
 
 
 def row_na_thresh(
     row: RowMapping,
     thresh: int,
-    subset: Optional[Sequence[str]] = None,
-    na_value: Optional[Any] = None
+    subset: Sequence[str] | None = None,
+    na_value: Any | None = None
 ) -> bool:
     items = row.values() if subset is None else [val for key, val in row.items() if key in subset]
-    return bool(sum(val != na_value for val in items) >= thresh)
+    return sum(not isna_functions.is_missing(val, na_value) for val in items) >= thresh
 

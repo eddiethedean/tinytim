@@ -1,6 +1,7 @@
 from collections import defaultdict
+from collections.abc import Generator, Iterable, Sequence
 from itertools import zip_longest
-from typing import Any, Dict, Generator, Iterable, Optional, Sequence, Tuple
+from typing import Any
 
 import tinytim.data as data_functions
 import tinytim.edit as edit_functions
@@ -40,7 +41,7 @@ def row_dict(
 def row_values(
     data: DataMapping,
     index: int
-) -> Tuple[Any, ...]:
+) -> tuple[Any, ...]:
     """
     Return a tuple of the values at row index.
 
@@ -68,7 +69,7 @@ def row_values(
 def iterrows(
     data: DataMapping,
     reverse: bool = False
-) -> Generator[Tuple[int, RowDict], None, None]:
+) -> Generator[tuple[int, RowDict], None, None]:
     """
     Return a generator of tuple row index, row dict values.
 
@@ -104,7 +105,7 @@ def iterrows(
 
 def itertuples(
     data: DataMapping
-) -> Generator[Tuple[Any, ...], None, None]:
+) -> Generator[tuple[Any, ...], None, None]:
     """
     Return a generator of tuple row values.
 
@@ -138,7 +139,7 @@ def itertuples(
 
 def itervalues(
     data: DataMapping
-) -> Generator[Tuple[Any, ...], None, None]:
+) -> Generator[tuple[Any, ...], None, None]:
     """
     Return a generator of tuple row values.
 
@@ -171,7 +172,7 @@ def itervalues(
 
 def values(
     data: DataMapping
-) -> Tuple[Tuple[Any, ...], ...]:
+) -> tuple[tuple[Any, ...], ...]:
     """
     Return tuple of tuple row values.
 
@@ -198,7 +199,7 @@ def row_value_counts(
     data: DataMapping,
     sort=True,
     ascending=True
-) -> Dict[Tuple[Any, ...], int]:
+) -> dict[tuple[Any, ...], int]:
     """
     Count up the unique rows.
 
@@ -222,7 +223,7 @@ def row_value_counts(
     >>> row_value_counts(data)
     {(3, 3): 2, (1, 6): 1, (2, 7): 1}
     """
-    d: Dict[Tuple[Any, ...], int] = {}
+    d: dict[tuple[Any, ...], int] = {}
     for row in itertuples(data):
         d[row] = d.get(row, 0) + 1
     if sort:
@@ -302,8 +303,8 @@ def records_equal(d1: DataMapping, d2: DataMapping) -> bool:
 
 def row_dicts_to_data(
     rows: Sequence[RowMapping],
-    columns: Optional[Sequence[str]] = None,
-    missing_value: Optional[Any] = None
+    columns: Sequence[str] | None = None,
+    missing_value: Any | None = None
 ) -> DataDict:
     """
     Convert a list of row dicts to dict[col_name: values] format.
@@ -347,7 +348,7 @@ def row_dicts_to_data(
 def row_values_to_data(
     rows: Sequence[Sequence[Any]],
     column_names: Sequence[str],
-    missing_value: Optional[Any] = None
+    missing_value: Any | None = None
 ) -> DataDict:
     """
     Convert sequence of row values: [col1_value, col2_value, col3_value]

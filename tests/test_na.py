@@ -622,8 +622,7 @@ def test_dropna_remaining_how_all():
 def test_dropna_columns_remaining_how_all():
     data = {"A": [None, None], "B": [1, 2], "C": [None, None]}
     result = dropna(data, axis='columns', how='all', remaining=True)
-    # Returns filtered data dict (not list) when remaining=True with how='all'
-    assert isinstance(result, dict)
+    assert result == ['B']
 
 
 # Test error conditions in fillna

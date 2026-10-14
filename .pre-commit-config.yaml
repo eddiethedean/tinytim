@@ -20,6 +20,5 @@ repos:
     rev: v1.11.2
     hooks:
       - id: mypy
-        additional_dependencies: [hasattrs>=0.0.2]
         args: [--config-file=pyproject.toml]
 

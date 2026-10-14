@@ -21,7 +21,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 3. **Install development dependencies**
 
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev,docs]"
 # Or
 pip install -r requirements_dev.txt
 ```
@@ -69,14 +69,24 @@ You can run all checks across multiple Python versions using tox:
 tox
 
 # Run specific environment
-tox -e py312
+tox -e py311
 tox -e ruff
 tox -e mypy
 ```
 
+## Building the documentation
+
+Install the documentation dependencies with the development extras, then build the HTML docs from the repository root:
+
+```bash
+python -m sphinx -b html src/tinytim/docs build/docs
+```
+
+The generated site is written to `build/docs/`, which is ignored by Git.
+
 ## Coding Standards
 
-1. **Python version support**: TinyTim supports Python 3.8+. Ensure your code is compatible with all supported versions.
+1. **Python version support**: TinyTim supports Python 3.11+. Ensure your code is compatible with all supported versions.
 
 2. **Type hints**: All functions should have proper type hints. Use types from `typing` or `collections.abc` as needed.
 
@@ -144,6 +154,12 @@ git push origin feature/your-feature-name
 - **Tests**: Include tests for new features
 - **Documentation**: Update README.md or docstrings if needed
 - **Breaking changes**: Clearly mark any breaking changes
+
+## Releasing
+
+Update the package version in `pyproject.toml` and `src/tinytim/__init__.py`, then push a matching `vX.Y.Z` tag. The release workflow validates the tag, runs the checks on all supported Python versions, builds the source and wheel distributions, and publishes them to PyPI.
+
+PyPI publishing uses Trusted Publishing. Configure the project's publisher with repository `eddiethedean/tinytim`, workflow `release.yml`, and GitHub environment `pypi`.
 
 ## Reporting Issues
 
